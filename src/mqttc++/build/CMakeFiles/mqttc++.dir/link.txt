@@ -1,0 +1,2 @@
+/usr/bin/ar cr libmqttc++.a  CMakeFiles/mqttc++.dir/mqtt_msg.cpp.o CMakeFiles/mqttc++.dir/mqtt_pkt.cpp.o
+/usr/bin/ranlib libmqttc++.a

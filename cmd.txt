@@ -1,0 +1,38 @@
+echo "# reactor" >> README.md
+git init
+git add README.md
+git commit -m "first commit"
+git remote add origin https://github.com/DavadDi/reactor.git
+git push -u origin master
+
+git commit -a -m "commit"
+
+
+perfmance test:
+$ACE_ROOT/performance-tests/TCP/tcp_test -c localhost -i 500000 -b 64 -p 5050
+
+google performance analysis:
+1. start
+LD_PRELOAD=./libghttpd-preload.so ./tcp_server_tcmalloc
+
+2. profiler
+pprof ./tcp_server_tcmalloc http://localhost:9999/pprof/profile
+
+-> file_name
+
+3. gif result
+pprof --gif ./tcp_server_tcmalloc /home/ops/pprof/.xxxx.localhost > main_thread.gif
+
+
+pingpong test one thread and one client
+
+/home/ops/dev_tools/build/release/bin/pingpong_client 127.0.0.1 5050 1 16384 1 100
+
+
+valgrind --leak-check=yes ./tcp_server
+
+mqtt_pub:
+mosquitto_pub -t sensors/temperature -m 32 -q 1 -h 10.1.11.34 -p 5050
+
+mqtt_sub:
+mosquitto_sub -t sensors/temperature -q 1 -h 10.1.11.34 -p 5050

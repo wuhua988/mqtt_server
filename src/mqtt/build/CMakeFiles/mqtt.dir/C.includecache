@@ -1,0 +1,36 @@
+#IncludeRegexLine: ^[ 	]*#[ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/ops/dev_tools/reactor_mini/mqtt/helper.c
+helper.h
+/home/ops/dev_tools/reactor_mini/mqtt/helper.h
+stdarg.h
+-
+
+/home/ops/dev_tools/reactor_mini/mqtt/helper.h
+mqtt_common.h
+/home/ops/dev_tools/reactor_mini/mqtt/mqtt_common.h
+
+/home/ops/dev_tools/reactor_mini/mqtt/mqtt_common.h
+stdio.h
+-
+string.h
+-
+stdlib.h
+-
+
+/home/ops/dev_tools/reactor_mini/mqtt/mqtt_pkt_ansi.c
+mqtt_pkt_ansi.h
+/home/ops/dev_tools/reactor_mini/mqtt/mqtt_pkt_ansi.h
+
+/home/ops/dev_tools/reactor_mini/mqtt/mqtt_pkt_ansi.h
+mqtt_common.h
+/home/ops/dev_tools/reactor_mini/mqtt/mqtt_common.h
+helper.h
+/home/ops/dev_tools/reactor_mini/mqtt/helper.h
+

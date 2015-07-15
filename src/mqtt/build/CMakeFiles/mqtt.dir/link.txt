@@ -1,2 +1,0 @@
-/usr/bin/ar cr libmqtt.a  CMakeFiles/mqtt.dir/mqtt_pkt_ansi.c.o CMakeFiles/mqtt.dir/helper.c.o
-/usr/bin/ranlib libmqtt.a

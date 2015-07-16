@@ -1,0 +1,4 @@
+1. qos1, store msg to db, resend some msg, maybe can to qos2
+2. timer queue add, iedl connection kick off
+3. store every send msg log detailed.
+4. stat, also include abnormal situation.

@@ -12,6 +12,8 @@
 #include "reactor/define.hpp"
 #include "reactor/poller_epoll.hpp"
 #include "reactor/event_handler.hpp"
+#include "mqtt_server/mqtt_connection.hpp"
+#include "mqtt_server/subscriber_mgr.hpp"
 
 namespace reactor
 {
@@ -37,6 +39,9 @@ namespace reactor
         
         virtual int handle_input(socket_t sock_id);
         virtual int handle_close(socket_t sock_id);
+    
+    protected:
+	CTMqttClientContext_ptr m_client_context;
     };
 }
 

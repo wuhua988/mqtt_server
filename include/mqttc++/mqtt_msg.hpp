@@ -466,7 +466,7 @@ protected:
 };
 
 
-typedef CMqttUnsubAck CMqttPublishAck;
+typedef CMqttUnsubAck CMqttPublishAck; 
 
 
 /*

@@ -24,7 +24,7 @@
 
 #ifdef _HAS_LOG4CPLUSH_LOG_
     #include "common/my_logger.h"
-#elif
+#else
     int my_printf(const char *fmt, ...);
     #define LOG_DEBUG my_printf                                                                         
     #define LOG_WARN  my_printf                                                                         

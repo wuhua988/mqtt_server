@@ -15,7 +15,7 @@
 #define FAILTURE         -1
 #define SUCCESS         0
 
-int remain_lenght(uint8_t *pkt_buf, uint32_t len, uint32_t &remain_length_value, uint8_t &remain_length_bytes);
+int remain_length(uint8_t *pkt_buf, uint32_t len, uint32_t &remain_length_value, uint8_t &remain_length_bytes);
 
 class CMqttPkt
 {
@@ -25,7 +25,7 @@ public:
     {
     }
     
-    int read_remain_lenght(uint32_t &remain_length_value, uint8_t &remain_length_bytes);
+    int read_remain_length(uint32_t &remain_length_value, uint8_t &remain_length_bytes);
     int read_byte(uint8_t &value);
     
     int read_byte(std::vector<uint8_t> &payload, int len);
@@ -33,7 +33,7 @@ public:
     int read_short(uint16_t &value);
     int read_string(std::string &str);
     
-    int write_remain_lenght(uint32_t length, uint8_t &remain_length_bytes);
+    int write_remain_length(uint32_t length, uint8_t &remain_length_bytes);
     int write_byte(uint8_t value);
     int write_byte(uint8_t *buf, int size);
     int write_short(uint16_t value);

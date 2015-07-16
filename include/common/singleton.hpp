@@ -8,13 +8,16 @@ template<typename T>
 class CSingleton
 {
     public:
-	static T& getInstance()
+	static T * instance()
 	{
 	    static T value;
-	    return value;
+	    return &value;
 	}
 
     private:
 	CSingleton();
 	~CSingleton();
 };
+
+#endif
+

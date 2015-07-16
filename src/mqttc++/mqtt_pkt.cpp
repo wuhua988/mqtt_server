@@ -10,8 +10,8 @@
 #include <string>
 
 
-// -1 failed -2 need more data, > 0 remain_lenght_value
-int remain_lenght(uint8_t *pkt_buf, uint32_t len, uint32_t &remain_length_value, uint8_t &remain_length_bytes)
+// -1 failed -2 need more data, > 0 remain_length_value
+int remain_length(uint8_t *pkt_buf, uint32_t len, uint32_t &remain_length_value, uint8_t &remain_length_bytes)
 {
     const int POS_START_OF_REMAIN_LENGTH = 1; // start by 1
     uint8_t *buf = pkt_buf + POS_START_OF_REMAIN_LENGTH;
@@ -30,7 +30,7 @@ int remain_lenght(uint8_t *pkt_buf, uint32_t len, uint32_t &remain_length_value,
         
         if ((byte_value&0x80) == 0) /* the last bytes */
         {
-	    LOG_DEBUG("remain_lenght::Find last byte [0x%02x], offset [%d], remain len bytes [%d]",
+	    LOG_DEBUG("remain_length::Find last byte [0x%02x], offset [%d], remain len bytes [%d]",
 									byte_value, offset, offset + 1);
             last_byte_found = true;
             break;
@@ -56,7 +56,7 @@ int remain_lenght(uint8_t *pkt_buf, uint32_t len, uint32_t &remain_length_value,
     return remain_length_value;
 }
 
-int CMqttPkt::read_remain_lenght(uint32_t &remain_length_value, uint8_t &remain_length_bytes)
+int CMqttPkt::read_remain_length(uint32_t &remain_length_value, uint8_t &remain_length_bytes)
 {
     // Fix header has 2 bytes length
     if (left_size() < 2)
@@ -65,7 +65,7 @@ int CMqttPkt::read_remain_lenght(uint32_t &remain_length_value, uint8_t &remain_
     }
     
     int res = 0;
-    if ((res = remain_lenght(m_buf_ptr, m_max_size,remain_length_value,remain_length_bytes)) < 0)
+    if ((res = remain_length(m_buf_ptr, m_max_size,remain_length_value,remain_length_bytes)) < 0)
     {
         LOG_DEBUG("CMqttPkt::Get remain lenght failed, reason %d [-2 need more data]", res);
         return res;
@@ -175,7 +175,7 @@ int CMqttPkt::read_string(std::string &str)
 
 // ==========  write data to pkt ============
 
-int CMqttPkt::write_remain_lenght(uint32_t length, uint8_t &remain_length_bytes)
+int CMqttPkt::write_remain_length(uint32_t length, uint8_t &remain_length_bytes)
 {
     // const int POS_START_OF_REMAIN_LENGTH = 1; // start by 1
     
@@ -293,16 +293,16 @@ int main()
     
     printf("FixHeader 0x%x\n", fix_header);
     
-    uint32_t remain_lenght_value = 0;
+    uint32_t remain_length_value = 0;
     uint8_t  reamin_length_bytes = 0;
     
-    if (mqtt_msg_pkt.read_remain_lenght(remain_lenght_value, reamin_length_bytes) < 0)
+    if (mqtt_msg_pkt.read_remain_length(remain_length_value, reamin_length_bytes) < 0)
     {
-        printf("Get remain_lenght failed\n");
+        printf("Get remain_length failed\n");
         return -1;
     }
     
-    printf("Get remain lenght %d, bytes %d\n", remain_lenght_value, reamin_length_bytes);
+    printf("Get remain lenght %d, bytes %d\n", remain_length_value, reamin_length_bytes);
     
     std::string str_protocol_name;
     if (mqtt_msg_pkt.read_string(str_protocol_name) < 0)

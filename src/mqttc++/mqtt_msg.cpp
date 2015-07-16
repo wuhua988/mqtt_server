@@ -55,7 +55,7 @@ int CMqttMsg::decode()
     
     m_fixed_header.decode(fixed_header);
     
-    if (m_mqtt_pkt.read_remain_lenght(m_remain_length_value, m_remain_length_bytes) < 0)
+    if (m_mqtt_pkt.read_remain_length(m_remain_length_value, m_remain_length_bytes) < 0)
     {
         LOG_DEBUG("CMqttMsg::Get remain_lenght failed");
         return -1;
@@ -190,7 +190,7 @@ int CMqttConnAck::encode()
     CMqttMsg::encode();
     
     m_remain_length_value = 2;
-    m_mqtt_pkt.write_remain_lenght(m_remain_length_value, m_remain_length_bytes);
+    m_mqtt_pkt.write_remain_length(m_remain_length_value, m_remain_length_bytes);
     
     m_reserved = 0;
     m_mqtt_pkt.write_byte(m_reserved);
@@ -275,7 +275,7 @@ int CMqttSubAck::encode()
     CMqttMsg::encode();
     
     m_remain_length_value = m_sub_qos.size() + 2; // 2: msg_id
-    m_mqtt_pkt.write_remain_lenght(m_remain_length_value, m_remain_length_bytes);
+    m_mqtt_pkt.write_remain_length(m_remain_length_value, m_remain_length_bytes);
     
     m_mqtt_pkt.write_short(m_msg_id);
     
@@ -361,7 +361,7 @@ int CMqttUnsubAck::encode()
     CMqttMsg::encode();
     
     m_remain_length_value =  0x02; // 2: msg_id
-    m_mqtt_pkt.write_remain_lenght(m_remain_length_value, m_remain_length_bytes);
+    m_mqtt_pkt.write_remain_length(m_remain_length_value, m_remain_length_bytes);
     
     m_mqtt_pkt.write_short(m_msg_id);
     
@@ -445,7 +445,7 @@ int CMqttPingResp::encode()
     CMqttMsg::encode();
     
     m_remain_length_value =  0x0;
-    m_mqtt_pkt.write_remain_lenght(m_remain_length_value, m_remain_length_bytes);
+    m_mqtt_pkt.write_remain_length(m_remain_length_value, m_remain_length_bytes);
     
     
     uint32_t pkt_len = 2; // include fixed header

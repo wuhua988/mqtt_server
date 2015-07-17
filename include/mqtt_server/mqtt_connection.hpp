@@ -10,12 +10,10 @@
 #define ____mqtt_connection__
 
 #include "reactor/define.hpp"
-#include "reactor/poller_epoll.hpp"
 #include "reactor/event_handler.hpp"
-#include "mqtt_server/mqtt_connection.hpp"
-#include "mqtt_server/subscriber_mgr.hpp"
+#include "mqtt_server/mqtt_context.hpp"
 
-//#include "mqtt_server/mqtt_logic.hpp"
+class CPoller;
 
 namespace reactor
 {

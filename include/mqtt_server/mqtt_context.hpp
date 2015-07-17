@@ -4,6 +4,8 @@
 #include "reactor/define.hpp"
 #include "mqttc++/mqtt_msg.hpp"
 
+#include <list>
+
 namespace reactor // later --> mqtt_server
 {
     class CMqttPubMessage

@@ -1,4 +1,6 @@
 #include "mqttc++/mqtt_msg.hpp"
+#include "reactor/poller_epoll.hpp" 
+#include "mqtt_server/subscriber_mgr.hpp"
 #include "mqtt_server/mqtt_connection.hpp"
 
 int write_n(int fd, char *buf, ssize_t len)
@@ -287,20 +289,8 @@ namespace reactor
         // copy buf and send to other client
         CMbuf_ptr mbuf_pub  = make_shared<CMbuf>(len);
         mbuf_pub->copy(buf, len);
-        
-        CONTEXT_SET client_context_set;
-        
-        if (SUB_MGR->find_client_context(publish.topic_name(), client_context_set) != -1)
-        {
-            for (auto it = client_context_set.begin(); it != client_context_set.end(); it++)
-            {
-                auto mqtt_conn = (*it)->mqtt_connection();
-                if (mqtt_conn != nullptr)
-                {
-                    mqtt_conn->put(mbuf_pub);
-                }
-            }
-        }
+       
+	SUB_MGR->publish(publish.topic_name(), mbuf_pub);
         
         CMbuf_ptr mbuf_pub_ack = make_shared<CMbuf>(64);
         CMqttPublishAck  pub_ack(mbuf_pub_ack->write_ptr(),mbuf_pub_ack->max_size(),publish.msg_id());

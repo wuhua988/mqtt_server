@@ -10,7 +10,7 @@
 
 extern int g_run;
 
-namespace reactor
+namespace reactor // later -> mqtt_server
 {
     int TCPServer::open(void *)
     {
@@ -34,8 +34,8 @@ namespace reactor
                  m_server_address.get_ip().c_str(),m_server_address.get_port() );
         
         m_running_flag = true;
-    
-	return 0;
+        
+        return 0;
     }
     
     int TCPServer::loop()

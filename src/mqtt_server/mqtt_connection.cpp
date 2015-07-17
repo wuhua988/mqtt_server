@@ -1,5 +1,5 @@
-#include "mqtt_server/mqtt_connection.hpp" 
 #include "mqttc++/mqtt_msg.hpp"
+#include "mqtt_server/mqtt_connection.hpp"
 
 int write_n(int fd, char *buf, ssize_t len)
 {
@@ -37,29 +37,14 @@ int write_n(int fd, char *buf, ssize_t len)
 
 namespace reactor
 {
+
+    
     int CMqttConnection::handle_input(socket_t UNUSED(sock_id))
     {
         LOG_TRACE_METHOD(__func__);
         
-        char *buf = NULL;
-        
-        if (this->m_recv_mbuf.get() == nullptr)
-        {
-            LOG_DEBUG("m_recv_buf ptr is null , allocate new one");
-            m_recv_mbuf = make_shared<CMbuf>(16384);
-        }
-        
-        if (this->m_recv_mbuf.get() == nullptr)
-        {
-            LOG_ERROR("Get mbuf failed. pointer is null");
-            return -1;
-        }
-        
-        buf = (char *)m_recv_mbuf->write_ptr();
-        int max_size = m_recv_mbuf->available_buf();
-        
-        
-        int read_len = ::read(this->m_sock_handle, buf, max_size);
+        // maybe some data left in last read
+        int read_len = ::read(this->m_sock_handle, m_recv_buffer + m_cur_buf_pos, CMqttConnection::MAX_BUF_SIZE - m_cur_buf_pos);
         
         LOG_DEBUG("handle_input read data len %d, socket [%d]", read_len, this->m_sock_handle);
         if (read_len <= 0)
@@ -69,25 +54,80 @@ namespace reactor
             return -1;
         }
         
-        m_recv_mbuf->write_ptr(read_len);
-        
         m_recv_times++;
         m_recv_bytes += read_len;
         
-        return this->process_mqtt(m_recv_mbuf);
+        m_cur_buf_pos = read_len;
         
+        return this->process_mqtt(m_recv_buffer, read_len);
+    }
+    
+    int CMqttConnection::process_mqtt(uint8_t *buf, uint32_t len)
+    {
+        // first check is a full pkt
+        uint32_t remain_length_value = 0;
+        uint8_t remain_length_bytes = 0;
+        
+        // -1 failed -2 need more data, > 0 remain_length_value
+        uint32_t offset = 0;
+        
+        // split multi pkt and process each
+        while (offset < len)
+        {
+            int remain_len = remain_length(buf + offset, len - offset, remain_length_value, remain_length_bytes);
+            if (remain_len == NEED_MORE_DATA)
+            {
+                LOG_DEBUG("We need more data to decode pkt, maybe should copy last part data to buffer header");
+                
+                // | A | B | C |
+                //           ^
+                //           |
+                //          len
+                
+                if (offset != 0)
+                {
+                    int left_size = len - offset;
+                    memmove(buf, buf + offset, left_size); // memmove can deal overlap situation
+                
+                    m_cur_buf_pos = left_size;
+                }
+                    return 0;
+            }
+            else if (remain_len == FAILTURE) // decode failed
+            {
+                return -1;      // close this socket
+            }
+            
+	    uint32_t pkt_total_len = remain_len + remain_length_bytes + 1; // 1 for fixed header
+
+            // move body function to a mqtt_class
+            if (this->process(buf + offset, pkt_total_len, this) < 0)
+            {
+                return -1;    // something wrong close this socket
+            }
+            
+            offset += pkt_total_len;
+        }
+
+	// all pkts have dealt, so reset buf pos
+	m_cur_buf_pos = 0;
+        
+        return 0;
     }
     
     int CMqttConnection::handle_close(socket_t)
     {
         LOG_TRACE_METHOD(__func__);
         CEventHandler::close();
+        
+        // check clean session flag
+        if (m_client_context.get() != nullptr)
+	{
+	    m_client_context->mqtt_connection(nullptr);
+	}
 
-	// check clean session flag
-	m_client_context->mqtt_connection(nullptr);
-
-	// #include <inttypes.h>
-	// printf("uint64: %"PRIu64"\n", u64);
+        // #include <inttypes.h>
+        // printf("uint64: %"PRIu64"\n", u64);
         LOG_INFO("Summery Client Recv times %ld, bytes %ld, Send times %ld, bytes %ld, schedule write times %ld, cancel %ld",
                  this->m_recv_times,
                  this->m_recv_bytes,
@@ -101,268 +141,335 @@ namespace reactor
         return 0;
     }
     
-    int CMqttConnection::process_http(CMbuf_ptr &mbuf)
+    // --> later move to CMqttLogic class
+    int CMqttConnection::process(uint8_t *buf, uint32_t len, CMqttConnection *mqtt_connection)
     {
-        const char *http_header = "HTTP/1.1 200 ok \r\nContent-Length:5\r\n\r\nHello";
-        const int http_header_len = strlen(http_header);
+        MqttType msg_type = (MqttType)((buf[0]&0xF0)>>4);
         
-        // we don't care read content
-        mbuf->reset();
-        mbuf->copy((uint8_t *)http_header, http_header_len);
+        int res = 0;
         
-        return this->put(mbuf);
-    }
-    
-    int CMqttConnection::process_echo(CMbuf_ptr &mbuf)
-    {
-        return this->put(mbuf);
-    }
-    
-    int CMqttConnection::process_echo()
-    {
-        char buf[16384];
-        int max_size = 16384;
-        int read_len = ::read(this->m_sock_handle, buf, max_size);
-        
-        if (read_len <= 0)
+        switch(msg_type)
         {
+            case MqttType::CONNECT:
+            {
+                res = this->handle_connect_msg(buf, len, mqtt_connection);
+                break;
+            }
+                
+            case MqttType::PUBLISH:
+            {
+                res = this->handle_publish_msg(buf, len, mqtt_connection);
+                break;
+            }
+                
+            case MqttType::PUBACK:
+            {
+                res = this->handle_puback_msg(buf, len, mqtt_connection);
+                break;
+            }
+                
+            case MqttType::SUBSCRIBE:
+            {
+                res = this->handle_subscribe_msg(buf, len, mqtt_connection);
+                break;
+            }
+                
+            case  MqttType::UNSUBSCRIBE:
+            {
+                res = this->handle_unsubscribe_msg(buf, len, mqtt_connection);
+                break;
+            }
+                
+            case MqttType::PINGREQ:
+            {
+                res = this->handle_pingreq_msg(buf, len, mqtt_connection);
+                break;
+            }
+                
+            case MqttType::DISCONNECT:
+            {
+                res = this->handle_disconnect_msg(buf, len, mqtt_connection);;
+                break;
+            }
+                
+            default:
+            {
+                res = -1;
+                LOG_INFO("Undealed msg type %d", msg_type);
+                break;
+            }
+        } // end of switch
+        
+        return res;
+    }
+    
+    int CMqttConnection::handle_connect_msg(uint8_t *buf, uint32_t len, CMqttConnection *mqtt_connection)
+    {
+        if (mqtt_connection == nullptr)
+        {
+            LOG_DEBUG("mqtt_connection should not be nullptr");
             return -1;
         }
         
-        return ::write_n(this->m_sock_handle, buf, read_len);
+        int res = 0;
+        CMqttConnect conn_msg(buf,len);
+        
+        if (conn_msg.decode() < 0)
+        {
+            LOG_DEBUG("Connect decode failed");
+            return -1;
+        }
+        
+        conn_msg.print();
+       
+	CMqttConnAck::Code ack_code = CMqttConnAck::Code::ACCEPTED;
+        /*check protocol name/version, user_name, passwd, client_id*/
+        // todo later
+        
+        // not have client_context now, TODOLIST:: move to CMqttConnection open()
+        CMqttClientContext_ptr &cli_context = mqtt_connection->client_context();
+        
+        if (cli_context.get() == nullptr)
+        {
+            // find client context from client_id -> client_context
+            //if (find not found) //
+            //{
+                cli_context = make_shared<CTMqttClientContext>(mqtt_connection);
+            //}
+            //else
+            //{
+            //}
+            
+            cli_context->mqtt_connection(mqtt_connection);
+            cli_context->client_id(conn_msg.client_id());
+            
+            //cli_context->init(CMqttConnect conn_msg);
+        }
+        
+        CMbuf_ptr mbuf = make_shared<CMbuf>(32); // 32 enough for connack
+        
+        CMqttConnAck con_ack(mbuf->write_ptr(),mbuf->max_size(), ack_code);
+        
+        int enc_len = 0;
+        if ((enc_len = con_ack.encode()) < 0)
+        {
+            res = -1;
+        }
+        else
+        {
+            mbuf->write_ptr(enc_len);
+            if (mqtt_connection != nullptr)
+            {
+                res = mqtt_connection->put(mbuf);
+            }
+        }
+        
+        return res;
     }
     
-    int CMqttConnection::process_mqtt(CMbuf_ptr &mbuf)
+    int CMqttConnection::handle_publish_msg(uint8_t *buf, uint32_t len, CMqttConnection *mqtt_connection)
     {
-	// first check is a full pkt
-	uint32_t remain_length_value = 0;
-	uint8_t remain_length_bytes = 0;
-	
-	// -1 failed -2 need more data, > 0 remain_length_value
-	int res = remain_length(mbuf->read_ptr(), mbuf->length(), 
-				    remain_length_value, remain_length_bytes);
+        if (mqtt_connection == nullptr)
+        {
+            LOG_DEBUG("mqtt_connection should not be nullptr");
+            return -1;
+        }
+        
+        CMqttPublish publish(buf,len);
+        if (publish.decode() < 0)
+        {
+            LOG_INFO("publish decode failed");
+            return -1;
+        }
+        
+        publish.print();
+        
+        // copy buf and send to other client
+        CMbuf_ptr mbuf_pub  = make_shared<CMbuf>(len);
+        mbuf_pub->copy(buf, len);
+        
+        CONTEXT_SET client_context_set;
+        
+        if (SUB_MGR->find_client_context(publish.topic_name(), client_context_set) != -1)
+        {
+            for (auto it = client_context_set.begin(); it != client_context_set.end(); it++)
+            {
+                auto mqtt_conn = (*it)->mqtt_connection();
+                if (mqtt_conn != nullptr)
+                {
+                    mqtt_conn->put(mbuf_pub);
+                }
+            }
+        }
+        
+        CMbuf_ptr mbuf_pub_ack = make_shared<CMbuf>(64);
+        CMqttPublishAck  pub_ack(mbuf_pub_ack->write_ptr(),mbuf_pub_ack->max_size(),publish.msg_id());
+      
+	int res = 0;
+	int enc_len = 0;
 
-	if (res == NEED_MORE_DATA)
-	{
-	    LOG_INFO("We need more data");
-	    return 0;
-	}
-	else if (res == FAILTURE)
-	{
-	    return -1;
-	}
-
-	// full pkt here
-	uint8_t *pread = mbuf->read_ptr();
-	uint32_t length = mbuf->length();
-	MqttType msg_type = (MqttType)((pread[0]&0xF0)>>4);
-
-	res = 0;
-
-	int enc_len = 0; 
-
-	switch(msg_type)
-	{
-	    case MqttType::CONNECT:
-		{
-		    CMqttConnect conn(pread,length);
-		    if (conn.decode() < 0)
-		    {
-			LOG_INFO("Connect decode failed");
-			res = -1;
-
-			break;
-		    }
-
-		    conn.print();
-		    
-		    m_client_context = make_shared<CTMqttClientContext>();
-		    
-		    m_client_context->mqtt_connection(this);
-		    m_client_context->client_id(conn.client_id());
-
-		    mbuf->reset();
-		    length = mbuf->max_size();
-
-		    CMqttFixedHeader fixed_header(MqttType::CONNACK);
-		    CMqttConnAck con_ack(pread,length,fixed_header, CMqttConnAck::Code::ACCEPTED);
-		    
-		    enc_len = 0;
-		    if ((enc_len = con_ack.encode()) < 0)
-		    {
-			res = -1;
-		    }
-		    else
-		    {
-			mbuf->write_ptr(enc_len);
-		    }
-
-		    break;
-		}
-
-	    case MqttType::PUBLISH:
-		{
-		    CMqttPublish publish(pread,length);
-		    if (publish.decode() < 0)
-		    {
-			LOG_INFO("publish decode failed");
-			res = -1;
-			break;
-		    }
-		    
-		    publish.print();
-
-		    // copy buf and send to other client
-		    CMbuf_ptr mbuf_publish = mbuf;
-		    CONTEXT_SET client_context_set;
-
-		    if (SUB_MGR->find_client_context(publish.topic_name(), client_context_set) != -1)
-		    {
-			for (auto it = client_context_set.begin(); it != client_context_set.end(); it++)
-			{
-			    auto mqtt_conn = (*it)->mqtt_connection();
-			    if (mqtt_conn != nullptr)
-			    {
-				mqtt_conn->put(mbuf_publish);
-			    }
-			}
-		    }
-
-
-		    mbuf = make_shared<CMbuf>(64);
-		    pread = mbuf->read_ptr();
-		    length  = mbuf->max_size();
-
-		    // mbuf->reset();
-		    CMqttFixedHeader fixed_header(MqttType::PUBACK);
-		    CMqttPublishAck  pub_ack(pread,length,fixed_header, publish.msg_id());
-		    if ((enc_len = pub_ack.encode()) < 0)
-		    {
-			res = -1;
-		    }
-		    else
-		    {
-			mbuf->write_ptr(enc_len); 
-		    }
+        if ((enc_len = pub_ack.encode()) < 0)
+        {
+            res = -1;
+        }
+        else
+        {
+            mbuf_pub_ack->write_ptr(enc_len);
+            if (mqtt_connection != nullptr)
+            {
+                res = mqtt_connection->put(mbuf_pub_ack);
+            }
+        }
+        
+        return res;
+    }
     
-		    break;
-		}
+    int CMqttConnection::handle_puback_msg(uint8_t *UNUSED(buf), uint32_t UNUSED(len), CMqttConnection *mqtt_connection)
+    {
+        if (mqtt_connection == nullptr)
+        {
+            LOG_DEBUG("mqtt_connection should not be nullptr");
+            return -1;
+        }
+        
+        // get msg_id, and deal with msg in db
+        
+        return 0;
+    }
+    
+    int  CMqttConnection::handle_subscribe_msg(uint8_t *buf, uint32_t len, CMqttConnection *mqtt_connection)
+    {
+        if (mqtt_connection == nullptr)
+        {
+            LOG_DEBUG("mqtt_connection should not be nullptr");
+            return -1;
+        }
+        
+        CMqttSubscribe sub(buf,len);
+        if (sub.decode() < 0)
+        {
+            LOG_INFO("Sub decode failed");
+            return -1;
+        }
+        
+        sub.print();
+        
+        // add cli_context to topic_name
+        std::vector<std::string> topics = sub.topics_name();
+        for (auto it = topics.begin(); it != topics.end(); it++)
+        {
+            SUB_MGR->add_client_context(*it, mqtt_connection->client_context());
+        }
+        
+        SUB_MGR->print();
+        
+        CMbuf_ptr mbuf_sub_ack = make_shared<CMbuf>(64);
+        CMqttSubAck sub_ack(mbuf_sub_ack->write_ptr(),mbuf_sub_ack->max_size(), sub.msg_id(), sub.topics_qos());
+       
+	int res = 0;
+	int enc_len = 0;
 
-	    case MqttType::PUBACK:
-		{
-		    return 0;
-		    break;
-		}
+        if ((enc_len = sub_ack.encode()) < 0)
+        {
+            res = -1;
+        }
+        else
+        {
+            mbuf_sub_ack->write_ptr(enc_len);
+            if (mqtt_connection != nullptr)
+            {
+                res = mqtt_connection->put(mbuf_sub_ack);
+            }
+        }
+        
+        return res;
+    }
+    
+    int  CMqttConnection::handle_unsubscribe_msg(uint8_t *buf, uint32_t len, CMqttConnection *mqtt_connection)
+    {
+        if (mqtt_connection == nullptr)
+        {
+            LOG_DEBUG("mqtt_connection should not be nullptr");
+            return -1;
+        }
+        
+        CMqttUnsubscribe un_sub(buf,len);
+        if (un_sub.decode() < 0)
+        {
+            LOG_INFO("UNSub decode failed");
+            return -1;
+        }
+        
+        un_sub.print();
+        
+        CMbuf_ptr mbuf_unsub_ack = make_shared<CMbuf>(64);
+        
+        // CMqttFixedHeader fixed_header(MqttType::UNSUBACK);
+        // CMqttUnsubAck unsub_ack(mbuf_unsub_ack->write_ptr(), mbuf_unsub_ack.max_size(), fixed_header, un_sub.msg_id());
+        
+        CMqttUnsubAck unsub_ack(mbuf_unsub_ack->write_ptr(), mbuf_unsub_ack->max_size(), un_sub.msg_id());
+     
+	int res = 0;
+	int enc_len = 0;
 
-	    case MqttType::SUBSCRIBE:
-		{
-		    CMqttSubscribe sub(pread,length);
-		    if (sub.decode() < 0)
-		    {
-			LOG_INFO("Sub decode failed");
-			res = -1;
-		    }
+        if ((enc_len = unsub_ack.encode()) < 0)
+        {
+            res = -1;
+        }
+        else
+        {
+            mbuf_unsub_ack->write_ptr(enc_len);
+            if (mqtt_connection != nullptr)
+            {
+                res = mqtt_connection->put(mbuf_unsub_ack);
+            }
+        }
+        
+        return res;
+    }
+    
+    int  CMqttConnection::handle_pingreq_msg(uint8_t *UNUSED(buf), uint32_t UNUSED(len), CMqttConnection *mqtt_connection)
+    {
+        if (mqtt_connection == nullptr)
+        {
+            LOG_DEBUG("mqtt_connection should not be nullptr");
+            return -1;
+        }
+        
+        CMbuf_ptr mbuf_pingresp = make_shared<CMbuf>(4);
+        
+        // CMqttFixedHeader fixed_header(MqttType::PINGRESP);
+        // CMqttPingResp ping_rsp(mbuf_pingresp->write_ptr(), mbuf_pingresp->max_size(), fixed_header);
+        CMqttPingResp ping_rsp(mbuf_pingresp->write_ptr(), mbuf_pingresp->max_size());
+     
+	int res = 0;
+	int enc_len = 0;
 
-		    sub.print();   
-		    
-		    // add cli_context to topic_name
-		    std::vector<std::string> topics = sub.topics_name(); 
-		    for (auto it = topics.begin(); it != topics.end(); it++)
-		    {
-			SUB_MGR->add_client_context(*it, m_client_context);
-		    }
-
-		    SUB_MGR->print();
-
-		    mbuf->reset();
-		    length = mbuf->max_size();
-
-		    CMqttFixedHeader fixed_header(MqttType::SUBACK);
-		    CMqttSubAck sub_ack(pread,length, fixed_header, sub.msg_id(), sub.topics_qos());
-
-		    if ((enc_len = sub_ack.encode()) < 0)
-		    {
-			res = -1;
-		    }
-		    else
-		    {
-			mbuf->write_ptr(enc_len);  
-		    }
-
-		    break;
-		}
-
-	    case  MqttType::UNSUBSCRIBE:
-		{
-		    CMqttUnsubscribe un_sub(pread,length);
-		    if (un_sub.decode() < 0)
-		    {
-			LOG_INFO("UNSub decode failed");
-			res = -1;
-		    }
-
-		    un_sub.decode();
-
-		    mbuf->reset();
-		    length = mbuf->max_size();
-		    CMqttFixedHeader fixed_header(MqttType::UNSUBACK);
-		    
-		    CMqttUnsubAck unsub_ack(pread, length, fixed_header, un_sub.msg_id());
-		    if ((enc_len = unsub_ack.encode()) < 0)
-		    {
-			res = -1;
-		    }
-		    else
-		    {
-			mbuf->write_ptr(enc_len);
-		    }
-
-		    break;
-		}
-
-	    case MqttType::PINGREQ:
-		{
-		    mbuf->reset(); 
-		    
-		    length = mbuf->max_size();
-
-		    CMqttFixedHeader fixed_header(MqttType::PINGRESP); 
-		    CMqttPingResp ping_rsp(pread, length, fixed_header);
-		    if ((enc_len = ping_rsp.encode()) < 0) 
-		    {
-			res = -1;
-		    }
-		    else
-		    {
-			mbuf->write_ptr(enc_len);  
-		    }
-
-		    break;
-		}
-
-	    case MqttType::DISCONNECT:
-		{
-		    res = -1;
-		    break;
-		}
-
-	    default:
-		{
-		    res = -1;
-		    LOG_INFO("Undealed msg type %d", msg_type);
-		    break;
-		}
-	}
-	
-	if (res == -1)
-	{
-	    mbuf->reset();
-	    return -1;
-	}
-
-	CMbuf_ptr mbuf_copy = mbuf;
-	m_recv_mbuf = make_shared<CMbuf>(16384);
-	return this->put(mbuf_copy); 
+        if ((enc_len = ping_rsp.encode()) < 0)
+        {
+            res = -1;
+        }
+        else
+        {
+            mbuf_pingresp->write_ptr(enc_len);
+            if (mqtt_connection != nullptr)
+            {
+                res = mqtt_connection->put(mbuf_pingresp);
+            }
+        }
+        
+        return res;
+    }
+    
+    int CMqttConnection::handle_disconnect_msg(uint8_t *UNUSED(buf), uint32_t UNUSED(len), CMqttConnection *mqtt_connection)
+    {
+        if (mqtt_connection == nullptr)
+        {
+            LOG_DEBUG("mqtt_connection should not be nullptr");
+            return -1;
+        }
+        
+        return 0;
     }
 
 } // end of namespace

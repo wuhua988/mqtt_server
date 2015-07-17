@@ -21,7 +21,7 @@ class CMqttPkt
 {
 public:
     CMqttPkt(uint8_t *buf, uint32_t len)
-        :m_offset(0), m_max_size(len), m_buf_ptr(buf), m_remain_length_value(0), m_remain_length_bytes(0)
+    :m_offset(0), m_max_size(len), m_buf_ptr(buf), m_remain_length_value(0), m_remain_length_bytes(0)
     {
     }
     
@@ -38,7 +38,7 @@ public:
     int write_byte(uint8_t *buf, int size);
     int write_short(uint16_t value);
     int write_string(uint8_t *buf, int size);
-                                                                                                       
+    
     uint32_t length()
     {
         return m_offset;
@@ -48,7 +48,7 @@ public:
     {
         return m_max_size - m_offset;
     }
-
+    
 protected:
     bool has_remain_len(uint8_t value)
     {

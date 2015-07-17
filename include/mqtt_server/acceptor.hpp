@@ -1,6 +1,6 @@
 //
 //  acceptor.h
-//  
+//
 //
 //  Created by davad.di on 7/15/15.
 //

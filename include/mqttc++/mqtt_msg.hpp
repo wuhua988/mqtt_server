@@ -50,7 +50,7 @@ typedef union
     uint8_t all;
     struct
     {
-        uint8_t:1;                            /**< unused */
+    uint8_t:1;                            /**< unused */
         uint8_t    clean_session:1;
         uint8_t    will:1;
         uint8_t    will_qos:2;
@@ -67,54 +67,54 @@ public:
     CMqttFixedHeader()
     {
     }
-
+    
     void msg_type(MqttType msg_type)
     {
-	m_msg_type = msg_type;
+        m_msg_type = msg_type;
     }
-
+    
     MqttType msg_type()
     {
-	return m_msg_type;
+        return m_msg_type;
     }
-
+    
     void dup_flag(bool dup_flag)
     {
-	m_dup_flag = dup_flag;
+        m_dup_flag = dup_flag;
     }
     
     bool dup_flag()
     {
-	return m_dup_flag;
+        return m_dup_flag;
     }
-
+    
     void retain_flag(bool retain_flag)
     {
-	m_retain_flag = retain_flag;
+        m_retain_flag = retain_flag;
     }
-
+    
     bool retain_flag()
     {
-	return m_retain_flag;
+        return m_retain_flag;
     }
-
+    
     void qos(uint8_t qos)
     {
-	m_qos = qos;
+        m_qos = qos;
     }
-
+    
     uint8_t qos()
     {
-	return m_qos;
+        return m_qos;
     }
-
+    
     CMqttFixedHeader(MqttType msg_type)
-	: m_msg_type(msg_type),m_dup_flag(0), m_qos(0), m_retain_flag(0)
+    : m_msg_type(msg_type),m_dup_flag(0), m_qos(0), m_retain_flag(0)
     {
     }
-
+    
     CMqttFixedHeader(MqttType msg_type, bool dup_flag, uint8_t qos, bool retain_flag)
-                    : m_msg_type(msg_type),m_dup_flag(dup_flag), m_qos(qos), m_retain_flag(retain_flag)
+    : m_msg_type(msg_type),m_dup_flag(dup_flag), m_qos(qos), m_retain_flag(retain_flag)
     {
     }
     
@@ -130,7 +130,7 @@ protected:
     
     uint8_t     m_qos;
     bool        m_retain_flag;
-
+    
 };
 
 //--------------------* Connect and Ack *---------------------------
@@ -142,16 +142,21 @@ public:
     }
     
     CMqttMsg(uint8_t *buf, int len, CMqttFixedHeader fixed_header)  // for encode
-                    :m_fixed_header(fixed_header), m_mqtt_pkt(buf, len)
+    :m_fixed_header(fixed_header), m_mqtt_pkt(buf, len)
+    {
+    }
+    
+    CMqttMsg(uint8_t *buf, int len, MqttType msg_type)  // for encode
+    :m_fixed_header(msg_type), m_mqtt_pkt(buf, len)
     {
     }
     
     // -1 failed. 0 success
     int decode();
-
+    
     int encode();
-
-
+    
+    
 protected:
     CMqttFixedHeader m_fixed_header;
     uint32_t         m_remain_length_value;
@@ -163,7 +168,7 @@ protected:
 class CMqttConnect : public CMqttMsg    // decode
 {
 public:
-
+    
     CMqttConnect(uint8_t *buf, int len) : CMqttMsg(buf, len)
     {
     }
@@ -172,71 +177,71 @@ public:
     int decode();
     
     void print();
-
+    
     std::string & proto_name()
     {
-	return m_str_proto_name;
+        return m_str_proto_name;
     }
-
+    
     uint8_t proto_version()
     {
-	return m_proto_version;
+        return m_proto_version;
     }
-
+    
     bool has_user_name()
     {
-	return m_has_user_name;
+        return m_has_user_name;
     }
-
+    
     bool has_passwd()
     {
-	return m_has_password;
+        return m_has_password;
     }
-
-
+    
+    
     bool has_will()
     {
-	return m_has_will;
+        return m_has_will;
     }
-
+    
     uint8_t will_qos()
     {
-	return m_will_qos;
+        return m_will_qos;
     }
-
+    
     bool clean_session()
     {
-	return m_clean_session;
+        return m_clean_session;
     }
-
+    
     uint16_t keep_alive()
     {
-	return m_keep_alive;
+        return m_keep_alive;
     }
-
+    
     std::string & client_id()
     {
-	return m_str_client_id;
+        return m_str_client_id;
     }
-
+    
     std::string & will_topic()
     {
-	return m_str_will_topic;
+        return m_str_will_topic;
     }
-
+    
     std::string & will_message()
     {
-	return m_str_will_message;
+        return m_str_will_message;
     }
-
+    
     std::string & user_name()
     {
-	return m_str_user_name;
+        return m_str_user_name;
     }
-
+    
     std::string & password()
     {
-	return m_str_password;
+        return m_str_password;
     }
     
 protected:
@@ -272,14 +277,21 @@ public:
     };
     
     CMqttConnAck(uint8_t *buf, int len, CMqttFixedHeader fixed_header, Code code)
-                                            : CMqttMsg(buf, len, fixed_header),m_code(code)
+    : CMqttMsg(buf, len, fixed_header),m_code(code)
     {
     }
-
+    
+    CMqttConnAck(uint8_t *buf, int len, Code code)
+    : CMqttMsg(buf, len, MqttType::CONNACK),m_code(code)
+    {
+        
+    }
+    
+    
     // return encode buf lenght
     int encode();
     void print();
-
+    
 public:
     uint8_t          m_reserved;
     Code             m_code;
@@ -294,7 +306,7 @@ public:
     }
     
     CTopic(std::string topic_name, uint8_t qos)
-            :m_str_topic_name(std::move(topic_name)), m_qos(qos)
+    :m_str_topic_name(std::move(topic_name)), m_qos(qos)
     {
     }
     
@@ -302,17 +314,17 @@ public:
     {
         return (m_str_topic_name == t.m_str_topic_name && m_qos == t.m_qos);
     }
-
+    
     std::string & topic_name()
     {
-	return m_str_topic_name;
+        return m_str_topic_name;
     }
-
+    
     uint8_t qos()
     {
-	return m_qos;
+        return m_qos;
     }
-
+    
 protected:
     std::string     m_str_topic_name;
     uint8_t         m_qos;
@@ -328,40 +340,40 @@ public:
     
     int decode();
     void print();
-
+    
     uint16_t msg_id()
     {
-	return m_msg_id;
+        return m_msg_id;
     }
-
+    
     std::vector<CTopic> & sub_topics()
     {
-	return m_sub_topics;
+        return m_sub_topics;
     }
-
+    
     std::vector<std::string> topics_name()
     {
-	std::vector<std::string> topics_name;
-
-	for (auto it = m_sub_topics.begin(); it != m_sub_topics.end(); it++)
-	{
-	    topics_name.push_back(it->topic_name());
-	}
-
-	return topics_name;
+        std::vector<std::string> topics_name;
+        
+        for (auto it = m_sub_topics.begin(); it != m_sub_topics.end(); it++)
+        {
+            topics_name.push_back(it->topic_name());
+        }
+        
+        return topics_name;
     }
-
+    
     std::vector<uint8_t> topics_qos()
     {
-	std::vector<uint8_t> topics_qos;
-	for (auto it = m_sub_topics.begin(); it != m_sub_topics.end(); it++)  
-	{
-	    topics_qos.push_back(it->qos());
-	}
-
-	return topics_qos;
+        std::vector<uint8_t> topics_qos;
+        for (auto it = m_sub_topics.begin(); it != m_sub_topics.end(); it++)
+        {
+            topics_qos.push_back(it->qos());
+        }
+        
+        return topics_qos;
     }
-
+    
 protected:
     uint16_t             m_msg_id;
     std::vector<CTopic>  m_sub_topics;
@@ -372,13 +384,18 @@ class CMqttSubAck : public CMqttMsg // encode
 public:
     
     CMqttSubAck(uint8_t *buf, int len, CMqttFixedHeader fixed_header, uint16_t msg_id, std::vector<uint8_t> sub_qos)
-        : CMqttMsg(buf, len, fixed_header), m_msg_id(msg_id), m_sub_qos(sub_qos)
+    : CMqttMsg(buf, len, fixed_header), m_msg_id(msg_id), m_sub_qos(sub_qos)
+    {
+    }
+    
+    CMqttSubAck(uint8_t *buf, int len, uint16_t msg_id, std::vector<uint8_t> sub_qos)
+    : CMqttMsg(buf, len, MqttType::SUBACK), m_msg_id(msg_id), m_sub_qos(sub_qos)
     {
     }
     
     int encode();
     void print();
-
+    
 protected:
     uint16_t                m_msg_id;
     std::vector<uint8_t>    m_sub_qos;
@@ -395,17 +412,17 @@ public:
     
     int decode();
     void print();
- 
+    
     uint16_t msg_id()
     {
-	return m_msg_id;
+        return m_msg_id;
     }
-
+    
     std::vector<std::string> & topics_name()
     {
-	return m_str_topics;
+        return m_str_topics;
     }
-
+    
 protected:
     uint16_t                    m_msg_id;
     std::vector<std::string>    m_str_topics;
@@ -416,13 +433,18 @@ class CMqttUnsubAck : public CMqttMsg // encode
 public:
     
     CMqttUnsubAck(uint8_t *buf, int len, CMqttFixedHeader fixed_header, uint16_t msg_id)
-                                            : CMqttMsg(buf, len, fixed_header), m_msg_id(msg_id)
+    : CMqttMsg(buf, len, fixed_header), m_msg_id(msg_id)
+    {
+    }
+    
+    CMqttUnsubAck(uint8_t *buf, int len, uint16_t msg_id)
+    : CMqttMsg(buf, len, MqttType::UNSUBACK), m_msg_id(msg_id)
     {
     }
     
     int encode();
     void print();
-
+    
 protected:
     uint16_t        m_msg_id;
 };
@@ -441,24 +463,24 @@ public:
     {
     }
     
-    int decode(); 
+    int decode();
     void print();
-
+    
     std::string & topic_name()
     {
-	return m_str_topic_name;
+        return m_str_topic_name;
     }
-
+    
     std::vector<uint8_t> &  payload()
     {
-	return m_payload;
+        return m_payload;
     }
-
+    
     uint16_t msg_id()
     {
-	return m_msg_id;
+        return m_msg_id;
     }
-
+    
 protected:
     std::string             m_str_topic_name;
     std::vector<uint8_t>    m_payload;
@@ -466,37 +488,41 @@ protected:
 };
 
 
-typedef CMqttUnsubAck CMqttPublishAck; 
+typedef CMqttUnsubAck CMqttPublishAck;
 
 
 /*
-class CMqttDisconnect : public CMqttMsg   // no need decode, just base on msg_type
-{
-public:
-    CMqttDisconnect(uint8_t *buf, int len):CMqttMsg(buf, len)
-    {
-    }
-    
-    int decode()
-    {
-        return 0; // no need to decode
-    }
-};
-
-
-class CMqttPingReq       // no need decode, just base on msg_type
-{
-public:
-    CMqttPingReq(uint8_t *buf, int len):CMqttMsg(buf, len)
-    {
-    }
-};
+ class CMqttDisconnect : public CMqttMsg   // no need decode, just base on msg_type
+ {
+ public:
+ CMqttDisconnect(uint8_t *buf, int len):CMqttMsg(buf, len)
+ {
+ }
+ 
+ int decode()
+ {
+ return 0; // no need to decode
+ }
+ };
+ 
+ 
+ class CMqttPingReq       // no need decode, just base on msg_type
+ {
+ public:
+ CMqttPingReq(uint8_t *buf, int len):CMqttMsg(buf, len)
+ {
+ }
+ };
  */
 
 class CMqttPingResp : public CMqttMsg
 {
 public:
     CMqttPingResp(uint8_t *buf, int len, CMqttFixedHeader fixed_header):CMqttMsg(buf, len, fixed_header)
+    {
+    }
+    
+    CMqttPingResp(uint8_t *buf, int len):CMqttMsg(buf, len, MqttType::PINGRESP)
     {
     }
     

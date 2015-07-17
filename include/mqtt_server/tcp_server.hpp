@@ -1,6 +1,6 @@
 //
 //  tcp_server2.h
-//  
+//
 //
 //  Created by davad.di on 7/15/15.
 //
@@ -26,7 +26,7 @@ namespace reactor
         int open(void *data_ptr = nullptr);
         int loop();
         void stop();
-
+        
     protected:
         
         CSockAddress	m_server_address;

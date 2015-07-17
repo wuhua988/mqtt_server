@@ -10,7 +10,7 @@ void handle_sigint(int signal)
 {
     if (signal == SIGINT || signal == SIGTERM)
     {
-	g_run = 0;
+        g_run = 0;
     }
 }
 

@@ -15,6 +15,7 @@ use log4cplus-1.1.2, use static lib link. Can see include/reactor/define.hpp and
      \#define LOG_ERROR my_printf                                                                         
      \#define LOG_TRACE_METHORD my_printf                                                                 
 \#endif
+
 -------------------------------------------
 
 

@@ -36,3 +36,8 @@ mosquitto_pub -t sensors/temperature -m 32 -q 1 -h 10.1.11.34 -p 5050
 
 mqtt_sub:
 mosquitto_sub -t sensors/temperature -q 1 -h 10.1.11.34 -p 5050
+
+
+code line stat:
+$cd mqtt_server
+$cloc ./

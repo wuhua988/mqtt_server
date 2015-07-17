@@ -487,8 +487,26 @@ protected:
     uint16_t                m_msg_id;
 };
 
+class CMqttPublishAck : public CMqttMsg
+{
+public:
 
-typedef CMqttUnsubAck CMqttPublishAck;
+    CMqttPublishAck(uint8_t *buf, int len, CMqttFixedHeader fixed_header, uint16_t msg_id)
+	: CMqttMsg(buf, len, fixed_header), m_msg_id(msg_id)
+    {
+    }
+
+    CMqttPublishAck(uint8_t *buf, int len, uint16_t msg_id)
+	: CMqttMsg(buf, len, MqttType::PUBACK), m_msg_id(msg_id)
+    {
+    }
+
+    int encode();
+    void print();
+
+protected:
+    uint16_t        m_msg_id; 
+};
 
 
 /*

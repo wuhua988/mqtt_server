@@ -440,6 +440,35 @@ void CMqttPublish::print()
     LOG_DEBUG("------------------------------------------------");
 }
 
+int CMqttPublishAck::encode()                                                                         
+{                                                                                                   
+    CMqttMsg::encode();                                                                             
+    
+    m_remain_length_value =  0x02; // 2: msg_id                                                     
+    m_mqtt_pkt.write_remain_length(m_remain_length_value, m_remain_length_bytes);                   
+    
+    m_mqtt_pkt.write_short(m_msg_id);
+
+    uint32_t pkt_len = 4; // include fixed header                                                   
+    uint32_t encode_pkt_len = m_mqtt_pkt.length();                                                  
+    
+    if ( encode_pkt_len != pkt_len) // 1 for fixed header                                           
+    {                                                                                               
+	LOG_DEBUG("CMqttPublishAck:: wrong encode lenght(%d), should be (%d)", encode_pkt_len, pkt_len);
+	return -1;                                                                                  
+    }
+
+    return encode_pkt_len;                                                                          
+}                                                                                                   
+
+void CMqttPublishAck::print()                                                                         
+{                                                                                                   
+    m_fixed_header.print();                                                                         
+    LOG_DEBUG("Remain length %d, bytes %d", m_remain_length_value, m_remain_length_bytes);          
+    LOG_DEBUG("Msg id [0x%x]", m_msg_id);                                                           
+    LOG_DEBUG("------------------------------------------------");
+}
+
 int CMqttPingResp::encode()
 {
     CMqttMsg::encode();

@@ -154,43 +154,52 @@ namespace reactor
         {
             case MqttType::CONNECT:
             {
+		LOG_DEBUG("Recv mqtt CONNECT msg");
                 res = this->handle_connect_msg(buf, len, mqtt_connection);
                 break;
             }
                 
             case MqttType::PUBLISH:
             {
+		LOG_DEBUG("Recv mqtt PUBLISH msg");  
                 res = this->handle_publish_msg(buf, len, mqtt_connection);
                 break;
             }
                 
             case MqttType::PUBACK:
             {
+		LOG_DEBUG("Recv mqtt PUBACK msg");
                 res = this->handle_puback_msg(buf, len, mqtt_connection);
                 break;
             }
                 
             case MqttType::SUBSCRIBE:
             {
+		LOG_DEBUG("Recv mqtt SUBSCRIBE msg");
                 res = this->handle_subscribe_msg(buf, len, mqtt_connection);
                 break;
             }
                 
             case  MqttType::UNSUBSCRIBE:
             {
+		LOG_DEBUG("Recv mqtt UNSUBSCRIBE msg"); 
                 res = this->handle_unsubscribe_msg(buf, len, mqtt_connection);
                 break;
             }
                 
             case MqttType::PINGREQ:
             {
+		LOG_DEBUG("Recv mqtt PINGREQ msg");
                 res = this->handle_pingreq_msg(buf, len, mqtt_connection);
                 break;
             }
                 
             case MqttType::DISCONNECT:
             {
-                res = this->handle_disconnect_msg(buf, len, mqtt_connection);;
+		LOG_DEBUG("Recv mqtt DISCONNECT msg");   
+                res = this->handle_disconnect_msg(buf, len, mqtt_connection);
+
+		res = -1; // close this socket
                 break;
             }
                 

@@ -298,9 +298,8 @@ namespace reactor
         // copy buf and send to other client
         CMbuf_ptr mbuf_pub  = make_shared<CMbuf>(len);
         mbuf_pub->copy(buf, len);
-       
-	SUB_MGR->publish(publish.topic_name(), mbuf_pub);
-        
+      
+	// 1. first send ack to sender
         CMbuf_ptr mbuf_pub_ack = make_shared<CMbuf>(64);
         CMqttPublishAck  pub_ack(mbuf_pub_ack->write_ptr(),mbuf_pub_ack->max_size(),publish.msg_id());
       
@@ -319,6 +318,13 @@ namespace reactor
                 res = mqtt_connection->put(mbuf_pub_ack);
             }
         }
+
+	// publish my message
+	uint32_t start_tm = time(0); 
+	int pub_count = SUB_MGR->publish(publish.topic_name(), mbuf_pub); 
+	uint32_t diff = time(0) - start_tm;
+
+	LOG_ERROR("This publish cost %d (s) to %d clients", diff, pub_count);
         
         return res;
     }
@@ -360,8 +366,12 @@ namespace reactor
             SUB_MGR->add_client_context(*it, mqtt_connection->client_context());
         }
         
-        SUB_MGR->print();
-        
+	// change for performance
+	if (log4cplus::Logger::getRoot().isEnabledFor(log4cplus::DEBUG_LOG_LEVEL))
+	{
+	    SUB_MGR->print();
+	}
+
         CMbuf_ptr mbuf_sub_ack = make_shared<CMbuf>(64);
         CMqttSubAck sub_ack(mbuf_sub_ack->write_ptr(),mbuf_sub_ack->max_size(), sub.msg_id(), sub.topics_qos());
        

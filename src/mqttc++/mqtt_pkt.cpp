@@ -26,8 +26,15 @@ int remain_length(uint8_t *pkt_buf, uint32_t len, uint32_t &remain_length_value,
     while(offset < MAX_REMAIN_LENGTH_BYTES) /* most remain lenght 4 bytes */
     {
         uint8_t byte_value = buf[offset];
-        remain_length_value = (remain_length_value << 7)|(byte_value&0x7F);
-        
+	if (offset == 0)
+	{
+	    remain_length_value = (byte_value&0x7F);
+	}
+	else
+	{
+	    remain_length_value = ((byte_value&0x7F) << 7) | remain_length_value;
+	}
+
         if ((byte_value&0x80) == 0) /* the last bytes */
         {
 	    LOG_DEBUG("remain_length::Find last byte [0x%02x], offset [%d], remain len bytes [%d]",

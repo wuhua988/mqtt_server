@@ -40,13 +40,13 @@ namespace reactor
         {
 	    LOG_TRACE_METHOD(__func__); 
 
-            ::close(this->m_poller_handle);
-            this->m_poller_handle = -1;
-
 	    for (auto it = m_map_event_handlers.begin(); it != m_map_event_handlers.end(); it++)
 	    {
 		    it->second->handle_close();
 	    }
+
+	    ::close(this->m_poller_handle); 
+	    this->m_poller_handle = -1;
 
 	    return 0;
         }

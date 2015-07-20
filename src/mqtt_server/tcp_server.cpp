@@ -12,9 +12,11 @@ extern int g_run;
 
 namespace reactor // later -> mqtt_server
 {
-    int TCPServer::open(void *)
+    int TCPServer::open(CSockAddress &server_addr)
     {
         LOG_TRACE_METHOD(__func__);
+
+	m_server_address = server_addr;
         
         if (m_poller_epoll.open() == -1)
         {

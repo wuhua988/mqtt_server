@@ -6,7 +6,7 @@
 //  Copyright (c) 2015 davad.di. All rights reserved.
 //
 
-#include "mqtt_msg.hpp"
+#include "mqttc++/mqtt_msg.hpp"
 
 void print_hex_dump(const uint8_t *buf, int len)
 {
@@ -41,6 +41,16 @@ int main()
 	0x61, 0x64, 0x00, 0x07, 0x64, 0x61, 0x76, 0x61,
 	0x2e, 0x64, 0x69, 0x00, 0x08, 0x70, 0x61, 0x73,
 	0x73, 0x77, 0x6f, 0x72, 0x64 };
+
+
+    uint8_t buf[128];
+
+    CMqttFixedHeader fixed_header(MqttType::CONNECT);
+    CMqttConnect conn(buf, 128, fixed_header);
+    conn.client_id("hello");
+
+    int len = conn.encode();
+    print_hex_dump(buf, len);
 /*
     CMqttConnect connect(connect_buf, sizeof(connect_buf));
 

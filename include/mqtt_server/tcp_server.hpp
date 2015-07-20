@@ -23,7 +23,7 @@ namespace reactor
             LOG_TRACE_METHOD(__func__);
         }
         
-        int open(void *data_ptr = nullptr);
+        int open(CSockAddress &server_addr);
         int loop();
         void stop();
         

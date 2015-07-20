@@ -14,10 +14,21 @@ void handle_sigint(int signal)
     }
 }
 
-int main()
+#define version "1.0"
+
+int main(int argc, char *argv[])
 {
     CLoggerMgr logger("log4cplus.properties");
-    
+ 
+    int port = 5050;
+
+    if (argc > 1)
+    {
+	port = atoi(argv[1]);
+    }
+
+    CSockAddress server_addr(port);
+
     LOG_INFO("EPOLLIN 0x%x, EPOLLOUT 0x%x", EPOLLIN, EPOLLOUT);
     signal(SIGINT, handle_sigint);
     signal(SIGTERM, handle_sigint);
@@ -26,7 +37,7 @@ int main()
     signal(SIGPIPE, SIG_IGN);
     
     TCPServer server;
-    server.open();
+    server.open(server_addr);
     
     server.loop();
 }

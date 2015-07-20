@@ -1,3 +1,4 @@
 ADD_SUBDIRECTORY(mqttc++)
 ADD_SUBDIRECTORY(reactor)
 ADD_SUBDIRECTORY(mqtt_server)
+ADD_SUBDIRECTORY(benchmark)

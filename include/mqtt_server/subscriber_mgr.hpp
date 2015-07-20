@@ -142,18 +142,20 @@ namespace reactor
 		    return -1;
 		}
 
+		int count = 0;
 		CONTEXT_SET &client_context_set = it->second->client_context();
 		for (auto it = client_context_set.begin(); it != client_context_set.end(); it++)        
 		{                          
 		    // it mean client_context object
 		    auto mqtt_conn = (*it)->mqtt_connection();                                          
 		    if (mqtt_conn != nullptr)                                                           
-		    {                                                                                   
+		    {        
+			count++;
 			mqtt_conn->put(mbuf);                                                       
 		    }                                                                                   
 		}
 
-		return 0;
+		return count;
 	    }
 
 	    void print()

@@ -172,10 +172,16 @@ public:
     CMqttConnect(uint8_t *buf, int len) : CMqttMsg(buf, len)
     {
     }
+
+    CMqttConnect(uint8_t *buf, int len, CMqttFixedHeader fixed_header) // encode
+	    : CMqttMsg(buf, len, fixed_header)
+    {
+    }
     
     // -1 failed. 0 success
     int decode();
-    
+    int encode();
+
     void print();
     
     std::string & proto_name()
@@ -222,6 +228,16 @@ public:
     std::string & client_id()
     {
         return m_str_client_id;
+    }
+
+    void client_id(std::string &client_id)
+    {
+	m_str_client_id = client_id;
+    }
+
+    void client_id(char *client_id)
+    {
+	m_str_client_id = client_id;
     }
     
     std::string & will_topic()

@@ -13,15 +13,15 @@ $ACE_ROOT/performance-tests/TCP/tcp_test -c localhost -i 500000 -b 64 -p 5050
 
 google performance analysis:
 1. start
-LD_PRELOAD=./libghttpd-preload.so ./tcp_server_tcmalloc
+LD_PRELOAD=./libghttpd-preload.so ./mqtt_server
 
 2. profiler
-pprof ./tcp_server_tcmalloc http://localhost:9999/pprof/profile
+pprof ./mqtt_server http://localhost:9999/pprof/profile
 
 -> file_name
 
 3. gif result
-pprof --gif ./tcp_server_tcmalloc /home/ops/pprof/.xxxx.localhost > main_thread.gif
+pprof --gif ./mqtt_server /home/ops/pprof/.xxxx.localhost > main_thread.gif
 
 
 pingpong test one thread and one client

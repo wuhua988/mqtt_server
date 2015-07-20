@@ -24,7 +24,7 @@ namespace reactor
         }
         
         int open(CSockAddress &server_addr);
-        int loop();
+        int loop(int *stop_flag = nullptr);
         void stop();
         
     protected:

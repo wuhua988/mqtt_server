@@ -8,7 +8,7 @@
 
 #include "mqtt_server/tcp_server.hpp"
 
-extern int g_run;
+// extern int g_run;
 
 namespace reactor // later -> mqtt_server
 {
@@ -40,12 +40,17 @@ namespace reactor // later -> mqtt_server
         return 0;
     }
     
-    int TCPServer::loop()
+    int TCPServer::loop(int *stop_flag)
     {
         LOG_TRACE_METHOD(__func__);
         
-        while(m_running_flag && g_run)
+        while(m_running_flag)
         {
+            if ((stop_flag != nullptr) && *stop_flag)
+            {
+                break;
+            }
+            
             if (!m_poller_epoll.run(-1)) // -1 wait until event occurs
             {
                 LOG_ERROR("Epoller run retuan failed. Exit now");

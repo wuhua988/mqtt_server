@@ -203,8 +203,7 @@ public:
     {
         return m_has_password;
     }
-    
-    
+
     bool has_will()
     {
         return m_has_will;
@@ -259,6 +258,7 @@ public:
     {
         return m_str_password;
     }
+    
     
 protected:
     std::string      m_str_proto_name;

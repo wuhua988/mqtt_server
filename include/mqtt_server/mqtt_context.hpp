@@ -28,10 +28,19 @@ namespace reactor // later --> mqtt_server
     
     class CMqttConnection;
     
+    enum class ClientStatus {
+        NONE = 0,
+        CS_NEW = 1,
+        CS_CONNECTED = 2,
+        CS_DISCONNECTED = 3,
+        CS_EXPIRING = 4
+    };
+
+    
     class CTMqttClientContext
     {
     public:
-        CTMqttClientContext(CMqttConnection *mqtt_connection)
+        CTMqttClientContext(CMqttConnection *mqtt_connection) : m_client_status(ClientStatus::CS_NEW)
         {
             m_mqtt_connection = mqtt_connection;
         }
@@ -46,7 +55,6 @@ namespace reactor // later --> mqtt_server
             m_mqtt_connection = connection;
         }
         
-        
         std::string & client_id()
         {
             return m_client_id;
@@ -57,9 +65,44 @@ namespace reactor // later --> mqtt_server
             m_client_id = client_id;
         }
         
+        ClientStatus client_status()
+        {
+            return m_client_status;
+        }
+        
+        void  client_status(ClientStatus client_status)
+        {
+            m_client_status = client_status;
+        }
+        
+        bool clean_session()
+        {
+            return m_clean_session;
+        }
+        
+        void init(CMqttConnect &con_msg)
+        {
+            m_client_status = ClientStatus::CS_CONNECTED;
+            
+            m_protocal_name = con_msg.proto_name();
+            m_protocal_ver  = con_msg.proto_version();
+            
+            m_client_id     = con_msg.client_id();
+            
+            m_user_name     = con_msg.user_name();
+            m_user_password   = con_msg.password();
+            
+            m_clean_session = con_msg.clean_session();
+            
+            // m_will_flag     = con_msg.has_will();
+            // m_will_msg      = ;
+        }
+        
     public:
         // socket_t    m_sock_id;
         CMqttConnection *m_mqtt_connection = nullptr;
+        
+        ClientStatus m_client_status;
         
         std::string m_remote_addr;          // ip:port
         
@@ -68,12 +111,11 @@ namespace reactor // later --> mqtt_server
         
         std::string m_client_id;            // max len 23
         std::string m_user_name;
-        std::string m_user_passwd;
+        std::string m_user_password;
         
         uint16_t    m_keepa_live_timer;
         uint16_t    m_last_msg_id;
         
-        uint16_t    m_client_state;
         uint16_t    m_max_inflight_msgs;
         
         // time related
@@ -87,8 +129,8 @@ namespace reactor // later --> mqtt_server
         bool	    m_clean_session;
         
         bool            m_will_flag;
-        CMqttPubMessage m_will_msg;
         
+        // CMqttPubMessage m_will_msg;
         // std::list<CMbuf *> m_recv_msg_queue;
         // std::list<CMbuf *> m_send_msg_queue;
         // CMbuf   *m_recv_buf;

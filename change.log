@@ -6,4 +6,8 @@ V1.0
 4. start can choose different server port: ./mqtt_server port
 5. change epoll close problem
 
+V1.0.1
 6. add cmd option and change g_run -> g_stop_flag as a fuction parameter methord
+
+V1.0.2
+7. add mqtt msg logic. proto & version check, client status check and so on. not yet implement mqtt db store

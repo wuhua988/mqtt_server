@@ -1,5 +1,5 @@
 #include "mqttc++/mqtt_msg.hpp"
-#include "reactor/poller_epoll.hpp" 
+#include "reactor/poller_epoll.hpp"
 #include "mqtt_server/subscriber_mgr.hpp"
 #include "mqtt_server/mqtt_connection.hpp"
 
@@ -39,7 +39,7 @@ int write_n(int fd, char *buf, ssize_t len)
 
 namespace reactor
 {
-
+    
     
     int CMqttConnection::handle_input(socket_t UNUSED(sock_id))
     {
@@ -90,18 +90,18 @@ namespace reactor
                 {
                     int left_size = len - offset;
                     memmove(buf, buf + offset, left_size); // memmove can deal overlap situation
-                
+                    
                     m_cur_buf_pos = left_size;
                 }
-                    return 0;
+                return 0;
             }
             else if (remain_len == FAILTURE) // decode failed
             {
                 return -1;      // close this socket
             }
             
-	    uint32_t pkt_total_len = remain_len + remain_length_bytes + 1; // 1 for fixed header
-
+            uint32_t pkt_total_len = remain_len + remain_length_bytes + 1; // 1 for fixed header
+            
             // move body function to a mqtt_class
             if (this->process(buf + offset, pkt_total_len, this) < 0)
             {
@@ -110,9 +110,9 @@ namespace reactor
             
             offset += pkt_total_len;
         }
-
-	// all pkts have dealt, so reset buf pos
-	m_cur_buf_pos = 0;
+        
+        // all pkts have dealt, so reset buf pos
+        m_cur_buf_pos = 0;
         
         return 0;
     }
@@ -124,10 +124,10 @@ namespace reactor
         
         // check clean session flag
         if (m_client_context.get() != nullptr)
-	{
-	    m_client_context->mqtt_connection(nullptr);
-	}
-
+        {
+            m_client_context->mqtt_connection(nullptr);
+        }
+        
         // #include <inttypes.h>
         // printf("uint64: %"PRIu64"\n", u64);
         LOG_INFO("Summery Client Recv times %ld, bytes %ld, Send times %ld, bytes %ld, schedule write times %ld, cancel %ld",
@@ -154,52 +154,52 @@ namespace reactor
         {
             case MqttType::CONNECT:
             {
-		LOG_DEBUG("Recv mqtt CONNECT msg");
+                LOG_DEBUG("Recv mqtt CONNECT msg");
                 res = this->handle_connect_msg(buf, len, mqtt_connection);
                 break;
             }
                 
             case MqttType::PUBLISH:
             {
-		LOG_DEBUG("Recv mqtt PUBLISH msg");  
+                LOG_DEBUG("Recv mqtt PUBLISH msg");
                 res = this->handle_publish_msg(buf, len, mqtt_connection);
                 break;
             }
                 
             case MqttType::PUBACK:
             {
-		LOG_DEBUG("Recv mqtt PUBACK msg");
+                LOG_DEBUG("Recv mqtt PUBACK msg");
                 res = this->handle_puback_msg(buf, len, mqtt_connection);
                 break;
             }
                 
             case MqttType::SUBSCRIBE:
             {
-		LOG_DEBUG("Recv mqtt SUBSCRIBE msg");
+                LOG_DEBUG("Recv mqtt SUBSCRIBE msg");
                 res = this->handle_subscribe_msg(buf, len, mqtt_connection);
                 break;
             }
                 
             case  MqttType::UNSUBSCRIBE:
             {
-		LOG_DEBUG("Recv mqtt UNSUBSCRIBE msg"); 
+                LOG_DEBUG("Recv mqtt UNSUBSCRIBE msg");
                 res = this->handle_unsubscribe_msg(buf, len, mqtt_connection);
                 break;
             }
                 
             case MqttType::PINGREQ:
             {
-		LOG_DEBUG("Recv mqtt PINGREQ msg");
+                LOG_DEBUG("Recv mqtt PINGREQ msg");
                 res = this->handle_pingreq_msg(buf, len, mqtt_connection);
                 break;
             }
                 
             case MqttType::DISCONNECT:
             {
-		LOG_DEBUG("Recv mqtt DISCONNECT msg");   
+                LOG_DEBUG("Recv mqtt DISCONNECT msg");
                 res = this->handle_disconnect_msg(buf, len, mqtt_connection);
-
-		res = -1; // close this socket
+                
+                res = -1; // close this socket
                 break;
             }
                 
@@ -230,35 +230,45 @@ namespace reactor
             LOG_DEBUG("Connect decode failed");
             return -1;
         }
-        
         conn_msg.print();
-       
-	CMqttConnAck::Code ack_code = CMqttConnAck::Code::ACCEPTED;
-        /*check protocol name/version, user_name, passwd, client_id*/
-        // todo later
         
-        // not have client_context now, TODOLIST:: move to CMqttConnection open()
-        CMqttClientContext_ptr &cli_context = mqtt_connection->client_context();
-        
-        if (cli_context.get() == nullptr)
+        CMqttConnAck::Code ack_code = CMqttConnAck::Code::ACCEPTED;
+        std::string proto_name = conn_msg.proto_name();
+
+        if ( (conn_msg.proto_version() != 3)
+            && ((proto_name.compare("MQIsdp") != 0) || (proto_name.compare("MQTT") != 0)) )
         {
-            // find client context from client_id -> client_context
-            //if (find not found) //
-            //{
-                cli_context = make_shared<CTMqttClientContext>(mqtt_connection);
-            //}
-            //else
-            //{
-            //}
-            
-            cli_context->mqtt_connection(mqtt_connection);
-            cli_context->client_id(conn_msg.client_id());
-            
-            //cli_context->init(CMqttConnect conn_msg);
+            ack_code = CMqttConnAck::Code::BAD_VERSION;
         }
         
-        CMbuf_ptr mbuf = make_shared<CMbuf>(32); // 32 enough for connack
+        //if (user_name and passwd)
+        //{
+        //      ack_code = CMqttConnAck::Code::BAD_USER_OR_PWD; or NO_AUTH
+        //}
+        std::string client_id = conn_msg.client_id();
+        if ( client_id.empty() )
+        {
+            ack_code = CMqttConnAck::Code::BAD_ID;
+        }
+        else
+        {
+            // CMqttConnection_ptr connect = CLIENT_DB->find(client_id)
+            // if ( connect->get() != nullptr ) 如果client_id 已经存在，则关闭前一个连接
+            // {
+            //      connect->handle_close();
+            // }
+        }
         
+        // client_context() fuction can handle nullptr situation
+        CMqttClientContext_ptr &cli_context = mqtt_connection->client_context();
+        cli_context->init(conn_msg);
+        
+        if ( ack_code != CMqttConnAck::Code::ACCEPTED )
+        {
+            res = -1;
+        }
+
+        CMbuf_ptr mbuf = make_shared<CMbuf>(32); // 32 enough for connack
         CMqttConnAck con_ack(mbuf->write_ptr(),mbuf->max_size(), ack_code);
         
         int enc_len = 0;
@@ -286,6 +296,13 @@ namespace reactor
             return -1;
         }
         
+        CMqttClientContext_ptr &cli_context = mqtt_connection->client_context();
+        if (cli_context->client_status() != ClientStatus::CS_CONNECTED)
+        {
+            LOG_INFO("client is not wiht CONNECT msg");
+            return -1;
+        }
+        
         CMqttPublish publish(buf,len);
         if (publish.decode() < 0)
         {
@@ -298,14 +315,14 @@ namespace reactor
         // copy buf and send to other client
         CMbuf_ptr mbuf_pub  = make_shared<CMbuf>(len);
         mbuf_pub->copy(buf, len);
-      
-	// 1. first send ack to sender
+        
+        // 1. first send ack to sender
         CMbuf_ptr mbuf_pub_ack = make_shared<CMbuf>(64);
         CMqttPublishAck  pub_ack(mbuf_pub_ack->write_ptr(),mbuf_pub_ack->max_size(),publish.msg_id());
-      
-	int res = 0;
-	int enc_len = 0;
-
+        
+        int res = 0;
+        int enc_len = 0;
+        
         if ((enc_len = pub_ack.encode()) < 0)
         {
             res = -1;
@@ -318,13 +335,13 @@ namespace reactor
                 res = mqtt_connection->put(mbuf_pub_ack);
             }
         }
-
-	// publish my message
-	uint32_t start_tm = time(0); 
-	int pub_count = SUB_MGR->publish(publish.topic_name(), mbuf_pub); 
-	uint32_t diff = time(0) - start_tm;
-
-	LOG_ERROR("This publish cost %d (s) to %d clients", diff, pub_count);
+        
+        // publish my message
+        uint32_t start_tm = time(0);
+        int pub_count = SUB_MGR->publish(publish.topic_name(), mbuf_pub);
+        uint32_t diff = time(0) - start_tm;
+        
+        LOG_ERROR("This publish cost %d (s) to %d clients", diff, pub_count);
         
         return res;
     }
@@ -338,6 +355,8 @@ namespace reactor
         }
         
         // get msg_id, and deal with msg in db
+        // TODOLIST:
+        // change msg status by msg_id
         
         return 0;
     }
@@ -347,6 +366,13 @@ namespace reactor
         if (mqtt_connection == nullptr)
         {
             LOG_DEBUG("mqtt_connection should not be nullptr");
+            return -1;
+        }
+        
+        CMqttClientContext_ptr &cli_context = mqtt_connection->client_context();
+        if (cli_context->client_status() != ClientStatus::CS_CONNECTED)
+        {
+            LOG_INFO("client is not wiht CONNECT msg");
             return -1;
         }
         
@@ -366,18 +392,18 @@ namespace reactor
             SUB_MGR->add_client_context(*it, mqtt_connection->client_context());
         }
         
-	// change for performance
-	if (log4cplus::Logger::getRoot().isEnabledFor(log4cplus::DEBUG_LOG_LEVEL))
-	{
-	    SUB_MGR->print();
-	}
-
+        // change for performance
+        if (log4cplus::Logger::getRoot().isEnabledFor(log4cplus::DEBUG_LOG_LEVEL))
+        {
+            SUB_MGR->print();
+        }
+        
         CMbuf_ptr mbuf_sub_ack = make_shared<CMbuf>(64);
         CMqttSubAck sub_ack(mbuf_sub_ack->write_ptr(),mbuf_sub_ack->max_size(), sub.msg_id(), sub.topics_qos());
-       
-	int res = 0;
-	int enc_len = 0;
-
+        
+        int res = 0;
+        int enc_len = 0;
+        
         if ((enc_len = sub_ack.encode()) < 0)
         {
             res = -1;
@@ -402,6 +428,13 @@ namespace reactor
             return -1;
         }
         
+        CMqttClientContext_ptr &cli_context = mqtt_connection->client_context();
+        if (cli_context->client_status() != ClientStatus::CS_CONNECTED)
+        {
+            LOG_INFO("client is not wiht CONNECT msg");
+            return -1;
+        }
+        
         CMqttUnsubscribe un_sub(buf,len);
         if (un_sub.decode() < 0)
         {
@@ -411,16 +444,24 @@ namespace reactor
         
         un_sub.print();
         
+        // delete topic from sub_mgr
+        // add cli_context to topic_name
+        std::vector<std::string> topics = un_sub.topics_name();
+        for (auto it = topics.begin(); it != topics.end(); it++)
+        {
+            SUB_MGR->del_client_context(*it, mqtt_connection->client_context());
+        }
+        
         CMbuf_ptr mbuf_unsub_ack = make_shared<CMbuf>(64);
         
         // CMqttFixedHeader fixed_header(MqttType::UNSUBACK);
         // CMqttUnsubAck unsub_ack(mbuf_unsub_ack->write_ptr(), mbuf_unsub_ack.max_size(), fixed_header, un_sub.msg_id());
         
         CMqttUnsubAck unsub_ack(mbuf_unsub_ack->write_ptr(), mbuf_unsub_ack->max_size(), un_sub.msg_id());
-     
-	int res = 0;
-	int enc_len = 0;
-
+        
+        int res = 0;
+        int enc_len = 0;
+        
         if ((enc_len = unsub_ack.encode()) < 0)
         {
             res = -1;
@@ -450,10 +491,10 @@ namespace reactor
         // CMqttFixedHeader fixed_header(MqttType::PINGRESP);
         // CMqttPingResp ping_rsp(mbuf_pingresp->write_ptr(), mbuf_pingresp->max_size(), fixed_header);
         CMqttPingResp ping_rsp(mbuf_pingresp->write_ptr(), mbuf_pingresp->max_size());
-     
-	int res = 0;
-	int enc_len = 0;
-
+        
+        int res = 0;
+        int enc_len = 0;
+        
         if ((enc_len = ping_rsp.encode()) < 0)
         {
             res = -1;
@@ -478,8 +519,16 @@ namespace reactor
             return -1;
         }
         
+        CMqttClientContext_ptr &cli_context = mqtt_connection->client_context();
+        cli_context->client_status(ClientStatus::CS_DISCONNECTED);
+        
+        if ( cli_context->clean_session())
+        {
+            // TODOLIST:
+            // deal client id msg from db msg
+        }
         return 0;
     }
-
+    
 } // end of namespace
 

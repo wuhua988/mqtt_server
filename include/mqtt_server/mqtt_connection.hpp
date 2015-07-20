@@ -39,6 +39,11 @@ namespace reactor
         
         CMqttClientContext_ptr & client_context()
         {
+            if ( m_client_context.get() == nullptr )
+            {
+                m_client_context = make_shared<CTMqttClientContext>(this);
+            }
+            
             return m_client_context;
         }
         
@@ -46,8 +51,8 @@ namespace reactor
         virtual int handle_close(socket_t sock_id);
         
         // mqtt logic
-	int process_mqtt(uint8_t *buf, uint32_t len);
-	int process(uint8_t *buf, uint32_t len, CMqttConnection *mqtt_connection);
+        int process_mqtt(uint8_t *buf, uint32_t len);
+        int process(uint8_t *buf, uint32_t len, CMqttConnection *mqtt_connection);
         
         int handle_connect_msg(uint8_t *buf, uint32_t len, CMqttConnection *mqtt_connection);
         int handle_publish_msg(uint8_t *buf, uint32_t len, CMqttConnection *mqtt_connection);

@@ -69,7 +69,7 @@ namespace reactor
 	    }
 
 	private:
-	    CMqttPubMessage	    m_retain_msg;
+	    CMqttPubMessage	m_retain_msg;
 	    CONTEXT_SET	    m_subcriber_clients;
     };
 

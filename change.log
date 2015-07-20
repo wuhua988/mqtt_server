@@ -4,5 +4,6 @@ V1.0
 2. remove SUB->print() in perf test by add:  if (log4cplus::Logger::getRoot().isEnabledFor(log4cplus::DEBUG_LOG_LEVEL))        
 3. add profile analysis by add: In mqtt_server CMakeList.ext set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -ltcmalloc -lprofiler")
 4. start can choose different server port: ./mqtt_server port
+5. change epoll close problem
 
-5. add cmd option and change g_run -> g_stop_flag as a fuction parameter methord
+6. add cmd option and change g_run -> g_stop_flag as a fuction parameter methord

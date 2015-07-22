@@ -40,10 +40,16 @@ namespace reactor
         {
 	    LOG_TRACE_METHOD(__func__); 
 
-	    for (auto it = m_map_event_handlers.begin(); it != m_map_event_handlers.end(); it++)
+	    int count = 0;
+	    for (auto it = m_map_event_handlers.begin(); it != m_map_event_handlers.end();)
 	    {
-		    it->second->handle_close();
+		count++;
+		auto it_bak = it;
+		++it; // because in handle_close(), will erase this, so avoid iterator failed.
+	    	it_bak->second->handle_close();
 	    }
+
+	    LOG_DEBUG("Clean %d clients", count);
 
 	    ::close(this->m_poller_handle); 
 	    this->m_poller_handle = -1;

@@ -45,6 +45,11 @@ namespace reactor // later --> mqtt_server
         {
             m_mqtt_connection = mqtt_connection;
         }
+
+	~CTMqttClientContext()
+	{
+	    LOG_TRACE_METHOD(__func__);
+	}
         
         CMqttConnection * mqtt_connection()
         {

@@ -120,8 +120,9 @@ namespace reactor
     int CMqttConnection::handle_close(socket_t)
     {
         LOG_TRACE_METHOD(__func__);
+    
         CEventHandler::close();
-        
+   
         LOG_DEBUG("In CMqttConnection::handle_close(), clean session [%d]", m_client_context->clean_session());
         if (m_client_context->clean_session())
         {
@@ -136,8 +137,7 @@ namespace reactor
             }
         }
         
-        // check clean session flag
-        if (m_client_context.get() != nullptr)
+	if (m_client_context.get() != nullptr)
         {
             m_client_context->mqtt_connection(nullptr);
         }
@@ -152,8 +152,9 @@ namespace reactor
                  this->m_schedule_write_times,
                  this->m_cancel_schedule_write_times);
         
+
         delete this;
-        
+    
         return 0;
     }
     

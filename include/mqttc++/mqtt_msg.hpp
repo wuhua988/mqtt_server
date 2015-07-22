@@ -50,7 +50,7 @@ typedef union
     uint8_t all;
     struct
     {
-    uint8_t:1;                            /**< unused */
+        uint8_t:1;                            /**< unused */
         uint8_t    clean_session:1;
         uint8_t    will:1;
         uint8_t    will_qos:2;
@@ -149,6 +149,11 @@ public:
     CMqttMsg(uint8_t *buf, int len, MqttType msg_type)  // for encode
     :m_fixed_header(msg_type), m_mqtt_pkt(buf, len)
     {
+    }
+    
+    CMqttFixedHeader & fixed_header()
+    {
+        return m_fixed_header;
     }
     
     // -1 failed. 0 success

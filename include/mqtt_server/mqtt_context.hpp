@@ -4,7 +4,8 @@
 #include "reactor/define.hpp"
 #include "mqttc++/mqtt_msg.hpp"
 
-#include <list>
+#include <vector>
+#include <algorithm>
 
 namespace reactor // later --> mqtt_server
 {
@@ -98,7 +99,24 @@ namespace reactor // later --> mqtt_server
             // m_will_msg      = ;
         }
         
-    public:
+        std::vector<CTopic>  & subcribe_topics()
+        {
+            return m_subcribe_topics;
+        }
+        
+        void add_subcribe_topics(std::vector<CTopic> &sub_topics)
+        {
+            for (auto it = sub_topics.begin(); it != sub_topics.end(); it++)
+            {
+                auto topic_it = find(m_subcribe_topics.begin(), m_subcribe_topics.end(), *it);
+                if ( topic_it == m_subcribe_topics.end() )
+                {
+                    m_subcribe_topics.push_back(*it);
+                }
+            }
+        }
+        
+    protected:
         // socket_t    m_sock_id;
         CMqttConnection *m_mqtt_connection = nullptr;
         
@@ -128,14 +146,14 @@ namespace reactor // later --> mqtt_server
         time_t	    m_last_retry_check;
         bool	    m_clean_session;
         
-        bool            m_will_flag;
+        bool         m_will_flag;
         
         // CMqttPubMessage m_will_msg;
         // std::list<CMbuf *> m_recv_msg_queue;
         // std::list<CMbuf *> m_send_msg_queue;
         // CMbuf   *m_recv_buf;
         
-        std::list<CTopic>   m_subcribe_topics;
+        std::vector<CTopic>   m_subcribe_topics;
         
         //stat related struct
         uint64_t  m_qos_msg_count[3];           // qos0/1/2

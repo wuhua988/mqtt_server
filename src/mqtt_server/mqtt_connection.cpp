@@ -122,6 +122,20 @@ namespace reactor
         LOG_TRACE_METHOD(__func__);
         CEventHandler::close();
         
+        LOG_DEBUG("In CMqttConnection::handle_close(), clean session [%d]", m_client_context->clean_session());
+        if (m_client_context->clean_session())
+        {
+            
+            //std::list<CTopic>  & subcribe_topics()
+            auto topics_vector = m_client_context->subcribe_topics();
+            
+            for (auto it = topics_vector.begin(); it != topics_vector.end(); it++)
+            {
+                LOG_DEBUG("Clean session is set, clean topic [%s]", it->topic_name().c_str());
+                SUB_MGR->del_client_context(it->topic_name(), m_client_context);
+            }
+        }
+        
         // check clean session flag
         if (m_client_context.get() != nullptr)
         {
@@ -234,15 +248,15 @@ namespace reactor
         
         CMqttConnAck::Code ack_code = CMqttConnAck::Code::ACCEPTED;
         std::string proto_name = conn_msg.proto_name();
-
-	uint8_t proto_version = conn_msg.proto_version();
-
-	if ( (proto_version != 3) && (proto_version != 4) )
-	{
-	    ack_code = CMqttConnAck::Code::BAD_VERSION; 
-	}
-	else if ( ((conn_msg.proto_version() == 3) && (proto_name.compare("MQIsdp") != 0))
-		 || ((conn_msg.proto_version() == 4) &&  (proto_name.compare("MQTT") != 0)) )
+        
+        uint8_t proto_version = conn_msg.proto_version();
+        
+        if ( (proto_version != 3) && (proto_version != 4) )
+        {
+            ack_code = CMqttConnAck::Code::BAD_VERSION;
+        }
+        else if ( ((conn_msg.proto_version() == 3) && (proto_name.compare("MQIsdp") != 0))
+                 || ((conn_msg.proto_version() == 4) &&  (proto_name.compare("MQTT") != 0)) )
         {
             ack_code = CMqttConnAck::Code::BAD_VERSION;
         }
@@ -251,7 +265,7 @@ namespace reactor
         //{
         //      ack_code = CMqttConnAck::Code::BAD_USER_OR_PWD; or NO_AUTH
         //}
-	
+        
         std::string client_id = conn_msg.client_id();
         if ( client_id.empty() )
         {
@@ -274,7 +288,7 @@ namespace reactor
         {
             res = -1;
         }
-
+        
         CMbuf_ptr mbuf = make_shared<CMbuf>(32); // 32 enough for connack
         CMqttConnAck con_ack(mbuf->write_ptr(),mbuf->max_size(), ack_code);
         
@@ -343,9 +357,10 @@ namespace reactor
             }
         }
         
-        // publish my message
+        // 2. publish my message
         uint32_t start_tm = time(0);
-        int pub_count = SUB_MGR->publish(publish.topic_name(), mbuf_pub);
+        int pub_count = SUB_MGR->publish(publish.topic_name(), mbuf_pub, publish);
+        
         uint32_t diff = time(0) - start_tm;
         
         LOG_ERROR("This publish cost %d (s) to %d clients", diff, pub_count);
@@ -390,21 +405,12 @@ namespace reactor
             return -1;
         }
         
+        // add to client_context
+        cli_context->add_subcribe_topics(sub.sub_topics());
+        
         sub.print();
         
-        // add cli_context to topic_name
-        std::vector<std::string> topics = sub.topics_name();
-        for (auto it = topics.begin(); it != topics.end(); it++)
-        {
-            SUB_MGR->add_client_context(*it, mqtt_connection->client_context());
-        }
-        
-        // change for performance
-        if (log4cplus::Logger::getRoot().isEnabledFor(log4cplus::DEBUG_LOG_LEVEL))
-        {
-            SUB_MGR->print();
-        }
-        
+        // 1. send sub ack
         CMbuf_ptr mbuf_sub_ack = make_shared<CMbuf>(64);
         CMqttSubAck sub_ack(mbuf_sub_ack->write_ptr(),mbuf_sub_ack->max_size(), sub.msg_id(), sub.topics_qos());
         
@@ -422,6 +428,19 @@ namespace reactor
             {
                 res = mqtt_connection->put(mbuf_sub_ack);
             }
+        }
+        
+        // 2. add cli_context to topic_name and send retain msg
+        std::vector<std::string> topics = sub.topics_name();
+        for (auto it = topics.begin(); it != topics.end(); it++)
+        {
+            SUB_MGR->add_client_context(*it, mqtt_connection->client_context());
+        }
+    
+        // change for performance
+        if (log4cplus::Logger::getRoot().isEnabledFor(log4cplus::DEBUG_LOG_LEVEL))
+        {
+            SUB_MGR->print();
         }
         
         return res;

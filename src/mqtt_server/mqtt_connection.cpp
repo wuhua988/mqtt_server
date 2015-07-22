@@ -235,8 +235,14 @@ namespace reactor
         CMqttConnAck::Code ack_code = CMqttConnAck::Code::ACCEPTED;
         std::string proto_name = conn_msg.proto_name();
 
-        if ( (conn_msg.proto_version() != 3)
-            && ((proto_name.compare("MQIsdp") != 0) || (proto_name.compare("MQTT") != 0)) )
+	uint8_t proto_version = conn_msg.proto_version();
+
+	if ( (proto_version != 3) && (proto_version != 4) )
+	{
+	    ack_code = CMqttConnAck::Code::BAD_VERSION; 
+	}
+	else if ( ((conn_msg.proto_version() == 3) && (proto_name.compare("MQIsdp") != 0))
+		 || ((conn_msg.proto_version() == 4) &&  (proto_name.compare("MQTT") != 0)) )
         {
             ack_code = CMqttConnAck::Code::BAD_VERSION;
         }
@@ -245,6 +251,7 @@ namespace reactor
         //{
         //      ack_code = CMqttConnAck::Code::BAD_USER_OR_PWD; or NO_AUTH
         //}
+	
         std::string client_id = conn_msg.client_id();
         if ( client_id.empty() )
         {

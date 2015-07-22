@@ -11,3 +11,6 @@ V1.0.1
 
 V1.0.2
 7. add mqtt msg logic. proto & version check, client status check and so on. not yet implement mqtt db store
+
+V1.0.3
+8. fix mqtt version: 3.1.1 ver = 4

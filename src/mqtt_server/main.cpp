@@ -10,6 +10,8 @@ int g_stop_flag = 0;
 using namespace reactor;
 
 /* Signal handler for SIGINT and SIGTERM - just stop gracefully. */
+/*
+move sig handle to epoll loop
 void handle_sigint(int signal)
 {
     if (signal == SIGINT || signal == SIGTERM)
@@ -17,8 +19,9 @@ void handle_sigint(int signal)
         g_stop_flag = 1;
     }
 }
+ */
 
-#define version "1.0.3"
+#define version "1.0.4"
 
 static struct option long_options[] = {
     { "help",           no_argument,        NULL,   'h' },
@@ -98,16 +101,11 @@ int main(int argc, char *argv[])
     LOG_INFO("Server will start at [%s:%d], thread_num [%d]....", 
 		    str_server_ip.c_str(), server_port, thread_num);
     
-    signal(SIGINT, handle_sigint);
-    signal(SIGTERM, handle_sigint);
-    
-    // ignore sigpipe
-    signal(SIGPIPE, SIG_IGN);
-    
+
     TCPServer server;
     server.open(server_addr);
     
-    server.loop(&g_stop_flag);
+    server.loop();
     
     return 0;
 }

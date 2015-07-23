@@ -6,9 +6,8 @@
 //
 //
 
+#include <signal.h>
 #include "mqtt_server/tcp_server.hpp"
-
-// extern int g_run;
 
 namespace reactor // later -> mqtt_server
 {
@@ -16,15 +15,15 @@ namespace reactor // later -> mqtt_server
     {
         LOG_TRACE_METHOD(__func__);
 
-	m_server_address = server_addr;
-        
+        m_server_address = server_addr;
+       
         if (m_poller_epoll.open() == -1)
         {
             LOG_ERROR("Epoll open faild. %s", strerror(errno));
             return -1;
         }
-        
-        if ( m_acceptor.open(m_server_address) == -1)
+       
+        if ( m_acceptor->open(m_server_address) == -1)
         {
             LOG_ERROR("Open Server at %d failed, %s",
                       m_server_address.get_port(), strerror(errno));
@@ -34,28 +33,37 @@ namespace reactor // later -> mqtt_server
         
         LOG_INFO("Open Server at %s:%d succeed.",
                  m_server_address.get_ip().c_str(),m_server_address.get_port() );
+
+	/*
+         signal(SIGINT, handle_sigint);
+         signal(SIGTERM, handle_sigint);
+         
+         // ignore sigpipe
+         signal(SIGPIPE, SIG_IGN);
+         */
+
+        std::set<int> sig_set;
+        std::set<int> sig_ign_set;
         
-        m_running_flag = true;
+        sig_set.insert(SIGINT);
+        sig_set.insert(SIGTERM);
+	sig_set.insert(SIGHUP);
+
+        sig_ign_set.insert(SIGPIPE);
         
+        m_sig_handler->open(sig_set, sig_ign_set);
+	
+        m_timer_handler->open(60, 60); // every min to check timeout
+
         return 0;
     }
     
-    int TCPServer::loop(int *stop_flag)
+    int TCPServer::loop()
     {
         LOG_TRACE_METHOD(__func__);
         
-        while(m_running_flag)
+        while(m_poller_epoll.run(-1))
         {
-            if ((stop_flag != nullptr) && *stop_flag)
-            {
-                break;
-            }
-            
-            if (!m_poller_epoll.run(-1)) // -1 wait until event occurs
-            {
-                LOG_ERROR("Epoller run retuan failed. Exit now");
-                break;
-            }
         }
         
         LOG_INFO("Ready to exit loop now");
@@ -63,10 +71,4 @@ namespace reactor // later -> mqtt_server
         return 0;
     }
     
-    void TCPServer::stop()
-    {
-        LOG_TRACE_METHOD(__func__);
-        
-        m_running_flag = false;
-    }
 }

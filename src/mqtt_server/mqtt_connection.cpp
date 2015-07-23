@@ -153,7 +153,7 @@ namespace reactor
                  this->m_cancel_schedule_write_times);
         
 
-        delete this;
+        delete this; 
     
         return 0;
     }

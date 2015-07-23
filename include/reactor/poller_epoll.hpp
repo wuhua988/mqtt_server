@@ -16,6 +16,8 @@ namespace reactor
             
             virtual bool run(int32_t timeout);
             
+            virtual void stop();
+            
             virtual int add_event(CEventHandler *tcp_socket, uint32_t event_mask);
             virtual int del_event(CEventHandler *tcp_socket, uint32_t event_mask);
             virtual int mod_event(CEventHandler *tcp_socket, uint32_t event_mask);
@@ -25,6 +27,7 @@ namespace reactor
             
         private:
             struct  epoll_event  m_poller_events[MAX_EVENT_SIZE];
+            bool    m_running_flag;
         };   
 }
 

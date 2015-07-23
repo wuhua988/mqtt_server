@@ -16,7 +16,6 @@ namespace reactor
 	public:
 
 	    CEventHandler(CPoller *poller);
-	    virtual ~CEventHandler();
 
 	    virtual int open(void *data = nullptr);
 	    virtual int close();
@@ -52,7 +51,8 @@ namespace reactor
 
 		m_current_event_mask = event_mask;
 	    }
-private:
+protected:
+	    virtual ~CEventHandler();  
 	    int send(CMbuf_ptr &mbuf, int &my_errno);  
 	    int nonblk_send(CMbuf_ptr &mbuf);  
 	    int schedule_write();  

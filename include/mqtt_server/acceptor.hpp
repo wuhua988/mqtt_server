@@ -27,9 +27,15 @@ namespace reactor
         int open(const CSockAddress &address);
         
         virtual int handle_input(socket_t sock_id);
-        
+
     protected:
         CSockAcceptor  m_sock_acceptor;
+
+    private:
+	~Acceptor()
+	{
+	    LOG_TRACE_METHOD(__func__);
+	}
     };
 }
 

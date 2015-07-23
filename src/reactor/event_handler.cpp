@@ -77,8 +77,14 @@ namespace reactor
     {                                                                                       
 	LOG_TRACE_METHOD(__func__);
 	LOG_DEBUG("In CEventHandler::handle_close() socket %d", socket);
+
+        this->close();
+
+	delete this;
+
 	return 0;                                                                           
     }
+
     int CEventHandler::handle_output(socket_t socket)                                                                                               
     {                                                                                       
 	LOG_TRACE_METHOD(__func__);

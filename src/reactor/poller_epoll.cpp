@@ -3,7 +3,7 @@
 
 namespace reactor
 {
-      	CPollerEpoll::CPollerEpoll()
+    CPollerEpoll::CPollerEpoll(): m_running_flag(true)
         {
 	    LOG_TRACE_METHOD(__func__); 
         }
@@ -41,12 +41,13 @@ namespace reactor
 	    LOG_TRACE_METHOD(__func__); 
 
 	    int count = 0;
-	    for (auto it = m_map_event_handlers.begin(); it != m_map_event_handlers.end();)
+	    LOG_DEBUG("In CPollerEpoll::close(), map size %d", (int) m_map_event_handlers.size());
+
+	    for (auto it = m_map_event_handlers.begin(); it != m_map_event_handlers.end();it++)
 	    {
 		count++;
-		auto it_bak = it;
-		++it; // because in handle_close(), will erase this, so avoid iterator failed.
-	    	it_bak->second->handle_close();
+		LOG_DEBUG("Clean %d clients, handle %d", count, it->second->get_handle());
+	    	it->second->handle_close();
 	    }
 
 	    LOG_DEBUG("Clean %d clients", count);
@@ -57,11 +58,20 @@ namespace reactor
 	    return 0;
         }
         
-        
+        void CPollerEpoll::stop()
+        {
+            m_running_flag = false;
+        }
+    
         /* for Linux */
         bool CPollerEpoll::run(int32_t timeout)
         {
-	    LOG_TRACE_METHOD(__func__);
+            if (!m_running_flag)
+            {
+                return false;
+            }
+            
+            LOG_TRACE_METHOD(__func__);
 
             int32_t result = epoll_wait(this->m_poller_handle, this->m_poller_events, MAX_EVENT_SIZE, timeout < 0 ? INFINITE : timeout);
             if (result <  0)
@@ -72,7 +82,7 @@ namespace reactor
                 }
                 else
                 {
-                    LOG_ERROR("epoll_wait end,errno = %d", errno);
+                    LOG_ERROR("epoll_wait end,errno = %d, %s", errno, strerror(errno));
                     return false;
                 }
             }
@@ -93,22 +103,29 @@ namespace reactor
                     LOG_WARN("eventm_poller_handle is nullptr.");
                     continue;
                 }
+
+		int sock_id = event_handler->get_handle();
                 
                 if (event & EPOLLIN)
                 {
-                    if (event_handler->handle_input(event_handler->get_handle()) < 0)
+                    if (event_handler->handle_input(sock_id) < 0)
 		    {
 			LOG_INFO("In epoll run, handle_input return < 0, call handle_close now");
-			event_handler->handle_close(event_handler->get_handle());
+			
+			this->m_map_event_handlers.erase(sock_id); 
+
+			event_handler->handle_close(sock_id);
 			continue; // we just ready to call close now, no need further more
 		    }
                 }
                 
                 if (event & EPOLLOUT)
                 {
-                    if (event_handler->handle_output(event_handler->get_handle()) < 0)
+                    if (event_handler->handle_output(sock_id) < 0)
 		    {
-			event_handler->handle_close(event_handler->get_handle()); 
+			this->m_map_event_handlers.erase(sock_id); 
+
+			event_handler->handle_close(sock_id); 
 		    }
 		    continue; // we just ready to call close now, no need further more 
 
@@ -117,7 +134,9 @@ namespace reactor
                 // error
                 if (event & EPOLLERR)
 		{
-                    event_handler->handle_close(event_handler->get_handle());
+		    this->m_map_event_handlers.erase(sock_id); 
+
+                    event_handler->handle_close(sock_id);
                 }
             }
             
@@ -136,11 +155,11 @@ namespace reactor
             ev.data.u64 = 0;
             ev.data.ptr = (void*)event_handler;
            
-	    LOG_DEBUG("In add_event, ev.events 0x%x",ev.events);
+	    LOG_DEBUG("In add_event, ev.events 0x%x, sock_id %d",ev.events, socket_id);
 
             if (epoll_ctl(this->m_poller_handle, EPOLL_CTL_ADD, socket_id, &ev) < 0)
             {
-                LOG_ERROR("epoll_ctl EPOLL_CTL_ADD error!");
+                LOG_ERROR("epoll_ctl EPOLL_CTL_ADD error! %d, %s", errno, strerror(errno));
                 return -1;
             }
             
@@ -186,8 +205,9 @@ namespace reactor
             event_handler->set_cur_event_mask(0);
             
             // delete it from  hash_map
-            this->m_map_event_handlers.erase(socket_id);
-            
+            // this->m_map_event_handlers.erase(socket_id);
+            // move to epoll::run
+
             return 0;
         }
         

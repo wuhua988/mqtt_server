@@ -22,7 +22,8 @@ namespace reactor
 	};
         
         virtual bool run(int32_t tm) = 0; 
-        
+	virtual void stop() = 0;
+
         virtual int add_event(CEventHandler *event_handler, uint32_t event_mask) = 0;
         virtual int del_event(CEventHandler *event_handler, uint32_t event_mask) = 0;
         virtual int mod_event(CEventHandler *event_handler, uint32_t event_mask) = 0;

@@ -17,3 +17,9 @@ V1.0.3
 9. support retain msg
 10. support clean session set, not support no clean session now 
 11. fixed bug: in epoll close, call event_handler->handle_close(), in handle_close() will erase event from hash_map, can make iterator failed.
+
+
+V1.0.4
+1. add signal fd and timer fd into epoll mode. Test passed
+2. change tcp_server: acceptor timerfd signalfd -> new object
+3. fixed epoll close bug. Because static object acceptor timerfd signalfd may alreay destruct in epoll close.

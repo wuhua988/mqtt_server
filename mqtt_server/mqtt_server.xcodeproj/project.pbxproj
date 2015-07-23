@@ -9,10 +9,10 @@
 /* Begin PBXFileReference section */
 		D92B93651B60862A00DD569B /* timer_wheel.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = timer_wheel.cpp; sourceTree = "<group>"; };
 		D92B93661B60862A00DD569B /* timer_wheel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = timer_wheel.h; sourceTree = "<group>"; };
-		D92B93671B60BAFC00DD569B /* sig_handle.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = sig_handle.hpp; sourceTree = "<group>"; };
-		D92B93681B60BB1200DD569B /* sig_handle.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = sig_handle.cpp; sourceTree = "<group>"; };
-		D92B93691B60BBC700DD569B /* timer_handle.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = timer_handle.cpp; sourceTree = "<group>"; };
-		D92B936A1B60BBD000DD569B /* timer_handle.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = timer_handle.hpp; sourceTree = "<group>"; };
+		D92B936B1B60F5C100DD569B /* sig_handler.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = sig_handler.cpp; sourceTree = "<group>"; };
+		D92B936C1B60F5C100DD569B /* timer_handler.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = timer_handler.cpp; sourceTree = "<group>"; };
+		D92B936D1B60F5EE00DD569B /* sig_handler.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = sig_handler.hpp; sourceTree = "<group>"; };
+		D92B936E1B60F5EE00DD569B /* timer_handler.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = timer_handler.hpp; sourceTree = "<group>"; };
 		D98A8C6C1B58CD9D00A8B969 /* mbuf.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = mbuf.hpp; sourceTree = "<group>"; };
 		D98A8C6D1B58CD9D00A8B969 /* mem_pool.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = mem_pool.hpp; sourceTree = "<group>"; };
 		D98A8C6E1B58CD9D00A8B969 /* my_logger.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = my_logger.h; sourceTree = "<group>"; };
@@ -376,8 +376,8 @@
 		D98A8CCF1B58CD9D00A8B969 /* reactor */ = {
 			isa = PBXGroup;
 			children = (
-				D92B936A1B60BBD000DD569B /* timer_handle.hpp */,
-				D92B93671B60BAFC00DD569B /* sig_handle.hpp */,
+				D92B936D1B60F5EE00DD569B /* sig_handler.hpp */,
+				D92B936E1B60F5EE00DD569B /* timer_handler.hpp */,
 				D98A8CD01B58CD9D00A8B969 /* define.hpp */,
 				D98A8CD11B58CD9D00A8B969 /* event_handler.hpp */,
 				D98A8CD21B58CD9D00A8B969 /* poller.hpp */,
@@ -549,8 +549,8 @@
 		D98A8D171B58CDB300A8B969 /* reactor */ = {
 			isa = PBXGroup;
 			children = (
-				D92B93691B60BBC700DD569B /* timer_handle.cpp */,
-				D92B93681B60BB1200DD569B /* sig_handle.cpp */,
+				D92B936B1B60F5C100DD569B /* sig_handler.cpp */,
+				D92B936C1B60F5C100DD569B /* timer_handler.cpp */,
 				D98A8D181B58CDB300A8B969 /* CMakeLists.txt */,
 				D98A8D191B58CDB300A8B969 /* event_handler.cpp */,
 				D98A8D1A1B58CDB300A8B969 /* poller_epoll.cpp */,

@@ -476,7 +476,7 @@ class CMqttPublish : public CMqttMsg     // decode and encode
 {
 public:
     
-    CMqttPublish(uint8_t *buf, int len):CMqttMsg(buf, len) // decode
+    CMqttPublish(uint8_t *buf, int len):CMqttMsg(buf, len), m_offset_msg_id(0) // decode
     {
     }
     
@@ -501,16 +501,27 @@ public:
     {
         return m_msg_id;
     }
+
+    uint32_t msg_id_offset()
+    {
+	return m_offset_msg_id;
+    }
     
 protected:
     std::string             m_str_topic_name;
     std::vector<uint8_t>    m_payload;
     uint16_t                m_msg_id;
+
+    uint32_t		    m_offset_msg_id;
 };
 
 class CMqttPublishAck : public CMqttMsg
 {
 public:
+
+    CMqttPublishAck(uint8_t *buf, int len) :  CMqttMsg(buf, len)
+    {
+    }
 
     CMqttPublishAck(uint8_t *buf, int len, CMqttFixedHeader fixed_header, uint16_t msg_id)
 	: CMqttMsg(buf, len, fixed_header), m_msg_id(msg_id)
@@ -522,6 +533,12 @@ public:
     {
     }
 
+    uint16_t msg_id()
+    {
+	return m_msg_id;
+    }
+
+    int decode(); 
     int encode();
     void print();
 

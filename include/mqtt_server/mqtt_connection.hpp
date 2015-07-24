@@ -47,6 +47,11 @@ namespace reactor
             return m_client_context;
         }
         
+        void client_context(CMqttClientContext_ptr & client_context)
+        {
+            m_client_context = client_context;
+        }
+        
         virtual int handle_input(socket_t sock_id);
         virtual int handle_close(socket_t sock_id);
         

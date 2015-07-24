@@ -23,3 +23,8 @@ V1.0.4
 1. add signal fd and timer fd into epoll mode. Test passed
 2. change tcp_server: acceptor timerfd signalfd -> new object
 3. fixed epoll close bug. Because static object acceptor timerfd signalfd may alreay destruct in epoll close.
+
+
+V1.0.5
+1. add client_id_db, implement qos = 1/offline message(send_message_queue)/puback/
+2. flush to file has not yet implement.

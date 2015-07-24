@@ -7,6 +7,7 @@
 //#include "mqtt_server/mqtt_context.hpp"
 #include "mqtt_server/mqtt_connection.hpp"
 
+#include "mqtt_server/client_id_db.hpp"
 
 namespace reactor
 {
@@ -166,6 +167,11 @@ namespace reactor
         
         int publish(std::string &str_topic_name, CMbuf_ptr &mbuf, CMqttPublish &publish_msg)
         {
+	    LOG_TRACE_METHOD(__func__);
+
+            // store msg
+            MSG_MEM_STORE->add_msg(mbuf);
+            
             auto it = m_topic_mgr.find(str_topic_name);
             if (it == m_topic_mgr.end())
             {
@@ -209,11 +215,24 @@ namespace reactor
                 if (mqtt_conn != nullptr)
                 {        
                     count++;
-                    mqtt_conn->put(mbuf);                                                       
-                }                                                                                   
+                    mqtt_conn->put(mbuf);    
+		}
+		else
+		{
+		    LOG_DEBUG("Client Context may offline now [%s]", (*it)->client_id().c_str());
+		}
+
+		// only deal publish msg 
+		if ((*it).get() == nullptr)
+		{
+		    LOG_DEBUG("Client context not has valid ptr");
+		}
+		else
+		{
+		    (*it)->add_send_msg(mbuf);
+		}
             }
-            
-            
+             
             return count;
         }
         

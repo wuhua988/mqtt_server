@@ -136,7 +136,7 @@ public:
 
     uint32_t available_buf()
     {
-	LOG_DEBUG("In available_buf, max_size %d, m_base_ptr 0x%p, m_write_ptr 0x%p", 
+        LOG_DEBUG("In available_buf, max_size %d, m_base_ptr 0x%p, m_write_ptr 0x%p",
 				    m_max_size, m_base_ptr, m_write_ptr);
 
 	return uint32_t(m_max_size + m_base_ptr - m_write_ptr);
@@ -146,6 +146,16 @@ public:
     {
 	return m_max_size;
     }
+    
+    void msg_id(uint64_t msg_id)
+    {
+        m_msg_id = msg_id;
+    }
+    
+    uint64_t msg_id()
+    {
+        return m_msg_id;
+    }
 
     
 private:
@@ -153,6 +163,8 @@ private:
     uint8_t            *m_read_ptr;    /* read marker */
     uint8_t            *m_write_ptr;   /* write marker */
     uint8_t            *m_base_ptr;    /* start of buffer (const) */
+    
+    uint64_t           m_msg_id;
 };
 
 typedef std::shared_ptr<CMbuf> CMbuf_ptr;

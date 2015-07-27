@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXFileReference section */
+		D912C7AE1B65F7B80014ED6D /* persist.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = persist.hpp; sourceTree = "<group>"; };
 		D92B93651B60862A00DD569B /* timer_wheel.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = timer_wheel.cpp; sourceTree = "<group>"; };
 		D92B93661B60862A00DD569B /* timer_wheel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = timer_wheel.h; sourceTree = "<group>"; };
 		D92B936B1B60F5C100DD569B /* sig_handler.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = sig_handler.cpp; sourceTree = "<group>"; };
@@ -362,6 +363,7 @@
 				D98A8CC91B58CD9D00A8B969 /* mqtt_context.hpp */,
 				D98A8CCA1B58CD9D00A8B969 /* subscriber_mgr.hpp */,
 				D98A8CCB1B58CD9D00A8B969 /* tcp_server.hpp */,
+				D912C7AE1B65F7B80014ED6D /* persist.hpp */,
 			);
 			path = mqtt_server;
 			sourceTree = "<group>";

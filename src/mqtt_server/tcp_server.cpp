@@ -16,7 +16,13 @@ namespace reactor // later -> mqtt_server
         LOG_TRACE_METHOD(__func__);
 
         m_server_address = server_addr;
-       
+
+	if (m_persist.open("dup_db") == -1)
+	{
+	     LOG_ERROR("Persist open failed");
+	    return -1;
+	}
+
         if (m_poller_epoll.open() == -1)
         {
             LOG_ERROR("Epoll open faild. %s", strerror(errno));

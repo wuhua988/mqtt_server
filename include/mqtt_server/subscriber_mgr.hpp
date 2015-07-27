@@ -253,6 +253,18 @@ namespace reactor
             
         }
         
+        int store()
+        {
+            // topic   -> retain_msg_id
+            //         -> client_id -> cient_id -> client_id  (len + client_id)
+            return 0;
+        }
+        
+        int restore(uint8 *UNUSED(buf), uint32_t UNUSED(len))
+        {
+            return 0;
+        }
+        
         
     protected:
         std::unordered_map<std::string,CTopicNode_ptr> m_topic_mgr;

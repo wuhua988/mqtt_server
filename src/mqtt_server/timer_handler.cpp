@@ -1,6 +1,7 @@
-#include "reactor/timer_handler.hpp"
-
+#include "mqtt_server/timer_handler.hpp"
 #include <sys/timerfd.h>    
+
+#include "mqtt_server/persist.hpp"
 
 namespace reactor
 {
@@ -47,6 +48,8 @@ namespace reactor
 	if (res > 0)
 	{
 	    // epoll->check_timeout; check idle client
+	    m_persist->store();
+
 	    LOG_DEBUG("In CTimerHandler::handle_input");
 	}
 

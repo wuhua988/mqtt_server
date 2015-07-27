@@ -59,7 +59,7 @@ class CTMqttClientContext
 	std::string m_user_name;
 	std::string m_user_passwd;
 
-	uint16_t    m_keepa_live_timer;
+	uint16_t    m_keep_alive_timer;
 	uint16_t    m_last_msg_id;
 
 	uint16_t    m_client_state;

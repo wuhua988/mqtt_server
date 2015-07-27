@@ -7,10 +7,12 @@
 #include <vector>
 #include <algorithm>
 
-#include "mqtt_server/mqtt_connection.hpp"
+//#include "mqtt_server/mqtt_connection.hpp"
 
 namespace reactor // later --> mqtt_server
 {
+    class CMqttConnection;
+
     class CMqttPubMessage
     {
 	uint8_t     m_msg_cmd;
@@ -200,7 +202,7 @@ namespace reactor // later --> mqtt_server
 	    std::string m_user_name;
 	    std::string m_user_password;
 
-	    uint16_t    m_keepa_live_timer;
+	    uint16_t    m_keep_alive_timer;
 	    uint16_t    m_last_msg_id;
 
 	    uint16_t    m_max_inflight_msgs;
@@ -211,7 +213,7 @@ namespace reactor // later --> mqtt_server
 	    time_t      m_ping;
 	    time_t      m_disconnect;
 
-	    time_t	    m_cli_msg_id; // last msg id from client
+	    time_t	    m_cli_msg_id;               // last msg id from client
 	    time_t	    m_last_retry_check;
 	    bool	    m_clean_session;
 
@@ -219,7 +221,7 @@ namespace reactor // later --> mqtt_server
 
 	    // CMqttPubMessage m_will_msg;
 	    // std::list<CMbuf *> m_recv_msg_queue;
-	    std::list<CMbuf_ptr> m_send_msg_queue;
+	    std::list<CMbuf_ptr>  m_send_msg_queue;
 	    // CMbuf   *m_recv_buf;
 
 	    std::vector<CTopic>   m_subcribe_topics;

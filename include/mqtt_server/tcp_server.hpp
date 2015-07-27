@@ -12,7 +12,8 @@
 #include "mqtt_server/mqtt_connection.hpp"
 #include "mqtt_server/acceptor.hpp"
 #include "reactor/sig_handler.hpp"
-#include "reactor/timer_handler.hpp"
+#include "mqtt_server/timer_handler.hpp"
+#include "mqtt_server/persist.hpp"
 
 namespace reactor
 {
@@ -26,7 +27,7 @@ namespace reactor
 
 	    m_acceptor = new Acceptor(&m_poller_epoll);
 	    m_sig_handler = new CSigHandler(&m_poller_epoll);
-	    m_timer_handler = new CTimerHandler(&m_poller_epoll);
+	    m_timer_handler = new CTimerHandler(&m_poller_epoll, &m_persist);
         }
         
         int open(CSockAddress &server_addr);
@@ -41,6 +42,7 @@ namespace reactor
         
         CSigHandler      *m_sig_handler = nullptr;  // manage by handle_close()
         CTimerHandler    *m_timer_handler = nullptr; // manage by handle_close()
+	CPersist	 m_persist;
     };
 }
 

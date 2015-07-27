@@ -122,9 +122,9 @@ namespace reactor
     int CMqttConnection::handle_close(socket_t)
     {
         LOG_TRACE_METHOD(__func__);
-    
+        
         CEventHandler::close();
-   
+        
         LOG_DEBUG("In CMqttConnection::handle_close(), clean session [%d]", m_client_context->clean_session());
         if (m_client_context->clean_session())
         {
@@ -137,11 +137,11 @@ namespace reactor
                 LOG_DEBUG("Clean session is set, clean topic [%s]", it->topic_name().c_str());
                 SUB_MGR->del_client_context(it->topic_name(), m_client_context);
             }
-
-	    CLIENT_ID_CONTEXT->del_client_context(m_client_context->client_id());
+            
+            CLIENT_ID_CONTEXT->del_client_context(m_client_context->client_id());
         }
         
-	if (m_client_context.get() != nullptr)
+        if (m_client_context.get() != nullptr)
         {
             m_client_context->mqtt_connection(nullptr);
         }
@@ -156,9 +156,9 @@ namespace reactor
                  this->m_schedule_write_times,
                  this->m_cancel_schedule_write_times);
         
-
-        delete this; 
-    
+        
+        delete this;
+        
         return 0;
     }
     
@@ -290,8 +290,8 @@ namespace reactor
                     last_mqtt_connection->handle_close(INVALID_SOCKET);
                 }
                 
-		msg_cli_context->init(conn_msg);
-
+                msg_cli_context->init(conn_msg);
+                
                 msg_cli_context->mqtt_connection(this);
                 mqtt_connection->client_context(msg_cli_context);
                 
@@ -299,7 +299,7 @@ namespace reactor
             }
             else
             {
-                 LOG_DEBUG("Cann't Find last client context for client_id [%s]", client_id.c_str());
+                LOG_DEBUG("Cann't Find last client context for client_id [%s]", client_id.c_str());
                 
                 // client_context() fuction can handle nullptr situation
                 CMqttClientContext_ptr &cli_context = mqtt_connection->client_context();
@@ -331,24 +331,24 @@ namespace reactor
                 res = mqtt_connection->put(mbuf);
             }
         }
-       
+        
         // send offline msg
         CMqttClientContext_ptr &cli_context = mqtt_connection->client_context();
-	std::list<CMbuf_ptr> &offline_msg = cli_context->send_msg();
+        std::list<CMbuf_ptr> &offline_msg = cli_context->send_msg();
         
-	int count = 0;
-	for (auto it = offline_msg.begin(); it != offline_msg.end(); it++)
-	{
-	    if ( (res = this->put(*it)) == -1)
-	    {
-		LOG_DEBUG("Send offline msg failed to client id [%s]", client_id.c_str());
-		break;
-	    }
-
-	    count++;
-	}
-
-	LOG_DEBUG("Send offline [%d] msg to client id [%s]", count, client_id.c_str()); 
+        int count = 0;
+        for (auto it = offline_msg.begin(); it != offline_msg.end(); it++)
+        {
+            if ( (res = this->put(*it)) == -1)
+            {
+                LOG_DEBUG("Send offline msg failed to client id [%s]", client_id.c_str());
+                break;
+            }
+            
+            count++;
+        }
+        
+        LOG_DEBUG("Send offline [%d] msg to client id [%s]", count, client_id.c_str());
         
         return res;
     }
@@ -403,19 +403,19 @@ namespace reactor
         uint64_t publish_msg_id = MSG_MEM_STORE->next_msg_id();   // change msg_id to msg_id
         mbuf_pub->msg_id(publish_msg_id);
         
-	uint32_t msg_id_offset = publish.msg_id_offset();
-	if (msg_id_offset < len)
-	{
-	    uint16_t msg_id = (uint16_t)publish_msg_id&0xFFFF;
-
-	    buf[msg_id_offset] = (msg_id >> 8)&0xFF;
-	    buf[msg_id_offset+1] = msg_id&0xFF;
-
-	    LOG_DEBUG("Change publish msg_id to [%d]", msg_id);
-	}
-
+        uint32_t msg_id_offset = publish.msg_id_offset();
+        if (msg_id_offset < len)
+        {
+            uint16_t msg_id = (uint16_t)publish_msg_id&0xFFFF;
+            
+            buf[msg_id_offset] = (msg_id >> 8)&0xFF;
+            buf[msg_id_offset+1] = msg_id&0xFF;
+            
+            LOG_DEBUG("Change publish msg_id to [%d]", msg_id);
+        }
+        
         mbuf_pub->copy(buf, len);  // change buf msg_id
-    
+        
         
         // 2. publish to clients
         uint32_t start_tm = time(0);
@@ -435,14 +435,14 @@ namespace reactor
             LOG_DEBUG("mqtt_connection should not be nullptr");
             return -1;
         }
-
-	CMqttPublishAck pub_ack(buf, len);
-	if (pub_ack.decode() < 0)
-	{
-	    LOG_DEBUG("CMqttPublishAck decode failed.");
-	    return -1;
-	}
-
+        
+        CMqttPublishAck pub_ack(buf, len);
+        if (pub_ack.decode() < 0)
+        {
+            LOG_DEBUG("CMqttPublishAck decode failed.");
+            return -1;
+        }
+        
         CMqttClientContext_ptr &cli_context = mqtt_connection->client_context();
         cli_context->ack_msg(pub_ack.msg_id());
         
@@ -502,7 +502,7 @@ namespace reactor
         {
             SUB_MGR->add_client_context(*it, mqtt_connection->client_context());
         }
-    
+        
         // change for performance
         if (log4cplus::Logger::getRoot().isEnabledFor(log4cplus::DEBUG_LOG_LEVEL))
         {

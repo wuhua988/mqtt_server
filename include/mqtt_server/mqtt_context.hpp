@@ -4,6 +4,7 @@
 #include "reactor/define.hpp"
 #include "mqttc++/mqtt_msg.hpp"
 
+#include <list>
 #include <vector>
 #include <algorithm>
 

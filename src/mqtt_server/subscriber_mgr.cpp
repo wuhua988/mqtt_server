@@ -129,7 +129,7 @@ namespace reactor
 	LOG_TRACE_METHOD(__func__);
 
 	// store msg
-	MSG_MEM_STORE->add_msg(mbuf);
+	// MSG_MEM_STORE->add_msg(mbuf);
 
 	auto it = m_topic_mgr.find(str_topic_name);
 	if (it == m_topic_mgr.end())
@@ -212,6 +212,7 @@ namespace reactor
 
     }
 
+    /*
     int CSubscriberMgr::store(CPersist *UNUSED(persist))
     {
 	// topic   -> retain_msg_id
@@ -223,6 +224,8 @@ namespace reactor
     {
 	return 0;
     }
+    */
+
 
 } // end of namespace
 

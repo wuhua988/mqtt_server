@@ -8,6 +8,11 @@
 
 /* Begin PBXFileReference section */
 		D912C7AE1B65F7B80014ED6D /* persist.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = persist.hpp; sourceTree = "<group>"; };
+		D912C7B21B66399D0014ED6D /* subscriber_mgr.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = subscriber_mgr.cpp; sourceTree = "<group>"; };
+		D912C7B31B66399D0014ED6D /* client_db_id.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = client_db_id.cpp; sourceTree = "<group>"; };
+		D912C7B41B66399D0014ED6D /* persist.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = persist.cpp; sourceTree = "<group>"; };
+		D912C7B51B66399D0014ED6D /* timer_handler.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = timer_handler.cpp; sourceTree = "<group>"; };
+		D912C7B61B6639A90014ED6D /* timer_handler.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = timer_handler.hpp; sourceTree = "<group>"; };
 		D92B93651B60862A00DD569B /* timer_wheel.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = timer_wheel.cpp; sourceTree = "<group>"; };
 		D92B93661B60862A00DD569B /* timer_wheel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = timer_wheel.h; sourceTree = "<group>"; };
 		D92B936B1B60F5C100DD569B /* sig_handler.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = sig_handler.cpp; sourceTree = "<group>"; };
@@ -357,6 +362,7 @@
 		D98A8CC61B58CD9D00A8B969 /* mqtt_server */ = {
 			isa = PBXGroup;
 			children = (
+				D912C7B61B6639A90014ED6D /* timer_handler.hpp */,
 				D97F6A721B61D325003A8C1D /* client_id_db.hpp */,
 				D98A8CC71B58CD9D00A8B969 /* acceptor.hpp */,
 				D98A8CC81B58CD9D00A8B969 /* mqtt_connection.hpp */,
@@ -433,6 +439,10 @@
 		D98A8CE31B58CDB300A8B969 /* mqtt_server */ = {
 			isa = PBXGroup;
 			children = (
+				D912C7B21B66399D0014ED6D /* subscriber_mgr.cpp */,
+				D912C7B31B66399D0014ED6D /* client_db_id.cpp */,
+				D912C7B41B66399D0014ED6D /* persist.cpp */,
+				D912C7B51B66399D0014ED6D /* timer_handler.cpp */,
 				D98A8CE41B58CDB300A8B969 /* acceptor.cpp */,
 				D98A8CE51B58CDB300A8B969 /* CMakeLists.txt */,
 				D98A8CE61B58CDB300A8B969 /* main.cpp */,

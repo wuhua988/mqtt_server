@@ -8,6 +8,10 @@ git push -u origin master
 git commit -a -m "commit"
 
 
+// rest
+git fetch origin
+git reset --hard origin/master
+
 perfmance test:
 $ACE_ROOT/performance-tests/TCP/tcp_test -c localhost -i 500000 -b 64 -p 5050
 

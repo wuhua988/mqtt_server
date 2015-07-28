@@ -15,6 +15,8 @@ namespace reactor
     
     class CTopicNode
     {
+	friend class CPersist;
+
     public:
         CTopicNode(){}
         
@@ -42,6 +44,8 @@ namespace reactor
     
     class CSubscriberMgr
     {
+	friend class CPersist;
+
     public:
         CSubscriberMgr(){}
         ~CSubscriberMgr(){}
@@ -53,8 +57,8 @@ namespace reactor
         int publish(std::string &str_topic_name, CMbuf_ptr &mbuf, CMqttPublish &publish_msg);
         
         void print();
-        int store(CPersist* persist);
-        int restore(uint8 *UNUSED(buf), uint32_t UNUSED(len));
+        // int store(CPersist* persist);
+        // int restore(uint8 *UNUSED(buf), uint32_t UNUSED(len));
         
     protected:
         std::unordered_map<std::string,CTopicNode_ptr> m_topic_mgr;

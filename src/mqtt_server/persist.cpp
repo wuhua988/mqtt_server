@@ -447,8 +447,22 @@ namespace reactor
 
     }
 
-    int CPersist::store()
+  
+    int CPersist::store(bool force_flush)
     {
+	if (!force_flush) // not force flush
+	{
+	    static uint32_t last_db_update_time = 0;
+	    uint32_t db_update_time = MSG_MEM_STORE->last_update_time();
+
+	    // don't need to update now
+	    if ( db_update_time <= last_db_update_time)
+	    {
+		LOG_DEBUG("No data change so ");
+		return 0; 
+	    }
+	}
+
 	if (m_db_file != nullptr)
 	{
 	    fclose(m_db_file);

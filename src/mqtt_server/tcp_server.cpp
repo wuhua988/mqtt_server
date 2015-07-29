@@ -72,7 +72,7 @@ namespace reactor // later -> mqtt_server
         {
         }
        
-	m_persist.store();
+	m_persist.store(true); // force flush
 
         LOG_INFO("Ready to exit loop now");
         

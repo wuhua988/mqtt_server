@@ -36,6 +36,7 @@ int CMsgMemStore::del_msg(uint64_t msg_id)
 
 int CMsgMemStore::add_msg(uint64_t msg_id, CMbuf *buf)
 {
+    m_last_update_time = time(0);
     if (buf != nullptr)
     {
 	m_msg_db[msg_id] = buf;
@@ -47,4 +48,9 @@ int CMsgMemStore::add_msg(uint64_t msg_id, CMbuf *buf)
 std::unordered_map<uint64_t, CMbuf *> &  CMsgMemStore::msg_db()
 {
     return m_msg_db;
+}
+
+uint32_t CMsgMemStore::last_update_time()
+{
+    return m_last_update_time;
 }

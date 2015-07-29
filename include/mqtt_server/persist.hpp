@@ -48,7 +48,7 @@ namespace reactor
 	int write_len_buf(void *buf, uint32_t len);
 
         int restore();
-        int store();
+        int store(bool force_flush = false);
        
 	int store_db_info();
 	int store_db_msg();

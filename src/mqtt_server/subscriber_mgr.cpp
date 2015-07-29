@@ -131,12 +131,18 @@ namespace reactor
 	// store msg
 	// MSG_MEM_STORE->add_msg(mbuf);
 
+	bool no_sub_client = false;
 	auto it = m_topic_mgr.find(str_topic_name);
 	if (it == m_topic_mgr.end())
 	{
+	    no_sub_client = true;
+	    // add topic name
+	    CTopicNode_ptr topic_node = make_shared<CTopicNode>();
+	    m_topic_mgr[str_topic_name] = topic_node;
 	    LOG_DEBUG("No subscriber find here");
-	    return -1;
 	}
+
+	it = m_topic_mgr.find(str_topic_name); 
 
 	// update retain msg
 	CMqttFixedHeader fixed_header = publish_msg.fixed_header();
@@ -164,6 +170,11 @@ namespace reactor
 	}
 
 	// end of retain msg
+
+	if (no_sub_client)
+	{
+	    return -1;
+	}
 
 	int count = 0;
 	CONTEXT_SET &client_context_set = it->second->client_context();
@@ -213,16 +224,16 @@ namespace reactor
     }
 
     /*
-    int CSubscriberMgr::store(CPersist *UNUSED(persist))
-    {
-	// topic   -> retain_msg_id
-	//         -> client_id -> cient_id -> client_id  (len + client_id)
-	return 0;
+       int CSubscriberMgr::store(CPersist *UNUSED(persist))
+       {
+    // topic   -> retain_msg_id
+    //         -> client_id -> cient_id -> client_id  (len + client_id)
+    return 0;
     }
 
     int CSubscriberMgr::restore(uint8 *UNUSED(buf), uint32_t UNUSED(len))
     {
-	return 0;
+    return 0;
     }
     */
 

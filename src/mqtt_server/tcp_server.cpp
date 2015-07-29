@@ -17,9 +17,9 @@ namespace reactor // later -> mqtt_server
 
         m_server_address = server_addr;
 
-	if (m_persist.open("dup_db") == -1)
+	if (m_persist.restore() == -1)
 	{
-	     LOG_ERROR("Persist open failed");
+	    LOG_DEBUG("DB restore failed");
 	    return -1;
 	}
 
@@ -71,7 +71,9 @@ namespace reactor // later -> mqtt_server
         while(m_poller_epoll.run(-1))
         {
         }
-        
+       
+	m_persist.store();
+
         LOG_INFO("Ready to exit loop now");
         
         return 0;

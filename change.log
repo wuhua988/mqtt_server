@@ -28,3 +28,8 @@ V1.0.4
 V1.0.5
 1. add client_id_db, implement qos = 1/offline message(send_message_queue)/puback/
 2. flush to file has not yet implement.
+
+V1.0.6
+1. flush db_last_id, client_msg, db_msg to file 
+2. restore info from file
+3. not implement retain msg

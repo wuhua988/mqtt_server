@@ -4,6 +4,7 @@
 #include "mqtt_server/mqtt_connection.hpp"
 
 #include "mqtt_server/client_id_db.hpp"
+#include "common/msg_mem_store.hpp"
 
 int write_n(int fd, char *buf, ssize_t len)
 {

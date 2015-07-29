@@ -8,6 +8,8 @@ git push -u origin master
 git commit -a -m "commit"
 
 
+od -A x -t x1z -v dup_db
+
 // rest
 git fetch origin
 git reset --hard origin/master

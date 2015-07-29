@@ -1,6 +1,7 @@
 #ifndef _mqtt_context_h__
 #define _mqtt_context_h__
 
+#include "common/mbuf.hpp"
 #include "reactor/define.hpp"
 #include "mqttc++/mqtt_msg.hpp"
 

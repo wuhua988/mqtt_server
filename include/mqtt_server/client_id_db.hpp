@@ -6,11 +6,13 @@
 #include "common/mbuf.hpp"
 #include "mqtt_server/mqtt_context.hpp"
 
+class CMbuf;
 
 namespace reactor
 {
     class CPersist;
 
+#if 0
     class CMsgMemStore
     {
 	friend class CPersist;
@@ -22,7 +24,18 @@ namespace reactor
 
 	 uint64_t last_msg_id();
 	 void last_msg_id(uint64_t msg_id);
-	/*
+	
+	 int add_mag(CMbuf *msg)
+	 {
+	     return 0;
+	 }
+
+	 int del_msg(uint64_t msg_id)
+	 {
+	     return 0;
+	 }
+
+	 /*
         uint64_t add_msg(CMbuf_ptr &msg);
         
         uint64_t next_msg_id();
@@ -43,7 +56,8 @@ namespace reactor
     };
     
 #define MSG_MEM_STORE   CSingleton<CMsgMemStore>::instance()
-    
+#endif 
+
     class CClientIdContext
     {
 	friend class CPersist;

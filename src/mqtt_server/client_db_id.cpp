@@ -6,12 +6,13 @@
 //
 //
 
-
+#include "common/mbuf.hpp"
 #include "mqtt_server/client_id_db.hpp"
 #include "mqtt_server/persist.hpp"
 
 namespace reactor
-{    
+{
+#if 0
     CMsgMemStore::CMsgMemStore(): m_last_msg_id (0)
     {
     }
@@ -83,7 +84,8 @@ namespace reactor
         return m_last_update_time;
     }
     */
-    
+#endif
+
     
     int CClientIdContext::find_client_context(std::string &client_id, CMqttClientContext_ptr &client_context)
     {

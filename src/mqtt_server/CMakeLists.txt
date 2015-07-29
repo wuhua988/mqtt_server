@@ -7,6 +7,7 @@ message("TCPServer SOURCES = " ${SOURCES})
 
 add_executable(mqtt_server ${SOURCES})
 
+TARGET_LINK_LIBRARIES(mqtt_server common)
 TARGET_LINK_LIBRARIES(mqtt_server log4cplus)
 TARGET_LINK_LIBRARIES(mqtt_server mqttc++)
 TARGET_LINK_LIBRARIES(mqtt_server reactor)

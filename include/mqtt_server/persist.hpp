@@ -55,9 +55,10 @@ namespace reactor
 	int store_client_info();
 	int store_retain_msg();
 
-	int restore_db_info(uint8_t *buf, uint32_t len);
+	int restore_db_info(uint8_t *chunk_buf, uint32_t len);
 	int restore_db_msg(uint8_t *chunk_buf, int len);
 	int restore_client_info(uint8_t *chunk_buf, uint32_t len);
+	int restore_retain_msg(uint8_t *chunk_buf, uint32_t len);
 
 	int write_chunk_info(CHUNK_TYPE type, uint32_t chunk_len);
 	int write(void *buf, uint32_t len);

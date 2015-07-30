@@ -127,15 +127,19 @@ uint32_t CMbuf::max_size()
     return m_max_size;
 }
 
-void CMbuf::msg_id(uint64_t msg_id)
+void CMbuf::msg_id(uint64_t msg_id, bool regist_to_db)
 {
     m_msg_id = msg_id;
 
-    m_mem_db = MSG_MEM_STORE;
-    // add to mem store
-    if (msg_id && m_mem_db != nullptr)
+    if (regist_to_db)
     {
-	m_mem_db->add_msg(msg_id, this);
+	m_mem_db = MSG_MEM_STORE;
+	
+	// add to mem store
+	if (msg_id && m_mem_db != nullptr)
+	{
+	    m_mem_db->add_msg(msg_id, this);
+	}
     }
 }
 

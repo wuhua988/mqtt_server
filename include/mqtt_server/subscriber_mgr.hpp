@@ -27,8 +27,7 @@ namespace reactor
         
         CONTEXT_SET & client_context();
         
-        int add_client(CMqttClientContext_ptr &cli_context);
-        
+        int add_client(CMqttClientContext_ptr &cli_context);        
         int del_client(CMqttClientContext_ptr &cli_context);
         
         void print();
@@ -57,9 +56,9 @@ namespace reactor
         int publish(std::string &str_topic_name, CMbuf_ptr &mbuf, CMqttPublish &publish_msg);
         
         void print();
-        // int store(CPersist* persist);
-        // int restore(uint8 *UNUSED(buf), uint32_t UNUSED(len));
-        
+       
+	std::unordered_map<std::string,CTopicNode_ptr> & topic_mgr();
+
     protected:
         std::unordered_map<std::string,CTopicNode_ptr> m_topic_mgr;
     };

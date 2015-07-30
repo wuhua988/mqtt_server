@@ -33,3 +33,7 @@ V1.0.6
 1. flush db_last_id, client_msg, db_msg to file 
 2. restore info from file
 3. not implement retain msg
+
+V1.0.7
+1. add retain msg persist
+2. fixed retain msg msg_id = 0

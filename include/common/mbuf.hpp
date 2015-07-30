@@ -68,7 +68,7 @@ public:
 
     uint32_t max_size();
     
-    void msg_id(uint64_t msg_id);
+    void msg_id(uint64_t msg_id, bool regist_to_db = true);
     
     uint64_t msg_id();
 

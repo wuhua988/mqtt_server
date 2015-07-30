@@ -21,7 +21,7 @@ void handle_sigint(int signal)
 }
  */
 
-#define version "1.0.6"
+#define version "1.0.7"
 
 static struct option long_options[] = {
     { "help",           no_argument,        NULL,   'h' },

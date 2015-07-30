@@ -85,6 +85,7 @@ namespace reactor
 	    // send retain msg
 	    if ( (retain_msg.get() != nullptr) && (mqtt_conn != nullptr) )
 	    {
+		cli_context->add_send_msg(retain_msg);
 		return mqtt_conn->put(retain_msg);
 	    }
 	}
@@ -150,16 +151,20 @@ namespace reactor
 	if (fixed_header.retain_flag())
 	{
 	    CMbuf_ptr publish_retain_msg = make_shared<CMbuf>(mbuf->length());
+	    publish_retain_msg->copy(mbuf->read_ptr(), mbuf->length());
+	    publish_retain_msg->msg_id(mbuf->msg_id(), false); // not regist to mem db
 
 	    // set retain flag
 	    FixHeaderFlag *header_flag = (FixHeaderFlag *)publish_retain_msg->read_ptr();
 	    header_flag->bits.retain = 1;
 
 
-	    LOG_DEBUG("Publish msg retain flag is set");
+	    LOG_DEBUG("Publish msg retain flag is set, msg_id %ld", publish_retain_msg->msg_id());
 	    if (publish_msg.payload().size() > 0)
 	    {
-		LOG_DEBUG("Update retain msg for topic [%s]", str_topic_name.c_str());
+		LOG_DEBUG("Update retain msg for topic [%s], buf len %d", 
+					str_topic_name.c_str(), publish_retain_msg->length());
+
 		it->second->update_retain_msg(publish_retain_msg);
 	    }
 	    else
@@ -178,6 +183,9 @@ namespace reactor
 
 	int count = 0;
 	CONTEXT_SET &client_context_set = it->second->client_context();
+	
+	LOG_DEBUG("Subscribe clients size %d", (uint32_t)client_context_set.size());
+
 	for (auto it = client_context_set.begin(); it != client_context_set.end(); it++)
 	{
 	    // it mean client_context object
@@ -223,19 +231,11 @@ namespace reactor
 
     }
 
-    /*
-       int CSubscriberMgr::store(CPersist *UNUSED(persist))
-       {
-    // topic   -> retain_msg_id
-    //         -> client_id -> cient_id -> client_id  (len + client_id)
-    return 0;
-    }
 
-    int CSubscriberMgr::restore(uint8 *UNUSED(buf), uint32_t UNUSED(len))
+    std::unordered_map<std::string,CTopicNode_ptr>  & CSubscriberMgr::topic_mgr()
     {
-    return 0;
+	return m_topic_mgr;
     }
-    */
 
 
 } // end of namespace

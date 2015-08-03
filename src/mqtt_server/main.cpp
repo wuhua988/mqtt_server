@@ -1,11 +1,13 @@
 #include "mqtt_server/tcp_server.hpp"
+#include "mqtt_server/xml_config.hpp" 
 #include <signal.h>
 
 extern char *optarg;
 extern int optind, opterr, optopt;
 #include <getopt.h>
 
-int g_stop_flag = 0;
+
+//int g_stop_flag = 0;
 
 using namespace reactor;
 
@@ -21,28 +23,21 @@ void handle_sigint(int signal)
 }
  */
 
-#define version "1.0.7"
+#define version "1.0.8"
 
 static struct option long_options[] = {
     { "help",           no_argument,        NULL,   'h' },
-    { "server_ip",      required_argument,  NULL,   's' },
-    { "port",           required_argument,  NULL,   'p' },
-    { "log_conf",       required_argument,  NULL,   'f' },
-    { "thread_num",     required_argument,  NULL,   'n' },
+    { "conf_file",        required_argument,  NULL,   'f' },
     { NULL,             0,                  NULL,    0  }
 };
 
-static char short_options[] = "hs:p:f:n:";
+static char short_options[] = "hf:";
 
 void usage(int , char* argv[])
 {
-    fprintf(stderr, "Usage: %s [-s server_bind_ip -p server_port -f log_conf_file -n thread_num]\n", argv[0]);
+    fprintf(stderr, "Usage: %s -f config_file\n", argv[0]);
     fprintf(stderr, "\n\tVersion %s\n\n", version); 
-    fprintf(stderr, "\t -s default: 0.0.0.0\n");
-    fprintf(stderr, "\t -p default: 5050\n");
-    fprintf(stderr, "\t -f default: log4cplus.properties\n");
-    fprintf(stderr, "\t -n default: 1, for reserved\n\n");
-            
+    
     exit(0);
 }
 
@@ -51,8 +46,8 @@ int main(int argc, char *argv[])
 {
     opterr = 0;
     std::string str_server_ip("0.0.0.0");
-    std::string str_log_conf("log4cplus.properties");
-    
+    std::string str_conf_file_name("setting.xml");
+
     uint16_t    server_port = 5050;
     uint32_t    thread_num  = 1; // used later
     
@@ -68,21 +63,10 @@ int main(int argc, char *argv[])
         
         switch (c)
         {
-            case 's':
-                str_server_ip = optarg;
-                break;
-                
-            case 'p':
-                server_port = atoi(optarg);
-                break;
-                
             case 'f':
-                str_log_conf = optarg;
+                str_conf_file_name = optarg;
                 break;
                 
-            case 'n':
-                thread_num =  atoi(optarg);
-                break;
                 
             case '?':
             case 'h':
@@ -94,10 +78,18 @@ int main(int argc, char *argv[])
                 break;
         }
     }
-    
-    CLoggerMgr logger(str_log_conf.c_str());
-    CSockAddress server_addr(str_server_ip, server_port);
 
+    ERROR_RETURN(CONFIG->open(str_conf_file_name), -1);
+    
+    str_server_ip   = CONFIG->get_server_listen_ip();
+    server_port	    = CONFIG->get_server_listen_port();
+    thread_num	    = CONFIG->get_thread_number();
+
+    CONFIG->print();
+
+    // CLoggerMgr logger(str_log_conf.c_str()); -> CONFIG->open()
+    
+    CSockAddress server_addr(str_server_ip, server_port);
     LOG_INFO("Server will start at [%s:%d], thread_num [%d]....", 
 		    str_server_ip.c_str(), server_port, thread_num);
     

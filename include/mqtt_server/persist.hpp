@@ -12,12 +12,13 @@
 #include "mqtt_server/subscriber_mgr.hpp"
 #include "mqtt_server/client_id_db.hpp"
 
+/*
 #define  ERROR_RETURN(a, b) \
         if ( (a) < 0 )        \
     {                   \
 	        return b;       \
 	    }                   \
-
+*/
 
 enum class CHUNK_TYPE 
 {

@@ -8,6 +8,7 @@
 
 #include <signal.h>
 #include "mqtt_server/tcp_server.hpp"
+#include "mqtt_server/xml_config.hpp"
 
 namespace reactor // later -> mqtt_server
 {
@@ -58,8 +59,10 @@ namespace reactor // later -> mqtt_server
         sig_ign_set.insert(SIGPIPE);
         
         m_sig_handler->open(sig_set, sig_ign_set);
-	
-        m_timer_handler->open(60, 60); // every min to check timeout
+
+	uint32_t time_flush = CONFIG->get_flush_interval();
+
+        m_timer_handler->open(time_flush, time_flush); // every min to check timeout
 
         return 0;
     }

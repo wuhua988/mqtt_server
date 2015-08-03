@@ -219,4 +219,25 @@ namespace reactor
 #define __func__ __FUNCTION__                                                                       
 #endif  
 
+#define ERROR_RETURN(a,b)\
+if ( (a) < 0 )\
+{\
+    return b;\
+}       
+
+#define NULL_PTR_RETRUN(a,b)\
+{\
+    if ( (a) == nullpr )\
+    {\
+	return b;\
+    }\
+}
+
+#define GETSETVAR(type, name)\
+protected:\
+    type m_##name;\
+public:\
+    const type & get_##name() const { return m_##name; }\
+    void set_##name(const type & newval) { m_##name = newval; }
+
 #endif

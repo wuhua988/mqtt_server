@@ -63,12 +63,18 @@ namespace reactor
         m_recv_bytes += read_len;
         
         m_cur_buf_pos = read_len;
-        
+       
+	m_last_msg_time  = time(0);
         return this->process_mqtt(m_recv_buffer, read_len);
     }
     
     int CMqttConnection::process_mqtt(uint8_t *buf, uint32_t len)
     {
+	if (m_client_context.get() != nullptr)
+	{
+	    m_client_context->last_msg_in(time(0));
+	}
+
         // first check is a full pkt
         uint32_t remain_length_value = 0;
         uint8_t remain_length_bytes = 0;
@@ -398,12 +404,13 @@ namespace reactor
             }
         }
         
-        // 1. change msg id and store msg
+        // 1. change msg id and regist msg to mem store
         CMbuf_ptr mbuf_pub  = make_shared<CMbuf>(len);   // copy buf and send to other client
         
         uint64_t publish_msg_id = MSG_MEM_STORE->next_msg_id();   // change msg_id to msg_id
         mbuf_pub->msg_id(publish_msg_id);
-        
+	mbuf_pub->regist_mem_store(MSG_MEM_STORE);
+
         uint32_t msg_id_offset = publish.msg_id_offset();
         if (msg_id_offset < len)
         {

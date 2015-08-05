@@ -24,7 +24,7 @@ message(" *SRC_DIR =" ${SRC_DIR} )
 set(BIN_DIR ${PROJECT_SOURCE_DIR}/bin)
 message(" *BIN_DIR =" ${BIN_DIR} )
 
-set(INCLUDE_DIR ${PROJECT_SOURCE_DIR}/include ${PROJECT_SOURCE_DIR}/include/common)
+set(INCLUDE_DIR ${PROJECT_SOURCE_DIR}/include ${PROJECT_SOURCE_DIR}/include/common ${PROJECT_SOURCE_DIR}/include/msgpack)
 message(" *INCLUDE_DIR = " ${INCLUDE_DIR})
 
 include_directories(${INCLUDE_DIR})

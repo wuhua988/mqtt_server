@@ -53,7 +53,7 @@ namespace reactor
         }
         
         virtual int handle_input(socket_t sock_id);
-        virtual int handle_close(socket_t sock_id);
+        virtual int handle_close(socket_t sock_id = INVALID_SOCKET);
         
         // mqtt logic
         int process_mqtt(uint8_t *buf, uint32_t len);
@@ -66,12 +66,19 @@ namespace reactor
         int handle_unsubscribe_msg(uint8_t *buf, uint32_t len, CMqttConnection *mqtt_connection);
         int handle_pingreq_msg(uint8_t *buf, uint32_t len, CMqttConnection *mqtt_connection);
         int handle_disconnect_msg(uint8_t *buf, uint32_t len, CMqttConnection *mqtt_connection);
-        
+
+	time_t last_msg_time()
+	{
+	    return m_last_msg_time; 
+	}
+
     protected:
         CMqttClientContext_ptr m_client_context;
         
         uint8_t     m_recv_buffer[MAX_BUF_SIZE];
         uint32_t    m_cur_buf_pos;
+
+	time_t	    m_last_msg_time;
     };
 }
 

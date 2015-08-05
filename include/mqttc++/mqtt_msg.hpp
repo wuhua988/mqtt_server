@@ -12,6 +12,7 @@
 #include <memory>
 #include "reactor/define.hpp"
 #include "mqtt_pkt.hpp"
+#include "msgpack/msgpack.hpp"
 
 enum class MqttType {
     RESERVED1   = 0,
@@ -349,6 +350,9 @@ public:
 protected:
     std::string     m_str_topic_name;
     uint8_t         m_qos;
+
+public:
+    MSGPACK_DEFINE(m_str_topic_name, m_qos);
 };
 
 class CMqttSubscribe : public CMqttMsg    // decode

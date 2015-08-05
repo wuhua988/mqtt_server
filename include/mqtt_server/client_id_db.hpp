@@ -73,6 +73,11 @@ namespace reactor
         int store(CPersist* persist);
         int restore(uint8_t *UNUSED(buf), uint32 UNUSED(len));
 
+	std::unordered_map<std::string, CMqttClientContext_ptr> & client_context()
+	{
+	    return m_client_msg;
+	}
+
     protected:
         std::unordered_map<std::string, CMqttClientContext_ptr>    m_client_msg;
     };

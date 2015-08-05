@@ -1,28 +1,39 @@
 #include "common/mbuf.hpp"
 #include "common/msg_mem_store.hpp" 
 
+
 CMbuf::CMbuf(uint32_t size)
 {
-    LOG_TRACE_METHOD(__func__);      
-    m_max_size = size;
-    m_base_ptr = new uint8_t[size]; // later from mem pool
-
-    m_read_ptr = m_base_ptr;
-    m_write_ptr = m_base_ptr;
-
-    m_msg_id = 0;
+    LOG_TRACE_METHOD(__func__);
+    init(size);
 }
 
 CMbuf::CMbuf()
 {
-    LOG_TRACE_METHOD(__func__); 
-    m_max_size = MAX_DEFAULT_BUF_SIZE; // default size len
-    m_base_ptr = new uint8_t[m_max_size];
+    LOG_TRACE_METHOD(__func__);
+    init(MAX_DEFAULT_BUF_SIZE);
+}
 
-    m_read_ptr = m_base_ptr;
-    m_write_ptr = m_base_ptr;
-
+int CMbuf::init(uint32_t size)
+{
+    m_data.size = size;
+    m_data.ptr = (const char *)new uint8_t[size];  // later from mem pool
+    
+    m_read_pos = 0;
+    m_write_pos = 0;
     m_msg_id = 0;
+
+    return 0;
+}
+
+void CMbuf::regist_mem_store(CMsgMemStore *mem_store)
+{
+    m_mem_db = mem_store;
+
+    if (m_msg_id && m_mem_db != nullptr)
+    {
+	m_mem_db->add_msg(m_msg_id, this);
+    }
 }
 
 CMbuf::~CMbuf()
@@ -31,10 +42,10 @@ CMbuf::~CMbuf()
 
     if (m_msg_id && m_mem_db != nullptr)
     {
-	m_mem_db->del_msg(m_msg_id);
+        m_mem_db->del_msg(m_msg_id);
     }
 
-    delete []m_base_ptr;
+    delete []m_data.ptr;
 }
 
 std::shared_ptr<CMbuf> CMbuf::copy()
@@ -45,48 +56,48 @@ std::shared_ptr<CMbuf> CMbuf::copy()
 // get read ptr
 uint8_t * CMbuf::read_ptr()
 {
-    return m_read_ptr;
+    return (uint8_t *)(m_data.ptr + m_read_pos);
 }
 
 // set write ptr skip offset
 void CMbuf::read_ptr(uint32_t n)
 {
-    if (m_read_ptr + n > m_base_ptr + m_max_size)
+    if (m_read_pos + n > m_data.size)
     {
-	return;
+        return;
     }
 
-    m_read_ptr += n;
+    m_read_pos += n;
 }
 
 // get read ptr
 uint8_t * CMbuf::write_ptr()
 {
-    return m_write_ptr;
+    return (uint8_t *)(m_data.ptr + m_write_pos);;
 }
 
 // set write ptr skip offset
 void CMbuf::write_ptr(uint32_t n)
 {
-    if (m_write_ptr + n > m_base_ptr + m_max_size)
+    if (m_write_pos + n > m_data.size)
     {
-	return;
+        return;
     }
 
-    m_write_ptr += n;
+    m_write_pos += n;
 }
 
 // copy data to buf, and  adjust offset
 int CMbuf::copy(const uint8_t *buf, int len)
 {
-    if (m_write_ptr - m_base_ptr + len > m_max_size)
+    if (m_write_pos + len > m_data.size)
     {
-	return -1;
+        return -1;
     }
 
-    memcpy(m_write_ptr, buf, len);
+    memcpy((void *)(m_data.ptr + m_write_pos), buf, len);
 
-    m_write_ptr += len;
+    m_write_pos += len;
 
     return 0;
 }
@@ -94,53 +105,40 @@ int CMbuf::copy(const uint8_t *buf, int len)
 // get base ptr
 uint8_t * CMbuf::base_ptr()
 {
-    return m_base_ptr;
+    return (uint8_t *)m_data.ptr;
 }
 
 // get end ptr
 uint8_t * CMbuf::end_ptr()
 {
-    return m_base_ptr + m_max_size;
+    return (uint8_t *)(m_data.ptr + m_data.size);
 }
 
 uint32_t CMbuf::length()
 {
-    return uint32_t(m_write_ptr - m_read_ptr);
+    return uint32_t(m_write_pos - m_read_pos);
 }
 
 void CMbuf::reset()
 {
-    m_read_ptr = m_base_ptr;
-    m_write_ptr = m_base_ptr;
+    m_read_pos = 0;
+    m_write_pos = 0;
+    // m_msg_id = 0;
 }
 
 uint32_t CMbuf::available_buf()
 {
-    LOG_DEBUG("In available_buf, max_size %d, m_base_ptr 0x%p, m_write_ptr 0x%p",
-	    m_max_size, m_base_ptr, m_write_ptr);
-
-    return uint32_t(m_max_size + m_base_ptr - m_write_ptr);
+    return uint32_t(m_data.size - m_write_pos);
 }
 
 uint32_t CMbuf::max_size()
 {
-    return m_max_size;
+    return m_data.size;
 }
 
-void CMbuf::msg_id(uint64_t msg_id, bool regist_to_db)
+void CMbuf::msg_id(uint64_t msg_id)
 {
     m_msg_id = msg_id;
-
-    if (regist_to_db)
-    {
-	m_mem_db = MSG_MEM_STORE;
-	
-	// add to mem store
-	if (msg_id && m_mem_db != nullptr)
-	{
-	    m_mem_db->add_msg(msg_id, this);
-	}
-    }
 }
 
 uint64_t CMbuf::msg_id()

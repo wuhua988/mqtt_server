@@ -26,6 +26,8 @@
 #include <memory>
 #include "reactor/define.hpp" 
 
+#include "msgpack/msgpack.hpp"
+
 class CMsgMemStore; 
 
 const int MAX_DEFAULT_BUF_SIZE = 512;
@@ -36,6 +38,10 @@ public:
     CMbuf(uint32_t size);
     CMbuf();
     ~CMbuf();
+
+    void regist_mem_store(CMsgMemStore *mem_store);
+
+    int init(uint32_t size);
 
     std::shared_ptr<CMbuf> copy();
 
@@ -68,20 +74,23 @@ public:
 
     uint32_t max_size();
     
-    void msg_id(uint64_t msg_id, bool regist_to_db = true);
+    void msg_id(uint64_t msg_id);
     
     uint64_t msg_id();
 
     
 private:
-    uint32_t           m_max_size;     /* 数据包大小 */
-    uint8_t            *m_read_ptr;    /* read marker */
-    uint8_t            *m_write_ptr;   /* write marker */
-    uint8_t            *m_base_ptr;    /* start of buffer (const) */
+    msgpack::type::raw_ref  m_data;
     
-    uint64_t           m_msg_id;
+    uint32_t            m_read_pos;    /* read marker */
+    uint32_t            m_write_pos;   /* write marker */
+    uint64_t            m_msg_id;
 
     CMsgMemStore       *m_mem_db = nullptr;
+    
+public:
+    MSGPACK_DEFINE(m_data, m_read_pos, m_write_pos, m_msg_id);
+    
 };
 
 typedef std::shared_ptr<CMbuf> CMbuf_ptr;

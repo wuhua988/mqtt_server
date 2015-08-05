@@ -2,6 +2,8 @@
 #define _msg_mem_store__
 
 #include "common/singleton.hpp"
+#include "msgpack/msgpack.hpp"
+
 
 class CMbuf;
 
@@ -26,6 +28,10 @@ class CMsgMemStore
         uint64_t                                    m_last_msg_id;
 	std::unordered_map<uint64_t, CMbuf *>     m_msg_db;
 	uint32_t                                    m_last_update_time;
+
+public:
+	MSGPACK_DEFINE(m_last_msg_id, m_last_update_time);
+
 };
 
 #define MSG_MEM_STORE   CSingleton<CMsgMemStore>::instance()

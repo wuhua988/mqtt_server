@@ -75,6 +75,7 @@ int CXMLConfig::open()
     //      <ip>0.0.0.0</ip>
     //      <port>5060</port>
     //      <db_flush_interval>60</db_flush_interval>
+    //      <max_idle_time>300</max_idle_time>
     //</mqtt_server>
     
     tinyxml2::XMLElement *mqtt_server = doc.FirstChildElement("mqtt_server");
@@ -93,6 +94,14 @@ int CXMLConfig::open()
     if (m_flush_interval <= 0)
     {
         m_flush_interval = 5*60; // 5 min
+    }
+
+    ERROR_RETURN(this->read_node_text(mqtt_server, "max_idle_timeout", tmp), -1);
+    m_max_idle_timeout = atoi(tmp.c_str()); 
+
+    if (m_max_idle_timeout <= 0)
+    {
+	m_max_idle_timeout = 300; // 5min
     }
     
     //<parent_mqtt_server>
@@ -133,17 +142,17 @@ int CXMLConfig::open()
 void CXMLConfig::print()
 {
     LOG_INFO("\t ------- Global --------------------");
-    LOG_INFO("\t\t Setting file name [%s]",  m_file_name.c_str());
-    LOG_INFO("\t\t Log conf file name [%s]", m_log_conf_name.c_str());
-    LOG_INFO("\t\t Thread number [%d]\n", m_thread_number);
+    LOG_INFO("\t  Setting file name [%s]",  m_file_name.c_str());
+    LOG_INFO("\t  Log conf file name [%s]", m_log_conf_name.c_str());
+    LOG_INFO("\t  Thread number [%d]\n", m_thread_number);
     
     LOG_INFO("\t ------- MQTT Server ----------------");
-    LOG_INFO("\t\t Server listen at [%s:%d]", m_server_listen_ip.c_str(), m_server_listen_port);
-    LOG_DEBUG("\t\t DB AND TIMOUT Check Interval [%d]\n", m_flush_interval);
+    LOG_INFO("\t  Server listen at [%s:%d]", m_server_listen_ip.c_str(), m_server_listen_port);
+    LOG_INFO("\t  DB AND TIMOUT Check Interval [%d]\n", m_flush_interval);
     
     LOG_INFO("\t ------- Parent MQTT Server ----------");
-    LOG_INFO("\t\t Parent Server Addr [%s:%d]", m_parent_server_ip.c_str(), m_parent_server_port);
-    LOG_INFO("\t\t UserName [%s], TopicName [%s], KeepAlive [%d]",
+    LOG_INFO("\t  Parent Server Addr [%s:%d]", m_parent_server_ip.c_str(), m_parent_server_port);
+    LOG_INFO("\t  UserName [%s], TopicName [%s], KeepAlive [%d]",
                     m_parent_user_name.c_str(), m_parent_topic_name.c_str(), m_parent_keep_alive);
     
     

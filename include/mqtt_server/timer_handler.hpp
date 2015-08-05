@@ -9,12 +9,13 @@ namespace reactor
 {
 
     class CPersist;
+    class CPersistMsgPack;
 
     class CTimerHandler : public CEventHandler
     {
 
 	public:
-	    CTimerHandler(CPoller *poller, CPersist *persist)
+	    CTimerHandler(CPoller *poller, CPersistMsgPack *persist)
 		: CEventHandler(poller), m_persist(persist)
 	    {
 		LOG_TRACE_METHOD(__func__);
@@ -33,7 +34,7 @@ namespace reactor
 	    uint32_t    m_start_second;
 	    uint32_t    m_interval_second;
 
-	    CPersist	*m_persist;
+	    CPersistMsgPack	*m_persist;
     };
 
 }

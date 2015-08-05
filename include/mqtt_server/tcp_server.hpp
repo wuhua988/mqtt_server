@@ -13,7 +13,7 @@
 #include "mqtt_server/acceptor.hpp"
 #include "reactor/sig_handler.hpp"
 #include "mqtt_server/timer_handler.hpp"
-#include "mqtt_server/persist.hpp"
+#include "mqtt_server/persist_msg_pack.hpp"
 
 namespace reactor
 {
@@ -42,7 +42,7 @@ namespace reactor
         
         CSigHandler      *m_sig_handler = nullptr;  // manage by handle_close()
         CTimerHandler    *m_timer_handler = nullptr; // manage by handle_close()
-	CPersist	 m_persist;
+	CPersistMsgPack	 m_persist;
     };
 }
 

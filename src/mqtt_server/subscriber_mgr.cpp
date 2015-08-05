@@ -150,9 +150,10 @@ namespace reactor
 
 	if (fixed_header.retain_flag())
 	{
+	    // not regist to mem store
 	    CMbuf_ptr publish_retain_msg = make_shared<CMbuf>(mbuf->length());
 	    publish_retain_msg->copy(mbuf->read_ptr(), mbuf->length());
-	    publish_retain_msg->msg_id(mbuf->msg_id(), false); // not regist to mem db
+	    publish_retain_msg->msg_id(mbuf->msg_id());
 
 	    // set retain flag
 	    FixHeaderFlag *header_flag = (FixHeaderFlag *)publish_retain_msg->read_ptr();

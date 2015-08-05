@@ -40,9 +40,12 @@ valgrind --leak-check=yes ./tcp_server
 mqtt_pub:
 mosquitto_pub -t sensors/temperature -m 32 -q 1 -h 10.1.11.34 -p 5050
 
+ mosquitto_pub -t sensors/temperature -m 32 -q 1 -h 10.1.11.34 -p 5060 -r // msg retain 
+
 mqtt_sub:
 mosquitto_sub -t sensors/temperature -q 1 -h 10.1.11.34 -p 5050
 
+mosquitto_sub -t sensors/temperature -q 1 -h 10.1.11.34 -p 5060 -c -i client_id // not clean session
 
 code line stat:
 $cd mqtt_server

@@ -174,8 +174,8 @@ namespace reactor
 
 	CMbuf_ptr mbuf =  make_shared<CMbuf>(buf_len);
 	mbuf->copy(buf, buf_len);
-
 	mbuf->msg_id(msg_id);
+	mbuf->regist_mem_store(MSG_MEM_STORE);
 
 	m_tmp_msg_db[msg_id] = mbuf;
 
@@ -466,7 +466,8 @@ namespace reactor
 	    CMbuf_ptr mbuf =  make_shared<CMbuf>(buf_len);                                              
 	    mbuf->copy(buf, buf_len);
 
-	    mbuf->msg_id(msg_id, false); // false not registe to db msg
+	    mbuf->msg_id(msg_id); 
+
 	    // std::unordered_map<std::string,CTopicNode_ptr>
 	    // add update_retain_msg(std::string topic_name, CMbuf_ptr mbuf) to SUB_MGR later
 	    auto topic_mgr = SUB_MGR->topic_mgr();

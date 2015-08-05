@@ -40,3 +40,7 @@ V1.0.7
 
 V1.0.8
 1. change setting file to xml, and open log in CONFIG->open()
+
+V1.0.9
+1. change persist to msg pack
+2. add idle client timeout check, lazy check in store_client_info()

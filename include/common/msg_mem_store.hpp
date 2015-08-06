@@ -24,6 +24,7 @@ class CMsgMemStore
 
 	uint32_t last_update_time();
 
+	void print();
     protected:
         uint64_t                                    m_last_msg_id;
 	std::unordered_map<uint64_t, CMbuf *>     m_msg_db;

@@ -21,7 +21,7 @@ namespace reactor
     {
     public:
         
-        TCPServer():m_server_address(5050), m_persist("dup.db")
+        TCPServer(std::string &file_name):m_server_address(5050), m_persist(file_name)
         {
             LOG_TRACE_METHOD(__func__);
 

@@ -89,8 +89,18 @@ private:
     CMsgMemStore       *m_mem_db = nullptr;
     
 public:
-    MSGPACK_DEFINE(m_data, m_read_pos, m_write_pos, m_msg_id);
-    
+    MSGPACK_DEFINE(m_data, m_read_pos, m_write_pos, m_msg_id);    
+};
+
+class CMbuf_tmp
+{
+    public:
+	msgpack::type::raw_ref  m_data;
+	uint32_t            m_read_pos;
+	uint32_t            m_write_pos;
+	uint64_t            m_msg_id;
+    public:
+	MSGPACK_DEFINE(m_data, m_read_pos, m_write_pos, m_msg_id); 
 };
 
 typedef std::shared_ptr<CMbuf> CMbuf_ptr;

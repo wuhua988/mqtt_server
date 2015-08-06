@@ -74,6 +74,7 @@ int CXMLConfig::open()
     //<mqtt_server>
     //      <ip>0.0.0.0</ip>
     //      <port>5060</port>
+    //      <db_file_name>dup.db</db_file_name>
     //      <db_flush_interval>60</db_flush_interval>
     //      <max_idle_time>300</max_idle_time>
     //</mqtt_server>
@@ -89,6 +90,8 @@ int CXMLConfig::open()
     ERROR_RETURN(this->read_node_text(mqtt_server, "port", tmp), -1);
     m_server_listen_port = (uint16_t)atoi(tmp.c_str());
     
+    ERROR_RETURN(this->read_node_text(mqtt_server, "db_file_name", m_db_file_name), -1); 
+
     ERROR_RETURN(this->read_node_text(mqtt_server, "db_flush_interval", tmp), -1);
     m_flush_interval = atoi(tmp.c_str());
     if (m_flush_interval <= 0)
@@ -148,8 +151,10 @@ void CXMLConfig::print()
     
     LOG_INFO("\t ------- MQTT Server ----------------");
     LOG_INFO("\t  Server listen at [%s:%d]", m_server_listen_ip.c_str(), m_server_listen_port);
-    LOG_INFO("\t  DB AND TIMOUT Check Interval [%d]\n", m_flush_interval);
-    
+    LOG_INFO("\t  DB AND TIMOUT Check Interval [%d]", m_flush_interval);
+    LOG_INFO("\t  DB file name [%s]", m_db_file_name.c_str());
+    LOG_INFO("\t  Max client timeout [%d]\n", m_max_idle_timeout);
+
     LOG_INFO("\t ------- Parent MQTT Server ----------");
     LOG_INFO("\t  Parent Server Addr [%s:%d]", m_parent_server_ip.c_str(), m_parent_server_port);
     LOG_INFO("\t  UserName [%s], TopicName [%s], KeepAlive [%d]",

@@ -7,6 +7,7 @@
 <mqtt_server>
 	<ip>0.0.0.0</ip>
 	<port>5060</port>
+	<db_file_name>dup.db</db_file_name>
 	<db_flush_interval>30</db_flush_interval>
 	<max_idle_timeout>300</max_idle_timeout>
 </mqtt_server>

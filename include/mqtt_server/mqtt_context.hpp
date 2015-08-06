@@ -195,6 +195,25 @@ namespace reactor // later --> mqtt_server
 		m_last_msg_in = time; 
 	    }
 
+	    void print()
+	    {
+		LOG_DEBUG(" Client_id [%s]", m_client_id.c_str());
+		LOG_DEBUG(" Topic num [%d]", (uint32_t)m_subcribe_topics.size());
+
+		uint32_t i = 0;
+		for (auto it = m_subcribe_topics.begin(); it != m_subcribe_topics.end(); it++)
+		{
+		    LOG_DEBUG("\t [%d] %s %d", ++i, it->topic_name().c_str(), it->qos());
+		}
+
+		LOG_DEBUG(" Send msg queue [%d]", (uint32_t) m_send_msg_queue.size());
+		
+		i = 0;
+		for (auto it = m_send_msg_queue.begin(); it != m_send_msg_queue.end(); it++)
+		{
+		     LOG_DEBUG("\t [%d] id %ld, len %d", ++i, (*it)->msg_id(),(*it)->length());   
+		}
+	    }
 	protected:
 	    // socket_t    m_sock_id;
 	    CMqttConnection *m_mqtt_connection = nullptr;

@@ -47,6 +47,7 @@ class CXMLConfig
 	GETSETVAR(std::string, parent_server_ip);
 	GETSETVAR(std::string, parent_user_name);
 	GETSETVAR(std::string, parent_topic_name);
+	GETSETVAR(std::string, db_file_name);
 
 
 	GETSETVAR(uint16_t, server_listen_port);
@@ -55,7 +56,6 @@ class CXMLConfig
 
 	GETSETVAR(uint32_t, thread_number);
 	GETSETVAR(uint32_t, flush_interval);
-
 	GETSETVAR(uint32_t, max_idle_timeout);
 };
 

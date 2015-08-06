@@ -54,3 +54,10 @@ uint32_t CMsgMemStore::last_update_time()
 {
     return m_last_update_time;
 }
+
+void CMsgMemStore::print()
+{
+    LOG_DEBUG("Last msg id %ld", this->m_last_msg_id);
+    LOG_DEBUG("Last update time %d", this->m_last_update_time);
+}
+

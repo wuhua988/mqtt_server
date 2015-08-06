@@ -45,7 +45,19 @@ CMbuf::~CMbuf()
         m_mem_db->del_msg(m_msg_id);
     }
 
-    delete []m_data.ptr;
+    
+    if (m_data.ptr != nullptr)
+    {
+	uint8_t *p = (uint8_t *)m_data.ptr;
+	delete []p;
+
+	m_data.ptr = nullptr;
+    }
+    else
+    {
+	LOG_DEBUG("!!!!!! Maybe double free");
+    }
+    
 }
 
 std::shared_ptr<CMbuf> CMbuf::copy()

@@ -31,6 +31,8 @@
 class CMsgMemStore; 
 
 const int MAX_DEFAULT_BUF_SIZE = 512;
+const uint32_t MSG_DATA = 1;
+const uint32_t MSG_PUBLISH = 2;
 
 class CMbuf: public std::enable_shared_from_this<CMbuf>
 {
@@ -74,14 +76,16 @@ public:
 
     uint32_t max_size();
     
-    void msg_id(uint64_t msg_id);
-    
+    void msg_id(uint64_t msg_id);   
     uint64_t msg_id();
 
+    void msg_type(uint32_t msg_type);
+    uint32_t msg_type();
     
 private:
     msgpack::type::raw_ref  m_data;
     
+    uint32_t		m_msg_type;
     uint32_t            m_read_pos;    /* read marker */
     uint32_t            m_write_pos;   /* write marker */
     uint64_t            m_msg_id;
@@ -89,18 +93,19 @@ private:
     CMsgMemStore       *m_mem_db = nullptr;
     
 public:
-    MSGPACK_DEFINE(m_data, m_read_pos, m_write_pos, m_msg_id);    
+    MSGPACK_DEFINE(m_data, m_msg_type, m_read_pos, m_write_pos, m_msg_id);    
 };
 
 class CMbuf_tmp
 {
     public:
 	msgpack::type::raw_ref  m_data;
+	uint32_t	    m_msg_type;
 	uint32_t            m_read_pos;
 	uint32_t            m_write_pos;
 	uint64_t            m_msg_id;
     public:
-	MSGPACK_DEFINE(m_data, m_read_pos, m_write_pos, m_msg_id); 
+	MSGPACK_DEFINE(m_data, m_msg_type, m_read_pos, m_write_pos, m_msg_id); 
 };
 
 typedef std::shared_ptr<CMbuf> CMbuf_ptr;

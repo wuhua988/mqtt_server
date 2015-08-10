@@ -37,6 +37,9 @@ pingpong test one thread and one client
 
 valgrind --leak-check=yes ./tcp_server
 
+start mosquitto broker:
+/usr/local/opt/mosquitto/sbin/mosquitto -c  /usr/local/etc/mosquitto/mosquitto.conf -v
+
 mqtt_pub:
 mosquitto_pub -t sensors/temperature -m 32 -q 1 -h 10.1.11.34 -p 5050
 

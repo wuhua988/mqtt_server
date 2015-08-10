@@ -56,7 +56,7 @@ namespace reactor
 	uint32_t i = 1;
 	for (auto it = m_subcriber_clients.begin(); it != m_subcriber_clients.end(); it++, i++)
 	{
-	    LOG_DEBUG("[%d] %s", i, (*it)->client_id().c_str());
+	    LOG_DEBUG("\t (%d) %s", i, (*it)->client_id().c_str());
 	}
     }
 

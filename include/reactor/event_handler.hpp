@@ -28,8 +28,12 @@ namespace reactor
 		return 0;
 	    }
 
-	    virtual int handle_output(socket_t socket);
+	    virtual int notify() // use define notify methord
+	    {
+		return 0;
+	    }
 
+	    virtual int handle_output(socket_t socket);
 	    virtual int handle_exception(socket_t UNUSED(socket))
 	    {
 		LOG_TRACE_METHOD(__func__); 

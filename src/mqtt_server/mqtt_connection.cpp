@@ -50,7 +50,16 @@ namespace reactor
         
         // maybe some data left in last read
         int read_len = ::read(this->m_sock_handle, m_recv_buffer + m_cur_buf_pos, CMqttConnection::MAX_BUF_SIZE - m_cur_buf_pos);
-        
+	if (read_len < 0)
+	{
+	    int my_errno = errno;
+	    if (errno == EAGAIN || errno == EWOULDBLOCK || errno == EINTR)
+	    {
+		LOG_DEBUG("Read len < 0, errno %d, return 0 continue", my_errno);
+		return 0;
+	    }
+	}
+
         LOG_DEBUG("handle_input read data len %d, socket [%d]", read_len, this->m_sock_handle);
         if (read_len <= 0)
         {
@@ -62,10 +71,10 @@ namespace reactor
         m_recv_times++;
         m_recv_bytes += read_len;
         
-        m_cur_buf_pos = read_len;
+        m_cur_buf_pos += read_len;
        
 	m_last_msg_time  = time(0);
-        return this->process_mqtt(m_recv_buffer, read_len);
+        return this->process_mqtt(m_recv_buffer, m_cur_buf_pos);
     }
     
     int CMqttConnection::process_mqtt(uint8_t *buf, uint32_t len)

@@ -44,3 +44,12 @@ V1.0.8
 V1.0.9
 1. change persist to msg pack
 2. add idle client timeout check, lazy check in store_client_info()
+
+V1.1.0
+1. add tcp client
+2. fix handle_input() read res judge, and call process lenght adjust
+
+V1.1.1
+1. add tcp client 
+2. add epoll notify queue
+3. tcp client can forward msg to epoll based on notify pipe

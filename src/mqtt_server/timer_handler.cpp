@@ -50,8 +50,12 @@ namespace reactor
 	{
 	    // epoll->check_timeout; check idle client
 	    m_persist->store();
-
 	    LOG_DEBUG("In CTimerHandler::handle_input");
+
+	    // just for test
+	    //CMbuf_ptr mbuf = make_shared<CMbuf>(32);
+	    //mbuf->copy((const uint8_t *)"Hello", 5);
+	    //m_poller_ptr->notify(mbuf);
 	}
 
 	return 0;

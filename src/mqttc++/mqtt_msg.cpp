@@ -169,10 +169,10 @@ int CMqttConnect::encode()
     CMqttMsg::encode();
 
     m_remain_length_value = 0;
-    m_str_proto_name = "Mqisdp";
+    m_str_proto_name = "MQIsdp";
     m_proto_version = 3;
 
-    m_remain_length_value += 2 + strlen("Mqisdp") + 1;  // 2 for proto_name len, 1 for version
+    m_remain_length_value += 2 + strlen("MQIsdp") + 1;  // 2 for proto_name len, 1 for version
     m_remain_length_value += 1;                         // for con flag
     m_remain_length_value += 2;                         // keep alive
     m_remain_length_value += 2 + m_str_client_id.length();
@@ -180,6 +180,7 @@ int CMqttConnect::encode()
     ConnectFlag flag;
     flag.all = 0;
 
+    flag.bits.clean_session = this->m_clean_session;
     m_keep_alive = 60;
 
     LOG_DEBUG(" CMqttConnect::encode: remain len %d", m_remain_length_value);
@@ -223,6 +224,37 @@ void CMqttConnect::print()
 
     LOG_DEBUG("------------------------------------------------");
 }
+int CMqttConnAck::decode()
+{
+    if (CMqttMsg::decode() < 0)
+    {
+	LOG_DEBUG("CMqttConnAck:: CMqttMsg decode failed");
+	return -1;
+    }
+
+    if (m_fixed_header.msg_type() != MqttType::CONNACK)
+    {
+	LOG_DEBUG("CMqttConnAck::msg_type(%d) is not CONNACK", m_fixed_header.msg_type());
+	return -1;
+    }
+
+    if (m_mqtt_pkt.read_byte(m_reserved) < 0)
+    {
+	LOG_DEBUG("Read ack reserved failed");
+	return -1;
+    }
+
+    uint8_t code = 0;
+    if (m_mqtt_pkt.read_byte(code) < 0)
+    {
+	LOG_DEBUG("Read ack code failed.");
+	return -1;
+    }
+
+    m_code = (CMqttConnAck::Code)code;
+
+    return 0;
+}
 
 int CMqttConnAck::encode()
 {
@@ -255,6 +287,46 @@ void CMqttConnAck::print()
     LOG_DEBUG("------------------------------------------------");
 }
 
+int CMqttSubscribe::encode()
+{
+    CMqttMsg::encode();
+    
+    // msg_id topic_name qos
+
+    if (m_sub_topics.empty())
+    {
+	LOG_DEBUG("No topics here");
+	return -1;
+    }
+
+    uint32_t payload_len = 0;
+    for (auto it = m_sub_topics.begin(); it != m_sub_topics.end(); it++)
+    {
+	payload_len += it->topic_name().length() + 2 + 1; // 2 for topic_name len, 1 for qos
+    }
+
+    m_remain_length_value = payload_len + 2; // 2: msg_id
+    m_mqtt_pkt.write_remain_length(m_remain_length_value, m_remain_length_bytes);
+
+    m_mqtt_pkt.write_short(m_msg_id);
+
+    for (auto it = m_sub_topics.begin(); it != m_sub_topics.end(); it++)
+    {
+	m_mqtt_pkt.write_string((uint8_t *) it->topic_name().c_str(), it->topic_name().length());
+	m_mqtt_pkt.write_byte(it->qos());
+    }
+
+    uint32_t pkt_len = m_remain_length_value + m_remain_length_bytes + 1; // 1 for fixed header
+    uint32_t encode_pkt_len = m_mqtt_pkt.length();
+
+    if ( encode_pkt_len != pkt_len) // 1 for fixed header
+    {
+	LOG_DEBUG("CMqttSubscriber:: wrong encode lenght(%d), should be (%d)", encode_pkt_len, pkt_len);
+	return -1;
+    }
+
+    return encode_pkt_len;
+}
 
 int CMqttSubscribe::decode()
 {
@@ -307,6 +379,31 @@ void CMqttSubscribe::print()
     }
 
     LOG_DEBUG("------------------------------------------------");
+}
+
+int CMqttSubAck::decode()
+{
+    if (CMqttMsg::decode() < 0)
+    {
+	LOG_DEBUG("CMqttSubAck:: CMqttMsg decode failed");
+	return -1;
+    }
+
+    if (m_fixed_header.msg_type() != MqttType::SUBACK)
+    {
+	LOG_DEBUG("CMqttSubAck::msg_type(%d) is not SUBACK", m_fixed_header.msg_type());
+	return -1;
+    }
+
+    uint8_t qos = 0;
+    uint8_t left_size = m_mqtt_pkt.left_size();
+    for (uint8_t i = 0; i < left_size; i++)
+    {
+	m_mqtt_pkt.read_byte(qos);
+	m_sub_qos.push_back(qos);
+    }
+
+    return 0;
 }
 
 int CMqttSubAck::encode()
@@ -531,6 +628,47 @@ void CMqttPublishAck::print()
     LOG_DEBUG("Remain length %d, bytes %d", m_remain_length_value, m_remain_length_bytes);          
     LOG_DEBUG("Msg id [0x%x]", m_msg_id);                                                           
     LOG_DEBUG("------------------------------------------------");
+}
+
+int CMqttPingReq::encode()
+{
+    CMqttMsg::encode();
+
+    m_remain_length_value =  0x0;
+    m_mqtt_pkt.write_remain_length(m_remain_length_value, m_remain_length_bytes);
+
+
+    uint32_t pkt_len = 2; // include fixed header
+    uint32_t encode_pkt_len = m_mqtt_pkt.length();
+
+    if ( encode_pkt_len != pkt_len)
+    {
+	LOG_DEBUG("CMqttPingReq:: wrong encode lenght(%d), should be (%d)", encode_pkt_len, pkt_len);
+	return -1;
+    }
+
+    return encode_pkt_len;
+}
+
+
+int CMqttDisconnect::encode()
+{
+    CMqttMsg::encode();
+
+    m_remain_length_value =  0x0;
+    m_mqtt_pkt.write_remain_length(m_remain_length_value, m_remain_length_bytes);
+
+
+    uint32_t pkt_len = 2; // include fixed header
+    uint32_t encode_pkt_len = m_mqtt_pkt.length();
+
+    if ( encode_pkt_len != pkt_len)
+    {
+	LOG_DEBUG("CMqttDisnnect:: wrong encode lenght(%d), should be (%d)", encode_pkt_len, pkt_len);
+	return -1;
+    }
+
+    return encode_pkt_len;
 }
 
 int CMqttPingResp::encode()

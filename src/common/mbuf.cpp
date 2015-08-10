@@ -23,6 +23,7 @@ int CMbuf::init(uint32_t size)
     m_write_pos = 0;
     m_msg_id = 0;
 
+    m_msg_type = MSG_DATA;
     return 0;
 }
 
@@ -158,3 +159,12 @@ uint64_t CMbuf::msg_id()
     return m_msg_id;
 }
 
+void CMbuf::msg_type(uint32_t type)
+{
+    m_msg_type = type;
+}
+
+uint32_t CMbuf::msg_type()
+{
+    return m_msg_type;
+}

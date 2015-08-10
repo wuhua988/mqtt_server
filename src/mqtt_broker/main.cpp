@@ -1,4 +1,7 @@
 #include "mqtt_server/tcp_server.hpp"
+#include "mqtt_server/tcp_client.hpp"
+#include "reactor/poller_epoll.hpp"
+
 #include "mqtt_server/xml_config.hpp" 
 #include <signal.h>
 
@@ -23,7 +26,7 @@ void handle_sigint(int signal)
 }
  */
 
-#define version "1.0.9"
+#define version "1.1.1"
 
 static struct option long_options[] = {
     { "help",           no_argument,        NULL,   'h' },
@@ -90,15 +93,35 @@ int main(int argc, char *argv[])
     CONFIG->print();
 
     // CLoggerMgr logger(str_log_conf.c_str()); -> CONFIG->open()
-    
+    CPollerEpoll poller_epoll;
+
+    if (poller_epoll.open() == -1)
+    {
+        LOG_ERROR("Epoll open faild. %s", strerror(errno));
+        return -1;
+    }
+
+    // mqtt client
     CSockAddress server_addr(str_server_ip, server_port);
     LOG_INFO("Server will start at [%s:%d], thread_num [%d]....", 
-		    str_server_ip.c_str(), server_port, thread_num);
+			str_server_ip.c_str(), server_port, thread_num);
 
-    TCPServer server(str_db_file_name); // db file name
-    server.open(server_addr);
+    std::string str_client_id	       = CONFIG->get_parent_user_name();
+    std::string str_parent_topic_name  = CONFIG->get_parent_topic_name();
+    std::string str_parent_server_addr = CONFIG->get_parent_server_ip();
+    uint16_t	parent_server_port     = CONFIG->get_parent_server_port(); 
+
+    TCPClient client((reactor::CPoller *)&poller_epoll,str_parent_topic_name, str_client_id);
+    CSockAddress addr(str_parent_server_addr, parent_server_port);
+    client.open((void *)&addr);
     
+    //  client start finished
+    
+    TCPServer server(str_db_file_name, &poller_epoll); // db file name
+    server.open(server_addr);
     server.loop();
     
+    client.stop();
+
     return 0;
 }

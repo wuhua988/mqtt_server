@@ -2,6 +2,7 @@
 #define _reactor_poller_epoller_h_
 
 #include "reactor/poller.hpp"
+#include "common/mbuf.hpp"
 
 namespace reactor
 {
@@ -21,13 +22,18 @@ namespace reactor
             virtual int add_event(CEventHandler *tcp_socket, uint32_t event_mask);
             virtual int del_event(CEventHandler *tcp_socket, uint32_t event_mask);
             virtual int mod_event(CEventHandler *tcp_socket, uint32_t event_mask);
-            
-            
+	    
+	    virtual void regist_notify(CEventHandler *notify);
+	    virtual void unregist_notify();
+	    virtual int notify(CMbuf_ptr &mbuf);
+
+	    virtual int pop_front(CMbuf_ptr &msg);
+	    virtual int push_back(CMbuf_ptr &msg);
+
             uint32_t convert_event_mask(uint32_t event_mask);
             
         private:
             struct  epoll_event  m_poller_events[MAX_EVENT_SIZE];
-            bool    m_running_flag;
         };   
 }
 

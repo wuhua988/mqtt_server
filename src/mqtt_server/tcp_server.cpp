@@ -9,6 +9,7 @@
 #include <signal.h>
 #include "mqtt_server/tcp_server.hpp"
 #include "mqtt_server/xml_config.hpp"
+//#include "mqtt_server/poller_notify.hpp"
 
 namespace reactor // later -> mqtt_server
 {
@@ -23,12 +24,6 @@ namespace reactor // later -> mqtt_server
 	    LOG_DEBUG("DB restore failed");
 	    return -1;
 	}
-
-        if (m_poller_epoll.open() == -1)
-        {
-            LOG_ERROR("Epoll open faild. %s", strerror(errno));
-            return -1;
-        }
        
         if ( m_acceptor->open(m_server_address) == -1)
         {
@@ -48,6 +43,13 @@ namespace reactor // later -> mqtt_server
          // ignore sigpipe
          signal(SIGPIPE, SIG_IGN);
          */
+	//CPollerNotify notify(m_poller_epoll);  // helper class, new reader and writer
+	//notify.open();
+	if (m_notify_fd->open() < 0)
+	{
+	    LOG_INFO("Notify open faield. errno %d, %s", errno, strerror(errno));
+	    return -1;
+	}
 
         std::set<int> sig_set;
         std::set<int> sig_ign_set;
@@ -71,7 +73,7 @@ namespace reactor // later -> mqtt_server
     {
         LOG_TRACE_METHOD(__func__);
         
-        while(m_poller_epoll.run(-1))
+        while(m_poller_epoll->run(-1))
         {
         }
        

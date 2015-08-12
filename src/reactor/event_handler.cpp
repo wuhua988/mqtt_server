@@ -42,7 +42,7 @@ namespace reactor
 	m_schedule_write_times(0),
 	m_cancel_schedule_write_times(0),
 	m_max_msg_in_buffer(50)
-						    
+
     {
 	LOG_TRACE_METHOD(__func__); 
     }
@@ -72,13 +72,13 @@ namespace reactor
 	return res;
 	// check res
     }
- 
+
     int CEventHandler::handle_close(socket_t socket)                                                                                              
     {                                                                                       
 	LOG_TRACE_METHOD(__func__);
 	LOG_DEBUG("In CEventHandler::handle_close() socket %d", socket);
 
-        this->close();
+	this->close();
 
 	delete this;
 
@@ -120,9 +120,9 @@ namespace reactor
 		// We are responsible for releasing Message_Block if
 		// failures occur.
 		// /* FALLTHROUGH */
-	    
+
 	    default:
-	        // If we succeed in writing the entire event (or we did not
+		// If we succeed in writing the entire event (or we did not
 		// fail due to EWOULDBLOCK) then check if there are more
 		// events on the Message_Queue.  If there aren't, tell the
 		// ACE_Reactor not to notify us anymore (at least until
@@ -133,7 +133,7 @@ namespace reactor
 	if (m_send_msg_queue.empty()) 
 	{
 	    LOG_DEBUG("CEventHandler::nonblk_send(), queue is empty, cancel wirte event");
-	     this->cancel_schedule_write();
+	    this->cancel_schedule_write();
 	}
 
 	return 0;                                                                           
@@ -248,13 +248,13 @@ namespace reactor
 		LOG_INFO("Write will block, so return now");
 		return 0;
 	    }
-	    
+
 	    return n;
 	}
 	else
 	{
-	     m_send_times++; 
-	     m_send_bytes += n;
+	    m_send_times++; 
+	    m_send_bytes += n;
 
 	    if (n < len)
 	    {
@@ -269,7 +269,7 @@ namespace reactor
 		errno = 0;
 
 		// g_mem_pool.unget(mbuf->copy());
-    	    }
+	    }
 	}
 
 	return n;
@@ -286,5 +286,38 @@ namespace reactor
 	this->m_poller_ptr = nullptr;
 
 	return 0;
+    }
+
+    int CEventHandler::write_n(uint8_t *buf, uint32_t len)
+    {
+	uint32_t buf_len = len;
+	while (len > 0)
+	{
+	    ssize_t res = ::write(m_sock_handle, buf, len);
+	    if (res < len)
+	    {
+		if (res == 0)
+		{
+		    continue;
+		}
+
+		if (res < 0)
+		{
+		    if (EAGAIN == errno || EWOULDBLOCK == errno || EINTR == errno )
+		    {
+			continue;
+		    }
+		    else
+		    {
+			LOG_ERROR("socket(%d) send error, errno %d. %s", m_sock_handle, errno, strerror(errno));
+			return -1;
+		    }
+		}
+	    }
+
+	    len -= res;
+	}
+
+	return buf_len;
     }
 }

@@ -37,6 +37,11 @@ namespace reactor
 	    LOG_ERROR("Create socket failed, errno %d, %s", errno, strerror(errno));
 	    return -1;
 	}
+	
+	struct timeval tm = {10,0}; // 10 s
+	// setsockopt(socket，SOL_SOCKET,SO_SNDTIMEO，(char *)&timeout,sizeof(struct timeval));
+	setsockopt(m_client_socket,SOL_SOCKET,SO_RCVTIMEO,(const void *)&tm, (socklen_t)sizeof(struct timeval));
+
 
 	struct sockaddr_in server_addr = m_server_addr.sock_addr();
 	socklen_t server_addr_length = sizeof(server_addr);
@@ -75,10 +80,6 @@ namespace reactor
     {
 	this->connect();
 
-	struct timeval timeout = {10,0}; // 10 s
-	// setsockopt(socket，SOL_SOCKET,SO_SNDTIMEO，(char *)&timeout,sizeof(struct timeval));
-	setsockopt(m_client_socket,SOL_SOCKET,SO_RCVTIMEO,(const void *)&timeout,(socklen_t)sizeof(struct timeval));
-
 	uint32_t last_msg_time = time(0);
 	uint32_t send_ping_req_time = 0;
 
@@ -110,7 +111,7 @@ namespace reactor
 		int my_errno = errno;
 		if (errno == EAGAIN || errno == EWOULDBLOCK || errno == EINTR)
 		{
-		    LOG_TRACE("Read len <= 0, errno %d, %s, send req time %d", 
+		    LOG_DEBUG("Read len <= 0, errno %d, %s, send req time %d", 
 							    errno, strerror(errno), send_ping_req_time);
 		    // timeout
 		    // send pingreq
@@ -267,7 +268,7 @@ namespace reactor
 
 	    case MqttType::PINGRESP:
 		{
-		    // LOG_DEBUG("Recv mqtt PINGRESP msg");
+		    LOG_DEBUG("Recv mqtt PINGRESP msg");
 		    break;
 		}
 

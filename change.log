@@ -53,3 +53,6 @@ V1.1.1
 1. add tcp client 
 2. add epoll notify queue
 3. tcp client can forward msg to epoll based on notify pipe
+
+V1.1.2
+1. add http server, support GET and POST to publish msg

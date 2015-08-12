@@ -1,9 +1,10 @@
 #include "mqtt_server/tcp_server.hpp"
 #include "mqtt_server/tcp_client.hpp"
 #include "reactor/poller_epoll.hpp"
-
 #include "mqtt_server/xml_config.hpp" 
 #include <signal.h>
+
+#include "http_server/http_server.hpp"
 
 extern char *optarg;
 extern int optind, opterr, optopt;
@@ -26,7 +27,7 @@ void handle_sigint(int signal)
 }
  */
 
-#define version "1.1.1"
+#define version "1.1.2"
 
 static struct option long_options[] = {
     { "help",           no_argument,        NULL,   'h' },
@@ -114,13 +115,22 @@ int main(int argc, char *argv[])
     TCPClient client((reactor::CPoller *)&poller_epoll,str_parent_topic_name, str_client_id);
     CSockAddress addr(str_parent_server_addr, parent_server_port);
     client.open((void *)&addr);
+    //  client start finished  
     
-    //  client start finished
-    
+    // http_server
+    http::HttpServer http_server(8080, &poller_epoll);
+    if (http_server.open() == -1)
+    {
+	LOG_ERROR("Open Http server on 8080 failed.");
+	return -1;
+    }
+    // end of http_server
+
     TCPServer server(str_db_file_name, &poller_epoll); // db file name
     server.open(server_addr);
     server.loop();
     
+    http_server.stop();
     client.stop();
 
     return 0;

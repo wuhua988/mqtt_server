@@ -18,7 +18,7 @@ int CMbuf::init(uint32_t size)
 {
     m_data.size = size;
     m_data.ptr = (const char *)new uint8_t[size];  // later from mem pool
-    
+
     m_read_pos = 0;
     m_write_pos = 0;
     m_msg_id = 0;
@@ -43,10 +43,10 @@ CMbuf::~CMbuf()
 
     if (m_msg_id && m_mem_db != nullptr)
     {
-        m_mem_db->del_msg(m_msg_id);
+	m_mem_db->del_msg(m_msg_id);
     }
 
-    
+
     if (m_data.ptr != nullptr)
     {
 	uint8_t *p = (uint8_t *)m_data.ptr;
@@ -58,7 +58,7 @@ CMbuf::~CMbuf()
     {
 	LOG_DEBUG("!!!!!! Maybe double free");
     }
-    
+
 }
 
 std::shared_ptr<CMbuf> CMbuf::copy()
@@ -77,7 +77,7 @@ void CMbuf::read_ptr(uint32_t n)
 {
     if (m_read_pos + n > m_data.size)
     {
-        return;
+	return;
     }
 
     m_read_pos += n;
@@ -94,7 +94,7 @@ void CMbuf::write_ptr(uint32_t n)
 {
     if (m_write_pos + n > m_data.size)
     {
-        return;
+	return;
     }
 
     m_write_pos += n;
@@ -105,7 +105,7 @@ int CMbuf::copy(const uint8_t *buf, int len)
 {
     if (m_write_pos + len > m_data.size)
     {
-        return -1;
+	return -1;
     }
 
     memcpy((void *)(m_data.ptr + m_write_pos), buf, len);
@@ -168,3 +168,18 @@ uint32_t CMbuf::msg_type()
 {
     return m_msg_type;
 }
+
+void hex_dump(uint8_t *buf, uint32_t len)
+{
+    LOG_DEBUG("0000 ");
+    for (uint i = 0; i < len; i++)
+    {
+	if (i && ((i%16) == 0))
+	{
+	    LOG_DEBUG("\n%04x ", i);
+	}
+
+	LOG_DEBUG("%02X ", buf[i]);
+    }
+}
+

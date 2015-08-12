@@ -527,7 +527,8 @@ public:
     CMqttPublish(uint8_t *buf, uint32_t len, CMqttFixedHeader fixed_header):CMqttMsg(buf, len, fixed_header) // encode
     {
     }
-    
+   
+    int encode();
     int decode();
     void print();
     
@@ -535,15 +536,30 @@ public:
     {
         return m_str_topic_name;
     }
+
+    void topic_name(std::string &topic_name)
+    {
+	m_str_topic_name = topic_name;
+    }
     
     std::vector<uint8_t> &  payload()
     {
         return m_payload;
     }
+
+    void payload(std::vector<uint8_t> &payload)
+    {
+	m_payload = payload;
+    }
     
     uint16_t msg_id()
     {
         return m_msg_id;
+    }
+
+    void msg_id(uint16_t msg_id)
+    {
+	m_msg_id = msg_id;
     }
 
     uint32_t msg_id_offset()

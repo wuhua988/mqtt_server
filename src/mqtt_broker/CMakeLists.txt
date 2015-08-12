@@ -3,6 +3,7 @@ set(CMAKE_EXE_LINKER_FLAGS "-lpthread")
 aux_source_directory(. SOURCES)
 add_executable(mqtt_broker ${SOURCES})
 
+TARGET_LINK_LIBRARIES(mqtt_broker http_server)
 TARGET_LINK_LIBRARIES(mqtt_broker server) 
 TARGET_LINK_LIBRARIES(mqtt_broker common)
 TARGET_LINK_LIBRARIES(mqtt_broker reactor)

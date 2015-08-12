@@ -42,6 +42,8 @@ namespace reactor
 
 	    virtual int handle_close(socket_t socket = INVALID_SOCKET);
 
+	    int write_n(uint8_t *buf, uint32_t len);
+
 	    uint32_t get_cur_event_mask()
 	    {
 		LOG_TRACE_METHOD(__func__); 

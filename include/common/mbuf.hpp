@@ -110,5 +110,6 @@ class CMbuf_tmp
 
 typedef std::shared_ptr<CMbuf> CMbuf_ptr;
 
+void hex_dump(uint8_t *buf, uint32_t len);
 
 #endif /* defined(____buf__) */

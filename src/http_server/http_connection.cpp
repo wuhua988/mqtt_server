@@ -42,6 +42,12 @@ namespace http
 	return this->process(m_recv_buffer, m_cur_buf_pos);
     }
 
+#define json_error "{\n" \
+	"\"error\":\"%s\",\n"\
+	"\"error_code\":%s,\n"\
+	"\"request\":\"%s\"\n"\
+    "}\n"
+
     int HttpConnection::process(uint8_t *buf, uint32_t UNUSED(len))
     {
 	LOG_DEBUG("HTTP Content \n%s", (char *)buf);
@@ -60,12 +66,18 @@ namespace http
 
 	std::string error;
 
+	response.type = "text/json";
+	char str_buf[1024];
 	if ( (res == -1) || (req.path.compare("/publish") != 0))
 	{
 	    LOG_DEBUG("Send not found 404 to client");
 	    response.code = 404;
 	    response.phrase = "Not Found";
-	    response.type = "text/html";
+	   
+	    snprintf(str_buf, 1024, json_error, "not found", "400", req.path.c_str());
+	    std::string str(str_buf);
+	    response.append(str);
+	    /*
 	    response.append("<html>\n"\
 		    "<head><title>404 Not Found</title></head>\n" \
 		    "<body bgcolor=\"white\">\n" \
@@ -73,20 +85,24 @@ namespace http
 		    "<hr><center>http_server  / 1.0.0</center>\n" \
 		    "</body>\n" \
 		    "</html>\n");
+		    */
 	}
 	else
 	{
-	    response.type = "text/html";
 	    if (this->notify_mqtt_publish(req, error) == -1)
 	    {
 		response.code = 400;
+		snprintf(str_buf, 1024, json_error, error.c_str(), "400", req.path.c_str());
+		std::string str(str_buf);
+		response.append(str);
 	    }
 	    else
 	    {
-		error = "Publish msg succeed";
 		response.code = 200;
+		response.append("{\"msg\":\"succeed\"}");
 	    }
 
+/*
 	    response.append("<html>\n"\
 			"<head><title>Succeed</title></head\n" \
 			"<body bgcolor=\"white\">\n" \
@@ -95,6 +111,7 @@ namespace http
 	    response.append(error);
 
 	    response.append("</h1></center>\n</body>\n<html>\n");
+*/
 	}
 
 	this->http_send(response.body.str().c_str(), strlen(response.body.str().c_str()));
@@ -120,21 +137,21 @@ namespace http
 	if (req.query_param("client", str_client_id) == -1)
 	{
 	    // error description
-	    error += "client param must be supplied;\n";
+	    error += "client param missed. ";
 	}
 
 	// msut be
 	if (req.query_param("topic", str_topic_name) == -1)
 	{
 	    // error descripiton
-	    error += "topic param must be supplied;\n";
+	    error += "topic param missed. ";
 	}
 
 	// must be
 	if (req.query_param("msg",str_msg) == -1)
 	{
 	    // error description
-	    error += "msg param msut be supplied\n";
+	    error += "msg param missed";
 	}
 
 	// optional

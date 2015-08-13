@@ -1,4 +1,5 @@
 #include "common/str_tools.hpp"
+#include <sstream>
 
 namespace str_tools
 {
@@ -26,13 +27,13 @@ namespace str_tools
     }
 
     /* isspace() 
-    ' '	(0x20)	space (SPC)
-	'\t'	(0x09)	horizontal tab (TAB)
-	'\n'	(0x0a)	newline (LF)
-	'\v'	(0x0b)	vertical tab (VT)
-	'\f'	(0x0c)	feed (FF)
-	'\r'	(0x0d)	carriage return (CR)
-    */
+       ' '	(0x20)	space (SPC)
+       '\t'	(0x09)	horizontal tab (TAB)
+       '\n'	(0x0a)	newline (LF)
+       '\v'	(0x0b)	vertical tab (VT)
+       '\f'	(0x0c)	feed (FF)
+       '\r'	(0x0d)	carriage return (CR)
+       */
     std::string & trim(std::string &s)
     {
 	s.erase(s.begin(), std::find_if(s.begin(), s.end(), std::not1(std::ptr_fun<int, int>(isspace))));
@@ -48,4 +49,22 @@ namespace str_tools
 	str.assign(buff.begin() + buff.find_first_not_of(space),
 		buff.begin() + buff.find_last_not_of(space) + 1);
     }
+
+    template <class T>
+	std::string to_string(const T& t)
+	{
+	    std::ostringstream oss;
+	    oss << t;
+	    return oss.str();
+	}
+
+    template <class out_type,class in_value>
+	out_type convert(const in_value & t)
+	{
+	    std::stringstream stream;
+	    stream << t;
+	    out_type result;
+	    stream >> result;//向result中写入值
+	    return result;
+	}
 }

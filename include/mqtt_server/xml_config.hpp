@@ -57,6 +57,10 @@ class CXMLConfig
 	GETSETVAR(uint32_t, thread_number);
 	GETSETVAR(uint32_t, flush_interval);
 	GETSETVAR(uint32_t, max_idle_timeout);
+
+	GETSETVAR(uint8_t, mqtt_bridge);
+	GETSETVAR(std::string, http_server_ip);
+	GETSETVAR(uint16_t, http_server_port);
 };
 
 typedef CSingleton<CXMLConfig> XMLConfig;

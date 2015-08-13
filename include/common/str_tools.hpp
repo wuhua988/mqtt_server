@@ -14,9 +14,6 @@ namespace str_tools
 
     template <class T> std::string to_string(const T& t);
     template <class out_type,class in_value> out_type convert(const in_value & t);
-    template <class out_type,class in_value> out_type convert(const in_value & t);
-    template <class out_type,class in_value> out_type convert(const in_value & t);
-    template <class out_type,class in_value> out_type convert(const in_value & t);
 }
 
 #endif

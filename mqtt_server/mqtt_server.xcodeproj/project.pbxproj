@@ -7,18 +7,32 @@
 	objects = {
 
 /* Begin PBXFileReference section */
+		D90F0C3F1B81813E00C5CC5F /* poller_notify.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = poller_notify.hpp; sourceTree = "<group>"; };
+		D90F0C401B81813E00C5CC5F /* xml_config.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = xml_config.hpp; sourceTree = "<group>"; };
+		D90F0C411B81813E00C5CC5F /* tcp_client.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = tcp_client.hpp; sourceTree = "<group>"; };
+		D90F0C421B81813E00C5CC5F /* persist_msg_pack.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = persist_msg_pack.hpp; sourceTree = "<group>"; };
+		D90F0C431B81819A00C5CC5F /* tinyxml2.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = tinyxml2.h; sourceTree = "<group>"; };
+		D90F0C441B81819A00C5CC5F /* msg_mem_store.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = msg_mem_store.hpp; sourceTree = "<group>"; };
+		D90F0C451B81819A00C5CC5F /* str_tools.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = str_tools.hpp; sourceTree = "<group>"; };
+		D90F0C4F1B8181C600C5CC5F /* http_acceptor.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = http_acceptor.hpp; sourceTree = "<group>"; };
+		D90F0C501B8181C600C5CC5F /* http_connection.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = http_connection.hpp; sourceTree = "<group>"; };
+		D90F0C511B8181C600C5CC5F /* http_server.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = http_server.hpp; sourceTree = "<group>"; };
+		D90F0C531B8181E000C5CC5F /* CMakeLists.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = "<group>"; };
+		D90F0C541B8181E000C5CC5F /* http_acceptor.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = http_acceptor.cpp; sourceTree = "<group>"; };
+		D90F0C551B8181E000C5CC5F /* http_connection.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = http_connection.cpp; sourceTree = "<group>"; };
+		D90F0C561B8181E000C5CC5F /* http_server.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = http_server.cpp; sourceTree = "<group>"; };
+		D90F0C571B8181FD00C5CC5F /* persist_msg_pack.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = persist_msg_pack.cpp; sourceTree = "<group>"; };
+		D90F0C581B8181FD00C5CC5F /* tcp_client.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = tcp_client.cpp; sourceTree = "<group>"; };
+		D90F0C591B8181FD00C5CC5F /* xml_config.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = xml_config.cpp; sourceTree = "<group>"; };
+		D90F0C5A1B8181FD00C5CC5F /* poller_notify.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = poller_notify.cpp; sourceTree = "<group>"; };
 		D912C7AE1B65F7B80014ED6D /* persist.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = persist.hpp; sourceTree = "<group>"; };
 		D912C7B21B66399D0014ED6D /* subscriber_mgr.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = subscriber_mgr.cpp; sourceTree = "<group>"; };
 		D912C7B31B66399D0014ED6D /* client_db_id.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = client_db_id.cpp; sourceTree = "<group>"; };
 		D912C7B41B66399D0014ED6D /* persist.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = persist.cpp; sourceTree = "<group>"; };
 		D912C7B51B66399D0014ED6D /* timer_handler.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = timer_handler.cpp; sourceTree = "<group>"; };
 		D912C7B61B6639A90014ED6D /* timer_handler.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = timer_handler.hpp; sourceTree = "<group>"; };
-		D92B93651B60862A00DD569B /* timer_wheel.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = timer_wheel.cpp; sourceTree = "<group>"; };
-		D92B93661B60862A00DD569B /* timer_wheel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = timer_wheel.h; sourceTree = "<group>"; };
 		D92B936B1B60F5C100DD569B /* sig_handler.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = sig_handler.cpp; sourceTree = "<group>"; };
-		D92B936C1B60F5C100DD569B /* timer_handler.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = timer_handler.cpp; sourceTree = "<group>"; };
 		D92B936D1B60F5EE00DD569B /* sig_handler.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = sig_handler.hpp; sourceTree = "<group>"; };
-		D92B936E1B60F5EE00DD569B /* timer_handler.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = timer_handler.hpp; sourceTree = "<group>"; };
 		D97F6A721B61D325003A8C1D /* client_id_db.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = client_id_db.hpp; sourceTree = "<group>"; };
 		D98A8C6C1B58CD9D00A8B969 /* mbuf.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = mbuf.hpp; sourceTree = "<group>"; };
 		D98A8C6D1B58CD9D00A8B969 /* mem_pool.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = mem_pool.hpp; sourceTree = "<group>"; };
@@ -127,7 +141,6 @@
 		D98A8CE21B58CDB300A8B969 /* mqtt_pkt_ansi.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = mqtt_pkt_ansi.h; sourceTree = "<group>"; };
 		D98A8CE41B58CDB300A8B969 /* acceptor.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = acceptor.cpp; sourceTree = "<group>"; };
 		D98A8CE51B58CDB300A8B969 /* CMakeLists.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = "<group>"; };
-		D98A8CE61B58CDB300A8B969 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 		D98A8CE71B58CDB300A8B969 /* mqtt_connection.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = mqtt_connection.cpp; sourceTree = "<group>"; };
 		D98A8CE81B58CDB300A8B969 /* tcp_server.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = tcp_server.cpp; sourceTree = "<group>"; };
 		D98A8CEB1B58CDB300A8B969 /* cmake_install.cmake */ = {isa = PBXFileReference; lastKnownFileType = text; path = cmake_install.cmake; sourceTree = "<group>"; };
@@ -184,11 +197,30 @@
 /* End PBXFileReference section */
 
 /* Begin PBXGroup section */
+		D90F0C4E1B8181C600C5CC5F /* http_server */ = {
+			isa = PBXGroup;
+			children = (
+				D90F0C4F1B8181C600C5CC5F /* http_acceptor.hpp */,
+				D90F0C501B8181C600C5CC5F /* http_connection.hpp */,
+				D90F0C511B8181C600C5CC5F /* http_server.hpp */,
+			);
+			path = http_server;
+			sourceTree = "<group>";
+		};
+		D90F0C521B8181E000C5CC5F /* http_server */ = {
+			isa = PBXGroup;
+			children = (
+				D90F0C531B8181E000C5CC5F /* CMakeLists.txt */,
+				D90F0C541B8181E000C5CC5F /* http_acceptor.cpp */,
+				D90F0C551B8181E000C5CC5F /* http_connection.cpp */,
+				D90F0C561B8181E000C5CC5F /* http_server.cpp */,
+			);
+			path = http_server;
+			sourceTree = "<group>";
+		};
 		D98A8C631B58CD9000A8B969 = {
 			isa = PBXGroup;
 			children = (
-				D92B93651B60862A00DD569B /* timer_wheel.cpp */,
-				D92B93661B60862A00DD569B /* timer_wheel.h */,
 				D98A8CD81B58CDB300A8B969 /* src */,
 				D98A8C6A1B58CD9D00A8B969 /* include */,
 			);
@@ -197,6 +229,7 @@
 		D98A8C6A1B58CD9D00A8B969 /* include */ = {
 			isa = PBXGroup;
 			children = (
+				D90F0C4E1B8181C600C5CC5F /* http_server */,
 				D98A8C6B1B58CD9D00A8B969 /* common */,
 				D98A8C701B58CD9D00A8B969 /* log4cplus */,
 				D98A8CC61B58CD9D00A8B969 /* mqtt_server */,
@@ -210,6 +243,9 @@
 		D98A8C6B1B58CD9D00A8B969 /* common */ = {
 			isa = PBXGroup;
 			children = (
+				D90F0C431B81819A00C5CC5F /* tinyxml2.h */,
+				D90F0C441B81819A00C5CC5F /* msg_mem_store.hpp */,
+				D90F0C451B81819A00C5CC5F /* str_tools.hpp */,
 				D98A8C6C1B58CD9D00A8B969 /* mbuf.hpp */,
 				D98A8C6D1B58CD9D00A8B969 /* mem_pool.hpp */,
 				D98A8C6E1B58CD9D00A8B969 /* my_logger.h */,
@@ -362,6 +398,10 @@
 		D98A8CC61B58CD9D00A8B969 /* mqtt_server */ = {
 			isa = PBXGroup;
 			children = (
+				D90F0C3F1B81813E00C5CC5F /* poller_notify.hpp */,
+				D90F0C401B81813E00C5CC5F /* xml_config.hpp */,
+				D90F0C411B81813E00C5CC5F /* tcp_client.hpp */,
+				D90F0C421B81813E00C5CC5F /* persist_msg_pack.hpp */,
 				D912C7B61B6639A90014ED6D /* timer_handler.hpp */,
 				D97F6A721B61D325003A8C1D /* client_id_db.hpp */,
 				D98A8CC71B58CD9D00A8B969 /* acceptor.hpp */,
@@ -387,7 +427,6 @@
 			isa = PBXGroup;
 			children = (
 				D92B936D1B60F5EE00DD569B /* sig_handler.hpp */,
-				D92B936E1B60F5EE00DD569B /* timer_handler.hpp */,
 				D98A8CD01B58CD9D00A8B969 /* define.hpp */,
 				D98A8CD11B58CD9D00A8B969 /* event_handler.hpp */,
 				D98A8CD21B58CD9D00A8B969 /* poller.hpp */,
@@ -404,6 +443,7 @@
 			isa = PBXGroup;
 			children = (
 				D98A8CD91B58CDB300A8B969 /* CMakeLists.txt */,
+				D90F0C521B8181E000C5CC5F /* http_server */,
 				D98A8CDA1B58CDB300A8B969 /* mqtt */,
 				D98A8CE31B58CDB300A8B969 /* mqtt_server */,
 				D98A8CE91B58CDB300A8B969 /* mqttc++ */,
@@ -439,13 +479,16 @@
 		D98A8CE31B58CDB300A8B969 /* mqtt_server */ = {
 			isa = PBXGroup;
 			children = (
+				D90F0C571B8181FD00C5CC5F /* persist_msg_pack.cpp */,
+				D90F0C581B8181FD00C5CC5F /* tcp_client.cpp */,
+				D90F0C591B8181FD00C5CC5F /* xml_config.cpp */,
+				D90F0C5A1B8181FD00C5CC5F /* poller_notify.cpp */,
 				D912C7B21B66399D0014ED6D /* subscriber_mgr.cpp */,
 				D912C7B31B66399D0014ED6D /* client_db_id.cpp */,
 				D912C7B41B66399D0014ED6D /* persist.cpp */,
 				D912C7B51B66399D0014ED6D /* timer_handler.cpp */,
 				D98A8CE41B58CDB300A8B969 /* acceptor.cpp */,
 				D98A8CE51B58CDB300A8B969 /* CMakeLists.txt */,
-				D98A8CE61B58CDB300A8B969 /* main.cpp */,
 				D98A8CE71B58CDB300A8B969 /* mqtt_connection.cpp */,
 				D98A8CE81B58CDB300A8B969 /* tcp_server.cpp */,
 			);
@@ -564,7 +607,6 @@
 			isa = PBXGroup;
 			children = (
 				D92B936B1B60F5C100DD569B /* sig_handler.cpp */,
-				D92B936C1B60F5C100DD569B /* timer_handler.cpp */,
 				D98A8D181B58CDB300A8B969 /* CMakeLists.txt */,
 				D98A8D191B58CDB300A8B969 /* event_handler.cpp */,
 				D98A8D1A1B58CDB300A8B969 /* poller_epoll.cpp */,

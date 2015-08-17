@@ -32,6 +32,11 @@
 		D90F0C601B81A5C900C5CC5F /* log4cplus_debug.properties */ = {isa = PBXFileReference; lastKnownFileType = text; path = log4cplus_debug.properties; sourceTree = "<group>"; };
 		D90F0C611B81A5C900C5CC5F /* log4cplus_trace.properties */ = {isa = PBXFileReference; lastKnownFileType = text; path = log4cplus_trace.properties; sourceTree = "<group>"; };
 		D90F0C621B81A5C900C5CC5F /* mqtt_server.xml */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = mqtt_server.xml; sourceTree = "<group>"; };
+		D90F0C641B81C32100C5CC5F /* CMakeLists.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = "<group>"; };
+		D90F0C651B81C32100C5CC5F /* mbuf.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = mbuf.cpp; sourceTree = "<group>"; };
+		D90F0C661B81C32100C5CC5F /* msg_mem_store.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = msg_mem_store.cpp; sourceTree = "<group>"; };
+		D90F0C671B81C32100C5CC5F /* str_tools.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = str_tools.cpp; sourceTree = "<group>"; };
+		D90F0C681B81C32100C5CC5F /* tinyxml2.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = tinyxml2.cpp; sourceTree = "<group>"; };
 		D912C7AE1B65F7B80014ED6D /* persist.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = persist.hpp; sourceTree = "<group>"; };
 		D912C7B21B66399D0014ED6D /* subscriber_mgr.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = subscriber_mgr.cpp; sourceTree = "<group>"; };
 		D912C7B31B66399D0014ED6D /* client_db_id.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = client_db_id.cpp; sourceTree = "<group>"; };
@@ -238,6 +243,18 @@
 			);
 			name = conf;
 			path = ../conf;
+			sourceTree = "<group>";
+		};
+		D90F0C631B81C32100C5CC5F /* common */ = {
+			isa = PBXGroup;
+			children = (
+				D90F0C641B81C32100C5CC5F /* CMakeLists.txt */,
+				D90F0C651B81C32100C5CC5F /* mbuf.cpp */,
+				D90F0C661B81C32100C5CC5F /* msg_mem_store.cpp */,
+				D90F0C671B81C32100C5CC5F /* str_tools.cpp */,
+				D90F0C681B81C32100C5CC5F /* tinyxml2.cpp */,
+			);
+			path = common;
 			sourceTree = "<group>";
 		};
 		D98A8C631B58CD9000A8B969 = {
@@ -465,6 +482,7 @@
 		D98A8CD81B58CDB300A8B969 /* src */ = {
 			isa = PBXGroup;
 			children = (
+				D90F0C631B81C32100C5CC5F /* common */,
 				D98A8CD91B58CDB300A8B969 /* CMakeLists.txt */,
 				D90F0C521B8181E000C5CC5F /* http_server */,
 				D98A8CDA1B58CDB300A8B969 /* mqtt */,

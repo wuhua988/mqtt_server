@@ -82,18 +82,21 @@ public:
     void msg_type(uint32_t msg_type);
     uint32_t msg_type();
     
+    uint32_t time();
 private:
     msgpack::type::raw_ref  m_data;
     
-    uint32_t		m_msg_type;
+    uint32_t            m_msg_type;
     uint32_t            m_read_pos;    /* read marker */
     uint32_t            m_write_pos;   /* write marker */
     uint64_t            m_msg_id;
+    
+    uint32_t            m_time;
 
     CMsgMemStore       *m_mem_db = nullptr;
     
 public:
-    MSGPACK_DEFINE(m_data, m_msg_type, m_read_pos, m_write_pos, m_msg_id);    
+    MSGPACK_DEFINE(m_data, m_msg_type, m_read_pos, m_write_pos, m_msg_id, m_time);
 };
 
 class CMbuf_tmp
@@ -104,8 +107,11 @@ class CMbuf_tmp
 	uint32_t            m_read_pos;
 	uint32_t            m_write_pos;
 	uint64_t            m_msg_id;
+    
+    uint32_t            m_time;
+    
     public:
-	MSGPACK_DEFINE(m_data, m_msg_type, m_read_pos, m_write_pos, m_msg_id); 
+	MSGPACK_DEFINE(m_data, m_msg_type, m_read_pos, m_write_pos, m_msg_id, m_time);
 };
 
 typedef std::shared_ptr<CMbuf> CMbuf_ptr;

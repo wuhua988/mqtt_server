@@ -24,6 +24,8 @@ int CMbuf::init(uint32_t size)
     m_msg_id = 0;
 
     m_msg_type = MSG_DATA;
+    
+    m_time = time(0);
     return 0;
 }
 
@@ -167,6 +169,11 @@ void CMbuf::msg_type(uint32_t type)
 uint32_t CMbuf::msg_type()
 {
     return m_msg_type;
+}
+
+uint32_t CMbuf::time()
+{
+    return m_time;
 }
 
 void hex_dump(uint8_t *buf, uint32_t len)

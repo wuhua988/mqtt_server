@@ -418,7 +418,7 @@ namespace reactor
         
         uint64_t publish_msg_id = MSG_MEM_STORE->next_msg_id();   // change msg_id to msg_id
         mbuf_pub->msg_id(publish_msg_id);
-	mbuf_pub->regist_mem_store(MSG_MEM_STORE);
+        mbuf_pub->regist_mem_store(MSG_MEM_STORE);
 
         uint32_t msg_id_offset = publish.msg_id_offset();
         if (msg_id_offset < len)

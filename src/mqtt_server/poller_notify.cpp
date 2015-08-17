@@ -6,8 +6,9 @@
 // for socketpaire
 #include <sys/types.h>          /* See NOTES */
 #include <sys/socket.h>
-
 #include <sys/eventfd.h>
+
+#include "mqtt_server/xml_config.hpp"
 
 namespace reactor
 {
@@ -140,7 +141,19 @@ namespace reactor
 		publish.print();
 
 		uint32_t start_tm = time(0);
-		int pub_count = SUB_MGR->publish(publish.topic_name(), mbuf, publish);		        
+		
+		int pub_count = 0;
+		if (CONFIG->get_mqtt_bridge() <= 0)
+		{
+		    LOG_INFO("Publish to topic %s", publish.topic_name().c_str());
+		    pub_count = SUB_MGR->publish(publish.topic_name(), mbuf, publish);
+		}
+		else // bridge
+		{
+		    LOG_INFO("Publish to all client, bridge mode");
+		    pub_count = SUB_MGR->publish_all(mbuf, publish);
+		}
+		
 		uint32_t diff = time(0) - start_tm;
 					        
 		LOG_ERROR("This publish cost %d (s) to %d clients", diff, pub_count);

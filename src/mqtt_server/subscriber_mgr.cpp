@@ -124,6 +124,48 @@ namespace reactor
 
 	return -1;
     }
+    
+    // publish msg to all client, used for bridge or some notify msg
+    int CSubscriberMgr::publish_all(CMbuf_ptr &mbuf, CMqttPublish &UNUSED(publish_msg))
+    {
+        LOG_TRACE_METHOD(__func__);
+        for (auto it = m_topic_mgr.begin(); it != m_topic_mgr.end(); it++)
+        {
+	    CONTEXT_SET &client_context_set = it->second->client_context();
+	    for (auto it_context = client_context_set.begin(); it_context != client_context_set.end(); it_context++)
+            {
+                // CMqttClientContext_ptr
+                this->publish(*it_context, mbuf);
+            }
+        }
+        
+        return 0;
+        
+    }
+    
+    int CSubscriberMgr::publish(const CMqttClientContext_ptr &client, CMbuf_ptr &mbuf)
+    {
+        if (client.get() == nullptr)
+        {
+            return -1;
+        }
+        
+        client->add_send_msg(mbuf);
+        
+        // it mean client_context object
+        auto mqtt_conn = client->mqtt_connection();
+        if (mqtt_conn != nullptr)
+        {
+            mqtt_conn->put(mbuf);
+        }
+        else
+        {
+            LOG_DEBUG("Client Context may offline now [%s]", client->client_id().c_str());
+        }
+        
+        return 0;
+    }
+    
 
     int CSubscriberMgr::publish(std::string &str_topic_name, CMbuf_ptr &mbuf, CMqttPublish &publish_msg)
     {
@@ -189,27 +231,8 @@ namespace reactor
 
 	for (auto it = client_context_set.begin(); it != client_context_set.end(); it++)
 	{
-	    // it mean client_context object
-	    auto mqtt_conn = (*it)->mqtt_connection();
-	    if (mqtt_conn != nullptr)
-	    {        
-		count++;
-		mqtt_conn->put(mbuf);    
-	    }
-	    else
-	    {
-		LOG_DEBUG("Client Context may offline now [%s]", (*it)->client_id().c_str());
-	    }
-
-	    // only deal publish msg 
-	    if ((*it).get() == nullptr)
-	    {
-		LOG_DEBUG("Client context not has valid ptr");
-	    }
-	    else
-	    {
-		(*it)->add_send_msg(mbuf);
-	    }
+        count++;
+        this->publish(*it, mbuf);
 	}
 
 	return count;

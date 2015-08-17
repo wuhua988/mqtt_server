@@ -53,7 +53,11 @@ namespace reactor
         int del_client_context(std::string &str_topic_name, CMqttClientContext_ptr & cli_context);
         int find_client_context(std::string &str_topic_name, CONTEXT_SET &clients_set);
         
+        int publish_all(CMbuf_ptr &mbuf, CMqttPublish & publish_msg);
         int publish(std::string &str_topic_name, CMbuf_ptr &mbuf, CMqttPublish &publish_msg);
+        
+        int publish(const CMqttClientContext_ptr &client, CMbuf_ptr &mbuf);
+       
         
         void print();
        

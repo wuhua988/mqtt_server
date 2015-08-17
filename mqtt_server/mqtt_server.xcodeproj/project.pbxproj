@@ -25,6 +25,13 @@
 		D90F0C581B8181FD00C5CC5F /* tcp_client.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = tcp_client.cpp; sourceTree = "<group>"; };
 		D90F0C591B8181FD00C5CC5F /* xml_config.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = xml_config.cpp; sourceTree = "<group>"; };
 		D90F0C5A1B8181FD00C5CC5F /* poller_notify.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = poller_notify.cpp; sourceTree = "<group>"; };
+		D90F0C5C1B81A5C900C5CC5F /* all.xml */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = all.xml; sourceTree = "<group>"; };
+		D90F0C5D1B81A5C900C5CC5F /* bridge.xml */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = bridge.xml; sourceTree = "<group>"; };
+		D90F0C5E1B81A5C900C5CC5F /* log4cplus.properties */ = {isa = PBXFileReference; lastKnownFileType = text; path = log4cplus.properties; sourceTree = "<group>"; };
+		D90F0C5F1B81A5C900C5CC5F /* log4cplus_cli.properties */ = {isa = PBXFileReference; lastKnownFileType = text; path = log4cplus_cli.properties; sourceTree = "<group>"; };
+		D90F0C601B81A5C900C5CC5F /* log4cplus_debug.properties */ = {isa = PBXFileReference; lastKnownFileType = text; path = log4cplus_debug.properties; sourceTree = "<group>"; };
+		D90F0C611B81A5C900C5CC5F /* log4cplus_trace.properties */ = {isa = PBXFileReference; lastKnownFileType = text; path = log4cplus_trace.properties; sourceTree = "<group>"; };
+		D90F0C621B81A5C900C5CC5F /* mqtt_server.xml */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = mqtt_server.xml; sourceTree = "<group>"; };
 		D912C7AE1B65F7B80014ED6D /* persist.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = persist.hpp; sourceTree = "<group>"; };
 		D912C7B21B66399D0014ED6D /* subscriber_mgr.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = subscriber_mgr.cpp; sourceTree = "<group>"; };
 		D912C7B31B66399D0014ED6D /* client_db_id.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = client_db_id.cpp; sourceTree = "<group>"; };
@@ -218,9 +225,25 @@
 			path = http_server;
 			sourceTree = "<group>";
 		};
+		D90F0C5B1B81A5C900C5CC5F /* conf */ = {
+			isa = PBXGroup;
+			children = (
+				D90F0C5C1B81A5C900C5CC5F /* all.xml */,
+				D90F0C5D1B81A5C900C5CC5F /* bridge.xml */,
+				D90F0C5E1B81A5C900C5CC5F /* log4cplus.properties */,
+				D90F0C5F1B81A5C900C5CC5F /* log4cplus_cli.properties */,
+				D90F0C601B81A5C900C5CC5F /* log4cplus_debug.properties */,
+				D90F0C611B81A5C900C5CC5F /* log4cplus_trace.properties */,
+				D90F0C621B81A5C900C5CC5F /* mqtt_server.xml */,
+			);
+			name = conf;
+			path = ../conf;
+			sourceTree = "<group>";
+		};
 		D98A8C631B58CD9000A8B969 = {
 			isa = PBXGroup;
 			children = (
+				D90F0C5B1B81A5C900C5CC5F /* conf */,
 				D98A8CD81B58CDB300A8B969 /* src */,
 				D98A8C6A1B58CD9D00A8B969 /* include */,
 			);

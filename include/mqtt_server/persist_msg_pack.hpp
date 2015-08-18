@@ -13,7 +13,7 @@
 #include "mqtt_server/client_id_db.hpp"
 
 
-enum class CHUNK_TYPE 
+enum class CHUNK_TYPE
 {
     GLOBAL_INFO = 1,
     DB_MSG = 2,
@@ -30,37 +30,37 @@ namespace reactor
         CPersistMsgPack(std::string file_name);
         
         ~CPersistMsgPack();
-
+        
         int store(bool force_flush = false);
-	int store_db_info();
-	int store_db_msg();
-	int store_client_info();
-	int store_retain_msg();
-
-	int restore(); 
-	int restore_db_info(uint8_t *chunk_buf, uint32_t len);
-	int restore_db_msg(uint8_t *chunk_buf, int len);
-	int restore_client_info(uint8_t *chunk_buf, uint32_t len);
-	int restore_retain_msg(uint8_t *chunk_buf, uint32_t len);
-
-	int write_chunk_info(CHUNK_TYPE type, uint32_t chunk_len);
-	int write(void *buf, uint32_t len);
-
-	void print_detail();
-
-	CMbuf_ptr restore_mbuf(msgpack::object &obj);
+        int store_db_info();
+        int store_db_msg();
+        int store_client_info();
+        int store_retain_msg();
+        
+        int restore();
+        int restore_db_info(uint8_t *chunk_buf, uint32_t len);
+        int restore_db_msg(uint8_t *chunk_buf, int len);
+        int restore_client_info(uint8_t *chunk_buf, uint32_t len);
+        int restore_retain_msg(uint8_t *chunk_buf, uint32_t len);
+        
+        int write_chunk_info(CHUNK_TYPE type, uint32_t chunk_len);
+        int write(void *buf, uint32_t len);
+        
+        void print_detail();
+        
+        CMbuf_ptr restore_mbuf(msgpack::object &obj);
     private:
-	int open(std::string str_file_name, const char *mode);
-
+        int open(std::string str_file_name, const char *mode);
+        
     protected:
-        std::string     m_file_name;
+        std::string m_file_name;
         FILE *m_db_file = nullptr;
-	std::unordered_map<uint64_t, CMbuf_ptr>     m_tmp_msg_db;  // for store msg and restore
-	
-	bool   m_print_detail;
+        std::unordered_map<uint64_t, CMbuf_ptr>     m_tmp_msg_db;                  // for store msg and restore
+        
+        bool m_print_detail;
     };
     
-
+    
 } // end of namespace
 
 #endif

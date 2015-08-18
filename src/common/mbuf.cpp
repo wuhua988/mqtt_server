@@ -1,5 +1,5 @@
 #include "common/mbuf.hpp"
-#include "common/msg_mem_store.hpp" 
+#include "common/msg_mem_store.hpp"
 
 
 CMbuf::CMbuf(uint32_t size)
@@ -17,12 +17,12 @@ CMbuf::CMbuf()
 int CMbuf::init(uint32_t size)
 {
     m_data.size = size;
-    m_data.ptr = (const char *)new uint8_t[size];  // later from mem pool
-
+    m_data.ptr = (const char *)new uint8_t[size]; // later from mem pool
+    
     m_read_pos = 0;
     m_write_pos = 0;
     m_msg_id = 0;
-
+    
     m_msg_type = MSG_DATA;
     
     m_time = time(0);
@@ -32,35 +32,35 @@ int CMbuf::init(uint32_t size)
 void CMbuf::regist_mem_store(CMsgMemStore *mem_store)
 {
     m_mem_db = mem_store;
-
+    
     if (m_msg_id && m_mem_db != nullptr)
     {
-	m_mem_db->add_msg(m_msg_id, this);
+        m_mem_db->add_msg(m_msg_id, this);
     }
 }
 
 CMbuf::~CMbuf()
 {
     LOG_TRACE_METHOD(__func__);
-
+    
     if (m_msg_id && m_mem_db != nullptr)
     {
-	m_mem_db->del_msg(m_msg_id);
+        m_mem_db->del_msg(m_msg_id);
     }
-
-
+    
+    
     if (m_data.ptr != nullptr)
     {
-	uint8_t *p = (uint8_t *)m_data.ptr;
-	delete []p;
-
-	m_data.ptr = nullptr;
+        uint8_t *p = (uint8_t *)m_data.ptr;
+        delete []p;
+        
+        m_data.ptr = nullptr;
     }
     else
     {
-	LOG_DEBUG("!!!!!! Maybe double free");
+        LOG_DEBUG("!!!!!! Maybe double free");
     }
-
+    
 }
 
 std::shared_ptr<CMbuf> CMbuf::copy()
@@ -79,9 +79,9 @@ void CMbuf::read_ptr(uint32_t n)
 {
     if (m_read_pos + n > m_data.size)
     {
-	return;
+        return;
     }
-
+    
     m_read_pos += n;
 }
 
@@ -96,9 +96,9 @@ void CMbuf::write_ptr(uint32_t n)
 {
     if (m_write_pos + n > m_data.size)
     {
-	return;
+        return;
     }
-
+    
     m_write_pos += n;
 }
 
@@ -107,13 +107,13 @@ int CMbuf::copy(const uint8_t *buf, int len)
 {
     if (m_write_pos + len > m_data.size)
     {
-	return -1;
+        return -1;
     }
-
+    
     memcpy((void *)(m_data.ptr + m_write_pos), buf, len);
-
+    
     m_write_pos += len;
-
+    
     return 0;
 }
 
@@ -181,12 +181,12 @@ void hex_dump(uint8_t *buf, uint32_t len)
     LOG_DEBUG("0000 ");
     for (uint i = 0; i < len; i++)
     {
-	if (i && ((i%16) == 0))
-	{
-	    LOG_DEBUG("\n%04x ", i);
-	}
-
-	LOG_DEBUG("%02X ", buf[i]);
+        if (i && ((i%16) == 0))
+        {
+            LOG_DEBUG("\n%04x ", i);
+        }
+        
+        LOG_DEBUG("%02X ", buf[i]);
     }
 }
 

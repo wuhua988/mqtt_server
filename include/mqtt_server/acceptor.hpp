@@ -19,7 +19,7 @@ namespace reactor
     class Acceptor : public CEventHandler
     {
     public:
-        Acceptor(CPoller *poller): CEventHandler(poller)
+        Acceptor(CPoller *poller) : CEventHandler(poller)
         {
             LOG_TRACE_METHOD(__func__);
         }
@@ -27,15 +27,15 @@ namespace reactor
         int open(const CSockAddress &address);
         
         virtual int handle_input(socket_t sock_id);
-
+        
     protected:
-        CSockAcceptor  m_sock_acceptor;
-
+        CSockAcceptor m_sock_acceptor;
+        
     private:
-	~Acceptor()
-	{
-	    LOG_TRACE_METHOD(__func__);
-	}
+        ~Acceptor()
+        {
+            LOG_TRACE_METHOD(__func__);
+        }
     };
 }
 

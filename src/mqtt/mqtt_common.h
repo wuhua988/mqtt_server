@@ -32,53 +32,53 @@ enum msgTypes
 
 typedef union
 {
-    byte all;                                 /**< the whole byte */
+    byte all;                         /**< the whole byte */
     struct
     {
-        byte      retain:1;
-        byte      qos:2;
-        byte      dup:1;
-        byte      type:4;
-
+        byte retain : 1;
+        byte qos : 2;
+        byte dup : 1;
+        byte type : 4;
+        
     } bits;
-
+    
 } TMqttHeader;
 
 typedef struct
 {
-    TMqttHeader header;                         /**< MQTT header byte */
-    int         remain_length;
+    TMqttHeader header;                 /**< MQTT header byte */
+    int remain_length;
     union
     {
         char all;
         struct
         {
-        byte:1;                            /**< unused */
-            byte    clean_session:1;
-            byte    will:1;
-            byte    will_qos:2;
-            byte    will_retail:1;
-            byte    password:1;
-            byte    username:1;
+            byte : 1; /**< unused */
+            byte clean_session : 1;
+            byte will : 1;
+            byte will_qos : 2;
+            byte will_retail : 1;
+            byte password : 1;
+            byte username : 1;
         } bits;
-    } flags;                                    /**< connect flags byte */
-
-    byte            protocol_ver;
+    } flags;                            /**< connect flags byte */
+    
+    byte protocol_ver;
     char            *protocol_name;
     char            *client_id;
     char            *will_topic;
     char            *will_msg;
     char            *user_name;
     char            *user_passwd;
-
-    unsigned short  keep_alive_timer;                /**< keepalive timeout value in seconds */
+    
+    unsigned short keep_alive_timer;         /**< keepalive timeout value in seconds */
 } TMqttConnect;
 
 typedef struct
 {
     char *topic_name;
-    int  topic_qos;
-}TMqttTopic;
+    int topic_qos;
+} TMqttTopic;
 
 /*
  typedef struct
@@ -91,34 +91,34 @@ typedef struct
 #define  MAX_TOPIC_NUM 5
 typedef struct
 {
-    TMqttHeader     header;                       	/**< MQTT header byte */
-    int             remain_length;
-
-    int             msg_id;
-    TMqttTopic      topics[5];                      /**< list of topic strings */
-    int             topics_count;                  	/**< topic count */
-}TMqttSubcribe;
+    TMqttHeader header;                         /**< MQTT header byte */
+    int remain_length;
+    
+    int msg_id;
+    TMqttTopic topics[5];                   /**< list of topic strings */
+    int topics_count;                           /**< topic count */
+} TMqttSubcribe;
 
 typedef struct
 {
-    TMqttHeader     header;                       /**< MQTT header byte */
-    int             remain_length;
+    TMqttHeader header;                   /**< MQTT header byte */
+    int remain_length;
     char            *topic_name;
-    int             msg_id_offset;
-    int             msg_id;
-
-    int             payload_len;
+    int msg_id_offset;
+    int msg_id;
+    
+    int payload_len;
     char            *payload;
-
-}TMqttPublish;
+    
+} TMqttPublish;
 
 /**
  * Data for one of the ack packets.
  */
 typedef struct
 {
-    TMqttHeader header;      /**< MQTT header byte */
-    int         msg_id;      /**< MQTT message id */
+    TMqttHeader header; /**< MQTT header byte */
+    int msg_id;      /**< MQTT message id */
 } TAck;
 
 typedef TAck TPuback;

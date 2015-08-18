@@ -20,7 +20,7 @@ namespace reactor
     class CMqttConnection : public CEventHandler
     {
         enum {MAX_BUF_SIZE = 4096};
-
+        
     public:
         CMqttConnection(CPoller *poller) : CEventHandler(poller), m_cur_buf_pos(0)
         {
@@ -66,19 +66,19 @@ namespace reactor
         int handle_unsubscribe_msg(uint8_t *buf, uint32_t len, CMqttConnection *mqtt_connection);
         int handle_pingreq_msg(uint8_t *buf, uint32_t len, CMqttConnection *mqtt_connection);
         int handle_disconnect_msg(uint8_t *buf, uint32_t len, CMqttConnection *mqtt_connection);
-
-	time_t last_msg_time()
-	{
-	    return m_last_msg_time; 
-	}
-
+        
+        time_t last_msg_time()
+        {
+            return m_last_msg_time;
+        }
+        
     protected:
         CMqttClientContext_ptr m_client_context;
         
-        uint8_t     m_recv_buffer[MAX_BUF_SIZE];
-        uint32_t    m_cur_buf_pos;
-
-	time_t	    m_last_msg_time;
+        uint8_t m_recv_buffer[MAX_BUF_SIZE];
+        uint32_t m_cur_buf_pos;
+        
+        time_t m_last_msg_time;
     };
 }
 

@@ -11,17 +11,17 @@ namespace reactor
 {
     class CSockAcceptor : public CSockBase
     {
-	public:
-	    CSockAcceptor();
-	    ~CSockAcceptor();
-
-	    virtual int open(const CSockAddress &addr, int max_listen = 1024);
-	    virtual int close();
-
-	    socket_t accept(CEventHandler *tcp_socket);
-
-	protected:
-	    CSockAddress    m_sock_address;
+    public:
+        CSockAcceptor();
+        ~CSockAcceptor();
+        
+        virtual int open(const CSockAddress &addr, int max_listen = 1024);
+        virtual int close();
+        
+        socket_t accept(CEventHandler *tcp_socket);
+        
+    protected:
+        CSockAddress m_sock_address;
     };
 }
 

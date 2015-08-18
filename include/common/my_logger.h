@@ -93,15 +93,15 @@ LOG_MACRO_FMT_BODY(log4cplus::Logger::getRoot(), FATAL_LOG_LEVEL, logFmt, ##logA
 #endif
 
 #define LOG_TRACE_METHOD(logEvent)                        \
-    log4cplus::TraceLogger _log4cplus_trace_logger(log4cplus::Logger::getRoot(), logEvent,    \
-     							__FILE__, __LINE__); \
+log4cplus::TraceLogger _log4cplus_trace_logger(log4cplus::Logger::getRoot(), logEvent,    \
+__FILE__, __LINE__); \
 
 #if defined (LOG4CPLUS_HAVE_C99_VARIADIC_MACROS)
 #define LOG_TRACE(logFmt, ...)                            \
-    LOG_MACRO_FMT_BODY (log4cplus::Logger::getRoot(), TRACE_LOG_LEVEL, logFmt,##__VA_ARGS__)
+LOG_MACRO_FMT_BODY (log4cplus::Logger::getRoot(), TRACE_LOG_LEVEL, logFmt,##__VA_ARGS__)
 #elif defined (LOG4CPLUS_HAVE_GNU_VARIADIC_MACROS)
 #define LOG_TRACE(logFmt, logArgs...)                     \
-    LOG_MACRO_FMT_BODY(log4cplus::Logger::getRoot(), TRACE_LOG_LEVEL, logFmt, ##logArgs)
+LOG_MACRO_FMT_BODY(log4cplus::Logger::getRoot(), TRACE_LOG_LEVEL, logFmt, ##logArgs)
 #endif
 
 
@@ -112,12 +112,12 @@ using namespace log4cplus::helpers;
 class CLoggerMgr
 {
 public:
-
+    
     CLoggerMgr(const char *confFileName)
     {
         log4cplus::initialize (); // important
         // LogLog::getLogLog()->setInternalDebugging(true);
-	open(confFileName);
+        open(confFileName);
     }
     
     int open(const char *confFileName)

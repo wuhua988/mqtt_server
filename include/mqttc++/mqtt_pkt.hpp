@@ -21,7 +21,7 @@ class CMqttPkt
 {
 public:
     CMqttPkt(uint8_t *buf, uint32_t len)
-    :m_offset(0), m_max_size(len), m_buf_ptr(buf), m_remain_length_value(0), m_remain_length_bytes(0)
+    : m_offset(0), m_max_size(len), m_buf_ptr(buf), m_remain_length_value(0), m_remain_length_bytes(0)
     {
     }
     
@@ -55,12 +55,12 @@ protected:
         return ((value & 0x80) == 0x80);
     }
     
-    uint32_t  m_offset;
-    uint32_t  m_max_size;
+    uint32_t m_offset;
+    uint32_t m_max_size;
     uint8_t   *m_buf_ptr;
     
-    uint32_t    m_remain_length_value;
-    uint8_t     m_remain_length_bytes;
+    uint32_t m_remain_length_value;
+    uint8_t m_remain_length_bytes;
 };
 
 #endif /* defined(__mqtt_c____mqtt_pkt__) */

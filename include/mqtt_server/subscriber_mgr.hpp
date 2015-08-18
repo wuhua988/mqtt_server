@@ -1,4 +1,4 @@
-#ifndef	 _mqtt_server_topic_mgr__
+#ifndef  _mqtt_server_topic_mgr__
 #define  _mqtt_server_topic_mgr__
 
 #include <unordered_set>
@@ -10,15 +10,16 @@
 namespace reactor
 {
     class CPersist;
-
+    
     typedef std::unordered_set<CMqttClientContext_ptr> CONTEXT_SET;
     
     class CTopicNode
     {
-	friend class CPersist;
-
+        friend class CPersist;
+        
     public:
-        CTopicNode(){}
+        CTopicNode(){
+        }
         
         void update_retain_msg(CMbuf_ptr &retain_msg);
         void clean_retain_msg();
@@ -27,7 +28,7 @@ namespace reactor
         
         CONTEXT_SET & client_context();
         
-        int add_client(CMqttClientContext_ptr &cli_context);        
+        int add_client(CMqttClientContext_ptr &cli_context);
         int del_client(CMqttClientContext_ptr &cli_context);
         
         void print();
@@ -35,19 +36,21 @@ namespace reactor
     private:
         //CMqttPubMessage	m_retain_msg;
         //bool            m_has_retain_msg;
-        CMbuf_ptr       m_retian_msg_buf;
-        CONTEXT_SET	    m_subcriber_clients;
+        CMbuf_ptr m_retian_msg_buf;
+        CONTEXT_SET m_subcriber_clients;
     };
     
     typedef std::shared_ptr<CTopicNode> CTopicNode_ptr;
     
     class CSubscriberMgr
     {
-	friend class CPersist;
-
+        friend class CPersist;
+        
     public:
-        CSubscriberMgr(){}
-        ~CSubscriberMgr(){}
+        CSubscriberMgr(){
+        }
+        ~CSubscriberMgr(){
+        }
         
         int add_client_context(std::string str_topic_name, CMqttClientContext_ptr cli_context);
         int del_client_context(std::string &str_topic_name, CMqttClientContext_ptr & cli_context);
@@ -57,12 +60,12 @@ namespace reactor
         int publish(std::string &str_topic_name, CMbuf_ptr &mbuf, CMqttPublish &publish_msg);
         
         int publish(const CMqttClientContext_ptr &client, CMbuf_ptr &mbuf);
-       
+        
         
         void print();
-       
-	std::unordered_map<std::string,CTopicNode_ptr> & topic_mgr();
-
+        
+        std::unordered_map<std::string,CTopicNode_ptr> & topic_mgr();
+        
     protected:
         std::unordered_map<std::string,CTopicNode_ptr> m_topic_mgr;
     };

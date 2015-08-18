@@ -11,7 +11,7 @@ namespace str_tools
     void split(std::string str, std::string separator, int max, std::vector<std::string>* results);
     std::string & trim(std::string &str);
     void remove_space(std::string& str);
-
+    
     template <class T> std::string to_string(const T& t);
     template <class out_type,class in_value> out_type convert(const in_value & t);
 }

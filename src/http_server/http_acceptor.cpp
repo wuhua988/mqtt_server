@@ -33,8 +33,8 @@ namespace http
         
         CEventHandler *event_handler = new HttpConnection(this->m_poller_ptr, this->m_notify_poller);
         
-
-        int socket_id = this->m_sock_acceptor.accept(event_handler); 
+        
+        int socket_id = this->m_sock_acceptor.accept(event_handler);
         LOG_INFO("New http client arrived, sock_id [%d]", socket_id);
         
         event_handler->open();

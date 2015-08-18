@@ -24,29 +24,29 @@
  */
 
 #include <memory>
-#include "reactor/define.hpp" 
+#include "reactor/define.hpp"
 
 #include "msgpack/msgpack.hpp"
 
-class CMsgMemStore; 
+class CMsgMemStore;
 
 const int MAX_DEFAULT_BUF_SIZE = 512;
 const uint32_t MSG_DATA = 1;
 const uint32_t MSG_PUBLISH = 2;
 
-class CMbuf: public std::enable_shared_from_this<CMbuf>
+class CMbuf : public std::enable_shared_from_this<CMbuf>
 {
 public:
     CMbuf(uint32_t size);
     CMbuf();
     ~CMbuf();
-
+    
     void regist_mem_store(CMsgMemStore *mem_store);
-
+    
     int init(uint32_t size);
-
+    
     std::shared_ptr<CMbuf> copy();
-
+    
     // get read ptr
     uint8_t * read_ptr();
     
@@ -71,28 +71,28 @@ public:
     uint32_t length();
     
     void reset();
-
+    
     uint32_t available_buf();
-
+    
     uint32_t max_size();
     
-    void msg_id(uint64_t msg_id);   
+    void msg_id(uint64_t msg_id);
     uint64_t msg_id();
-
+    
     void msg_type(uint32_t msg_type);
     uint32_t msg_type();
     
     uint32_t time();
 private:
-    msgpack::type::raw_ref  m_data;
+    msgpack::type::raw_ref m_data;
     
-    uint32_t            m_msg_type;
-    uint32_t            m_read_pos;    /* read marker */
-    uint32_t            m_write_pos;   /* write marker */
-    uint64_t            m_msg_id;
+    uint32_t m_msg_type;
+    uint32_t m_read_pos;                       /* read marker */
+    uint32_t m_write_pos;                      /* write marker */
+    uint64_t m_msg_id;
     
-    uint32_t            m_time;
-
+    uint32_t m_time;
+    
     CMsgMemStore       *m_mem_db = nullptr;
     
 public:
@@ -101,17 +101,17 @@ public:
 
 class CMbuf_tmp
 {
-    public:
-	msgpack::type::raw_ref  m_data;
-	uint32_t	    m_msg_type;
-	uint32_t            m_read_pos;
-	uint32_t            m_write_pos;
-	uint64_t            m_msg_id;
+public:
+    msgpack::type::raw_ref m_data;
+    uint32_t m_msg_type;
+    uint32_t m_read_pos;
+    uint32_t m_write_pos;
+    uint64_t m_msg_id;
     
-    uint32_t            m_time;
+    uint32_t m_time;
     
-    public:
-	MSGPACK_DEFINE(m_data, m_msg_type, m_read_pos, m_write_pos, m_msg_id, m_time);
+public:
+    MSGPACK_DEFINE(m_data, m_msg_type, m_read_pos, m_write_pos, m_msg_id, m_time);
 };
 
 typedef std::shared_ptr<CMbuf> CMbuf_ptr;

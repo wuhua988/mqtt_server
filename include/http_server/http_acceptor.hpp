@@ -20,23 +20,23 @@ namespace http
     {
     public:
         HttpAcceptor(reactor::CPoller *poller, reactor::CPoller *notify_poller)
-	    : reactor::CEventHandler(poller), m_notify_poller(notify_poller)
+        : reactor::CEventHandler(poller), m_notify_poller(notify_poller)
         {
             LOG_TRACE_METHOD(__func__);
         }
         
         int open(const reactor::CSockAddress &address);
         virtual int handle_input(socket_t sock_id);
-
+        
     protected:
-	reactor::CSockAcceptor  m_sock_acceptor;
-
-	reactor::CPoller	*m_notify_poller = nullptr;
+        reactor::CSockAcceptor m_sock_acceptor;
+        
+        reactor::CPoller        *m_notify_poller = nullptr;
     private:
-	~HttpAcceptor()
-	{
-	    LOG_TRACE_METHOD(__func__);
-	}
+        ~HttpAcceptor()
+        {
+            LOG_TRACE_METHOD(__func__);
+        }
     };
 }
 

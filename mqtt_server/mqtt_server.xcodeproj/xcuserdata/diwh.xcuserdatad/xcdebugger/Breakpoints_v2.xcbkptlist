@@ -9,22 +9,6 @@
             shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "../src/mqtt_server/mqtt_connection.cpp"
-            timestampString = "459424292.669359"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "274"
-            endingLineNumber = "274"
-            landmarkName = "CMqttConnection::handle_connect_msg(uint8_t *buf, uint32_t len, CMqttConnection *mqtt_connection)"
-            landmarkType = "5">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
             filePath = "../include/mqtt_server/persist.hpp"
             timestampString = "459672267.243817"
             startingColumnNumber = "9223372036854775807"
@@ -55,13 +39,29 @@
             shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "../include/mqttc++/mqtt_msg.hpp"
-            timestampString = "460611112.959119"
+            filePath = "../src/mqtt_server/subscriber_mgr.cpp"
+            timestampString = "461491322.093951"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "117"
-            endingLineNumber = "117"
-            landmarkName = "CMqttFixedHeader(MqttType msg_type, bool dup_flag, uint8_t qos, bool retain_flag)"
+            startingLineNumber = "193"
+            endingLineNumber = "193"
+            landmarkName = "CSubscriberMgr::publish(std::string &amp;str_topic_name, CMbuf_ptr &amp;mbuf, CMqttPublish &amp;publish_msg)"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "../src/mqtt_server/xml_config.cpp"
+            timestampString = "461560234.285345"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "158"
+            endingLineNumber = "158"
+            landmarkName = "CXMLConfig::open()"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>

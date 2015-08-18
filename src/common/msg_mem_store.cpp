@@ -1,10 +1,10 @@
 #include "common/mbuf.hpp"
 #include "common/msg_mem_store.hpp"
 
-CMsgMemStore::CMsgMemStore(uint64_t msg_id_start) 
-    : m_last_msg_id(msg_id_start)
+CMsgMemStore::CMsgMemStore(uint64_t msg_id_start)
+: m_last_msg_id(msg_id_start)
 {
-
+    
 }
 
 uint64_t CMsgMemStore::next_msg_id()
@@ -25,12 +25,12 @@ void CMsgMemStore::last_msg_id(uint64_t msg_id)
 int CMsgMemStore::del_msg(uint64_t msg_id)
 {
     auto it = m_msg_db.find(msg_id);
-
+    
     if (it != m_msg_db.end())
     {
-	m_msg_db.erase(it);
+        m_msg_db.erase(it);
     }
-
+    
     return 0;
 }
 
@@ -39,9 +39,9 @@ int CMsgMemStore::add_msg(uint64_t msg_id, CMbuf *buf)
     m_last_update_time = time(0);
     if (buf != nullptr)
     {
-	m_msg_db[msg_id] = buf;
+        m_msg_db[msg_id] = buf;
     }
-
+    
     return 0;
 }
 

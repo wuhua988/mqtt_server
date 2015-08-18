@@ -50,16 +50,16 @@ namespace reactor
         
         // maybe some data left in last read
         int read_len = ::read(this->m_sock_handle, m_recv_buffer + m_cur_buf_pos, CMqttConnection::MAX_BUF_SIZE - m_cur_buf_pos);
-	if (read_len < 0)
-	{
-	    int my_errno = errno;
-	    if (errno == EAGAIN || errno == EWOULDBLOCK || errno == EINTR)
-	    {
-		LOG_DEBUG("Read len < 0, errno %d, return 0 continue", my_errno);
-		return 0;
-	    }
-	}
-
+        if (read_len < 0)
+        {
+            int my_errno = errno;
+            if (errno == EAGAIN || errno == EWOULDBLOCK || errno == EINTR)
+            {
+                LOG_DEBUG("Read len < 0, errno %d, return 0 continue", my_errno);
+                return 0;
+            }
+        }
+        
         LOG_DEBUG("handle_input read data len %d, socket [%d]", read_len, this->m_sock_handle);
         if (read_len <= 0)
         {
@@ -72,18 +72,18 @@ namespace reactor
         m_recv_bytes += read_len;
         
         m_cur_buf_pos += read_len;
-       
-	m_last_msg_time  = time(0);
+        
+        m_last_msg_time  = time(0);
         return this->process_mqtt(m_recv_buffer, m_cur_buf_pos);
     }
     
     int CMqttConnection::process_mqtt(uint8_t *buf, uint32_t len)
     {
-	if (m_client_context.get() != nullptr)
-	{
-	    m_client_context->last_msg_in(time(0));
-	}
-
+        if (m_client_context.get() != nullptr)
+        {
+            m_client_context->last_msg_in(time(0));
+        }
+        
         // first check is a full pkt
         uint32_t remain_length_value = 0;
         uint8_t remain_length_bytes = 0;
@@ -115,7 +115,7 @@ namespace reactor
             }
             else if (remain_len == FAILTURE) // decode failed
             {
-                return -1;      // close this socket
+                return -1; // close this socket
             }
             
             uint32_t pkt_total_len = remain_len + remain_length_bytes + 1; // 1 for fixed header
@@ -123,7 +123,7 @@ namespace reactor
             // move body function to a mqtt_class
             if (this->process(buf + offset, pkt_total_len, this) < 0)
             {
-                return -1;    // something wrong close this socket
+                return -1; // something wrong close this socket
             }
             
             offset += pkt_total_len;
@@ -395,7 +395,7 @@ namespace reactor
         
         // 1. first send ack to sender
         CMbuf_ptr mbuf_pub_ack = make_shared<CMbuf>(64);
-        CMqttPublishAck  pub_ack(mbuf_pub_ack->write_ptr(),mbuf_pub_ack->max_size(),publish.msg_id());
+        CMqttPublishAck pub_ack(mbuf_pub_ack->write_ptr(),mbuf_pub_ack->max_size(),publish.msg_id());
         
         int res = 0;
         int enc_len = 0;
@@ -419,7 +419,7 @@ namespace reactor
         uint64_t publish_msg_id = MSG_MEM_STORE->next_msg_id();   // change msg_id to msg_id
         mbuf_pub->msg_id(publish_msg_id);
         mbuf_pub->regist_mem_store(MSG_MEM_STORE);
-
+        
         uint32_t msg_id_offset = publish.msg_id_offset();
         if (msg_id_offset < len)
         {
@@ -466,7 +466,7 @@ namespace reactor
         return 0;
     }
     
-    int  CMqttConnection::handle_subscribe_msg(uint8_t *buf, uint32_t len, CMqttConnection *mqtt_connection)
+    int CMqttConnection::handle_subscribe_msg(uint8_t *buf, uint32_t len, CMqttConnection *mqtt_connection)
     {
         if (mqtt_connection == nullptr)
         {
@@ -529,7 +529,7 @@ namespace reactor
         return res;
     }
     
-    int  CMqttConnection::handle_unsubscribe_msg(uint8_t *buf, uint32_t len, CMqttConnection *mqtt_connection)
+    int CMqttConnection::handle_unsubscribe_msg(uint8_t *buf, uint32_t len, CMqttConnection *mqtt_connection)
     {
         if (mqtt_connection == nullptr)
         {
@@ -587,7 +587,7 @@ namespace reactor
         return res;
     }
     
-    int  CMqttConnection::handle_pingreq_msg(uint8_t *UNUSED(buf), uint32_t UNUSED(len), CMqttConnection *mqtt_connection)
+    int CMqttConnection::handle_pingreq_msg(uint8_t *UNUSED(buf), uint32_t UNUSED(len), CMqttConnection *mqtt_connection)
     {
         if (mqtt_connection == nullptr)
         {

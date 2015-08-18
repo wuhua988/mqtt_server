@@ -7,36 +7,36 @@
 
 namespace reactor
 {
-
+    
     class CPersist;
     class CPersistMsgPack;
-
+    
     class CTimerHandler : public CEventHandler
     {
-
-	public:
-	    CTimerHandler(CPoller *poller, CPersistMsgPack *persist)
-		: CEventHandler(poller), m_persist(persist)
-	    {
-		LOG_TRACE_METHOD(__func__);
-	    }
-	
-	    int open(uint32_t start_second, int interval_second); 
-	    virtual int handle_input(socket_t sock_id); 
-
-	private:
-	    ~CTimerHandler()
-	    {
-		LOG_TRACE_METHOD(__func__);   
-	    }
-
-	protected:
-	    uint32_t    m_start_second;
-	    uint32_t    m_interval_second;
-
-	    CPersistMsgPack	*m_persist;
+        
+    public:
+        CTimerHandler(CPoller *poller, CPersistMsgPack *persist)
+        : CEventHandler(poller), m_persist(persist)
+        {
+            LOG_TRACE_METHOD(__func__);
+        }
+        
+        int open(uint32_t start_second, int interval_second);
+        virtual int handle_input(socket_t sock_id);
+        
+    private:
+        ~CTimerHandler()
+        {
+            LOG_TRACE_METHOD(__func__);
+        }
+        
+    protected:
+        uint32_t m_start_second;
+        uint32_t m_interval_second;
+        
+        CPersistMsgPack     *m_persist;
     };
-
+    
 }
 
 #endif

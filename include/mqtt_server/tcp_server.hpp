@@ -21,18 +21,18 @@ namespace reactor
 {
     class TCPServer
     {
-
-    public: 
+        
+    public:
         TCPServer(std::string &file_name, CPollerEpoll *poller)
-	    :m_server_address(5050), m_poller_epoll(poller),  m_persist(file_name)
+        : m_server_address(5050), m_poller_epoll(poller),  m_persist(file_name)
         {
             LOG_TRACE_METHOD(__func__);
-
-	    m_acceptor = new Acceptor(m_poller_epoll);
-	    m_sig_handler = new CSigHandler(m_poller_epoll);
-	    m_timer_handler = new CTimerHandler(m_poller_epoll, &m_persist);
-
-	    m_notify_fd  = new CPollerNotifyFd(m_poller_epoll);
+            
+            m_acceptor = new Acceptor(m_poller_epoll);
+            m_sig_handler = new CSigHandler(m_poller_epoll);
+            m_timer_handler = new CTimerHandler(m_poller_epoll, &m_persist);
+            
+            m_notify_fd  = new CPollerNotifyFd(m_poller_epoll);
         }
         
         int open(CSockAddress &server_addr);
@@ -40,15 +40,15 @@ namespace reactor
         
     protected:
         
-        CSockAddress	m_server_address;
-
-        Acceptor 	*m_acceptor = nullptr;	    // manage by handle_close()
-        CPollerEpoll 	*m_poller_epoll = nullptr;
+        CSockAddress m_server_address;
         
-	CPollerNotifyFd  *m_notify_fd = nullptr;
-        CSigHandler      *m_sig_handler = nullptr;  // manage by handle_close()
-        CTimerHandler    *m_timer_handler = nullptr; // manage by handle_close()
-	CPersistMsgPack	 m_persist;
+        Acceptor        *m_acceptor = nullptr;                      // manage by handle_close()
+        CPollerEpoll    *m_poller_epoll = nullptr;
+        
+        CPollerNotifyFd  *m_notify_fd = nullptr;
+        CSigHandler      *m_sig_handler = nullptr;                  // manage by handle_close()
+        CTimerHandler    *m_timer_handler = nullptr;                 // manage by handle_close()
+        CPersistMsgPack m_persist;
     };
 }
 

@@ -7,7 +7,7 @@
 
 #if defined(_WIN32) || defined(WIN32)
 #define HAVE_WINDOWS 1
-#include <process.h>	// for _getpid()
+#include <process.h>    // for _getpid()
 #endif
 
 #if defined(__osf__)
@@ -22,22 +22,22 @@ typedef unsigned int uint;
 typedef unsigned char uchar;
 
 #ifdef _MSC_VER
-typedef __int8  int8;
+typedef __int8 int8;
 typedef __int16 int16;
 typedef __int32 int32;
 typedef __int64 int64;
 
-typedef unsigned __int8  uint8;
+typedef unsigned __int8 uint8;
 typedef unsigned __int16 uint16;
 typedef unsigned __int32 uint32;
 typedef unsigned __int64 uint64;
 #else
-typedef int8_t  int8;
+typedef int8_t int8;
 typedef int16_t int16;
 typedef int32_t int32;
 typedef int64_t int64;
 
-typedef uint8_t  uint8;
+typedef uint8_t uint8;
 typedef uint16_t uint16;
 typedef uint32_t uint32;
 typedef uint64_t uint64;
@@ -72,42 +72,42 @@ typedef uint64_t uint64;
 #endif
 
 #if !defined(HAVE_WINDOWS) \
-	&& !defined(HAVE_LINUX) \
-	&& !defined(HAVE_FREEBSD) \
-	&& !defined(HAVE_KFREEBSD) \
-	&& !defined(HAVE_NETBSD) \
-	&& !defined(HAVE_OPENBSD) \
-	&& !defined(HAVE_DARWIN) \
-	&& !defined(HAVE_ANDROID)
+&& !defined(HAVE_LINUX) \
+&& !defined(HAVE_FREEBSD) \
+&& !defined(HAVE_KFREEBSD) \
+&& !defined(HAVE_NETBSD) \
+&& !defined(HAVE_OPENBSD) \
+&& !defined(HAVE_DARWIN) \
+&& !defined(HAVE_ANDROID)
 #error Operating system does not support.
 #endif
 
 /* 统一定义基本的数据类型 */
-typedef unsigned int		uint32_t;
-typedef unsigned long		ulong_t;
-typedef long				long_t;
+typedef unsigned int uint32_t;
+typedef unsigned long ulong_t;
+typedef long long_t;
 
 /*
-#if defined(HAVE_WINDOWS)
-#define __QING_FUNC__ __FUNCTION__
-#define QING_TRACE()	printf("[TRACE] [%s:%d]\n", __QING_FUNC__, __LINE__);
-#else
-#define __QING_FUNC__ __PRETTY_FUNCTION__
-#define QING_TRACE()	printf("[TRACE] [%s:%d]\n", __QING_FUNC__, __LINE__);
-#endif
-*/
+ #if defined(HAVE_WINDOWS)
+ #define __QING_FUNC__ __FUNCTION__
+ #define QING_TRACE()	printf("[TRACE] [%s:%d]\n", __QING_FUNC__, __LINE__);
+ #else
+ #define __QING_FUNC__ __PRETTY_FUNCTION__
+ #define QING_TRACE()	printf("[TRACE] [%s:%d]\n", __QING_FUNC__, __LINE__);
+ #endif
+ */
 
 #ifdef HAVE_WINDOWS
 #ifndef snprintf
-#define snprintf		_snprintf_s
+#define snprintf                _snprintf_s
 #endif // !snprintf
-#define strcat_safe		strcat_s
-#define strtok_safe		strtok_s
-#define get_pid			_getpid
+#define strcat_safe             strcat_s
+#define strtok_safe             strtok_s
+#define get_pid                 _getpid
 #else
-#define strcat_safe		strcat
-#define strtok_safe		strtok_r
-#define get_pid			getpid
+#define strcat_safe             strcat
+#define strtok_safe             strtok_r
+#define get_pid                 getpid
 #endif
 
 

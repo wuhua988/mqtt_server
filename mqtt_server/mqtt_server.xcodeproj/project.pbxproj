@@ -17,7 +17,6 @@
 		D90F0C4F1B8181C600C5CC5F /* http_acceptor.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = http_acceptor.hpp; sourceTree = "<group>"; };
 		D90F0C501B8181C600C5CC5F /* http_connection.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = http_connection.hpp; sourceTree = "<group>"; };
 		D90F0C511B8181C600C5CC5F /* http_server.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = http_server.hpp; sourceTree = "<group>"; };
-		D90F0C531B8181E000C5CC5F /* CMakeLists.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = "<group>"; };
 		D90F0C541B8181E000C5CC5F /* http_acceptor.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = http_acceptor.cpp; sourceTree = "<group>"; };
 		D90F0C551B8181E000C5CC5F /* http_connection.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = http_connection.cpp; sourceTree = "<group>"; };
 		D90F0C561B8181E000C5CC5F /* http_server.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = http_server.cpp; sourceTree = "<group>"; };
@@ -32,7 +31,6 @@
 		D90F0C601B81A5C900C5CC5F /* log4cplus_debug.properties */ = {isa = PBXFileReference; lastKnownFileType = text; path = log4cplus_debug.properties; sourceTree = "<group>"; };
 		D90F0C611B81A5C900C5CC5F /* log4cplus_trace.properties */ = {isa = PBXFileReference; lastKnownFileType = text; path = log4cplus_trace.properties; sourceTree = "<group>"; };
 		D90F0C621B81A5C900C5CC5F /* mqtt_server.xml */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = mqtt_server.xml; sourceTree = "<group>"; };
-		D90F0C641B81C32100C5CC5F /* CMakeLists.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = "<group>"; };
 		D90F0C651B81C32100C5CC5F /* mbuf.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = mbuf.cpp; sourceTree = "<group>"; };
 		D90F0C661B81C32100C5CC5F /* msg_mem_store.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = msg_mem_store.cpp; sourceTree = "<group>"; };
 		D90F0C671B81C32100C5CC5F /* str_tools.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = str_tools.cpp; sourceTree = "<group>"; };
@@ -143,7 +141,6 @@
 		D98A8CD51B58CD9D00A8B969 /* sock_acceptor.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = sock_acceptor.hpp; sourceTree = "<group>"; };
 		D98A8CD61B58CD9D00A8B969 /* sock_address.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = sock_address.hpp; sourceTree = "<group>"; };
 		D98A8CD71B58CD9D00A8B969 /* sock_base.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = sock_base.hpp; sourceTree = "<group>"; };
-		D98A8CD91B58CDB300A8B969 /* CMakeLists.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = "<group>"; };
 		D98A8CDC1B58CDB300A8B969 /* CMakeLists.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = "<group>"; };
 		D98A8CDD1B58CDB300A8B969 /* helper.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = helper.c; sourceTree = "<group>"; };
 		D98A8CDE1B58CDB300A8B969 /* helper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = helper.h; sourceTree = "<group>"; };
@@ -152,47 +149,13 @@
 		D98A8CE11B58CDB300A8B969 /* mqtt_pkt_ansi.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = mqtt_pkt_ansi.c; sourceTree = "<group>"; };
 		D98A8CE21B58CDB300A8B969 /* mqtt_pkt_ansi.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = mqtt_pkt_ansi.h; sourceTree = "<group>"; };
 		D98A8CE41B58CDB300A8B969 /* acceptor.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = acceptor.cpp; sourceTree = "<group>"; };
-		D98A8CE51B58CDB300A8B969 /* CMakeLists.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = "<group>"; };
 		D98A8CE71B58CDB300A8B969 /* mqtt_connection.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = mqtt_connection.cpp; sourceTree = "<group>"; };
 		D98A8CE81B58CDB300A8B969 /* tcp_server.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = tcp_server.cpp; sourceTree = "<group>"; };
-		D98A8CEB1B58CDB300A8B969 /* cmake_install.cmake */ = {isa = PBXFileReference; lastKnownFileType = text; path = cmake_install.cmake; sourceTree = "<group>"; };
-		D98A8CEC1B58CDB300A8B969 /* CMakeCache.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = CMakeCache.txt; sourceTree = "<group>"; };
-		D98A8CEF1B58CDB300A8B969 /* CMakeCCompiler.cmake */ = {isa = PBXFileReference; lastKnownFileType = text; path = CMakeCCompiler.cmake; sourceTree = "<group>"; };
-		D98A8CF01B58CDB300A8B969 /* CMakeCXXCompiler.cmake */ = {isa = PBXFileReference; lastKnownFileType = text; path = CMakeCXXCompiler.cmake; sourceTree = "<group>"; };
-		D98A8CF11B58CDB300A8B969 /* CMakeDetermineCompilerABI_C.bin */ = {isa = PBXFileReference; lastKnownFileType = archive.macbinary; path = CMakeDetermineCompilerABI_C.bin; sourceTree = "<group>"; };
-		D98A8CF21B58CDB300A8B969 /* CMakeDetermineCompilerABI_CXX.bin */ = {isa = PBXFileReference; lastKnownFileType = archive.macbinary; path = CMakeDetermineCompilerABI_CXX.bin; sourceTree = "<group>"; };
-		D98A8CF31B58CDB300A8B969 /* CMakeSystem.cmake */ = {isa = PBXFileReference; lastKnownFileType = text; path = CMakeSystem.cmake; sourceTree = "<group>"; };
-		D98A8CF51B58CDB300A8B969 /* a.out */ = {isa = PBXFileReference; lastKnownFileType = file; path = a.out; sourceTree = "<group>"; };
-		D98A8CF61B58CDB300A8B969 /* CMakeCCompilerId.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = CMakeCCompilerId.c; sourceTree = "<group>"; };
-		D98A8CF81B58CDB300A8B969 /* a.out */ = {isa = PBXFileReference; lastKnownFileType = file; path = a.out; sourceTree = "<group>"; };
-		D98A8CF91B58CDB300A8B969 /* CMakeCXXCompilerId.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = CMakeCXXCompilerId.cpp; sourceTree = "<group>"; };
-		D98A8CFA1B58CDB300A8B969 /* cmake.check_cache */ = {isa = PBXFileReference; lastKnownFileType = text; path = cmake.check_cache; sourceTree = "<group>"; };
-		D98A8CFB1B58CDB300A8B969 /* CMakeDirectoryInformation.cmake */ = {isa = PBXFileReference; lastKnownFileType = text; path = CMakeDirectoryInformation.cmake; sourceTree = "<group>"; };
-		D98A8CFC1B58CDB300A8B969 /* CMakeOutput.log */ = {isa = PBXFileReference; lastKnownFileType = text; path = CMakeOutput.log; sourceTree = "<group>"; };
-		D98A8CFE1B58CDB300A8B969 /* Makefile.cmake */ = {isa = PBXFileReference; lastKnownFileType = text; path = Makefile.cmake; sourceTree = "<group>"; };
-		D98A8CFF1B58CDB300A8B969 /* Makefile2 */ = {isa = PBXFileReference; lastKnownFileType = text; path = Makefile2; sourceTree = "<group>"; };
-		D98A8D011B58CDB300A8B969 /* build.make */ = {isa = PBXFileReference; lastKnownFileType = text; path = build.make; sourceTree = "<group>"; };
-		D98A8D021B58CDB300A8B969 /* cmake_clean.cmake */ = {isa = PBXFileReference; lastKnownFileType = text; path = cmake_clean.cmake; sourceTree = "<group>"; };
-		D98A8D031B58CDB300A8B969 /* cmake_clean_target.cmake */ = {isa = PBXFileReference; lastKnownFileType = text; path = cmake_clean_target.cmake; sourceTree = "<group>"; };
-		D98A8D041B58CDB300A8B969 /* CXX.includecache */ = {isa = PBXFileReference; lastKnownFileType = text; path = CXX.includecache; sourceTree = "<group>"; };
-		D98A8D051B58CDB300A8B969 /* depend.internal */ = {isa = PBXFileReference; lastKnownFileType = text; path = depend.internal; sourceTree = "<group>"; };
-		D98A8D061B58CDB300A8B969 /* depend.make */ = {isa = PBXFileReference; lastKnownFileType = text; path = depend.make; sourceTree = "<group>"; };
-		D98A8D071B58CDB300A8B969 /* DependInfo.cmake */ = {isa = PBXFileReference; lastKnownFileType = text; path = DependInfo.cmake; sourceTree = "<group>"; };
-		D98A8D081B58CDB300A8B969 /* flags.make */ = {isa = PBXFileReference; lastKnownFileType = text; path = flags.make; sourceTree = "<group>"; };
-		D98A8D091B58CDB300A8B969 /* link.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = link.txt; sourceTree = "<group>"; };
-		D98A8D0A1B58CDB300A8B969 /* progress.make */ = {isa = PBXFileReference; lastKnownFileType = text; path = progress.make; sourceTree = "<group>"; };
-		D98A8D0C1B58CDB300A8B969 /* 1 */ = {isa = PBXFileReference; lastKnownFileType = text; path = 1; sourceTree = "<group>"; };
-		D98A8D0D1B58CDB300A8B969 /* count.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = count.txt; sourceTree = "<group>"; };
-		D98A8D0E1B58CDB300A8B969 /* progress.marks */ = {isa = PBXFileReference; lastKnownFileType = text; path = progress.marks; sourceTree = "<group>"; };
-		D98A8D0F1B58CDB300A8B969 /* TargetDirectories.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = TargetDirectories.txt; sourceTree = "<group>"; };
-		D98A8D101B58CDB300A8B969 /* Makefile */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.make; path = Makefile; sourceTree = "<group>"; };
-		D98A8D111B58CDB300A8B969 /* CMakeLists.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = "<group>"; };
 		D98A8D121B58CDB300A8B969 /* log4cplus.properties */ = {isa = PBXFileReference; lastKnownFileType = text; path = log4cplus.properties; sourceTree = "<group>"; };
 		D98A8D131B58CDB300A8B969 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 		D98A8D141B58CDB300A8B969 /* Makefile */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.make; path = Makefile; sourceTree = "<group>"; };
 		D98A8D151B58CDB300A8B969 /* mqtt_msg.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = mqtt_msg.cpp; sourceTree = "<group>"; };
 		D98A8D161B58CDB300A8B969 /* mqtt_pkt.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = mqtt_pkt.cpp; sourceTree = "<group>"; };
-		D98A8D181B58CDB300A8B969 /* CMakeLists.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = "<group>"; };
 		D98A8D191B58CDB300A8B969 /* event_handler.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = event_handler.cpp; sourceTree = "<group>"; };
 		D98A8D1A1B58CDB300A8B969 /* poller_epoll.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = poller_epoll.cpp; sourceTree = "<group>"; };
 		D98A8D1B1B58CDB300A8B969 /* sock_acceptor.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = sock_acceptor.cpp; sourceTree = "<group>"; };
@@ -222,7 +185,6 @@
 		D90F0C521B8181E000C5CC5F /* http_server */ = {
 			isa = PBXGroup;
 			children = (
-				D90F0C531B8181E000C5CC5F /* CMakeLists.txt */,
 				D90F0C541B8181E000C5CC5F /* http_acceptor.cpp */,
 				D90F0C551B8181E000C5CC5F /* http_connection.cpp */,
 				D90F0C561B8181E000C5CC5F /* http_server.cpp */,
@@ -248,7 +210,6 @@
 		D90F0C631B81C32100C5CC5F /* common */ = {
 			isa = PBXGroup;
 			children = (
-				D90F0C641B81C32100C5CC5F /* CMakeLists.txt */,
 				D90F0C651B81C32100C5CC5F /* mbuf.cpp */,
 				D90F0C661B81C32100C5CC5F /* msg_mem_store.cpp */,
 				D90F0C671B81C32100C5CC5F /* str_tools.cpp */,
@@ -483,7 +444,6 @@
 			isa = PBXGroup;
 			children = (
 				D90F0C631B81C32100C5CC5F /* common */,
-				D98A8CD91B58CDB300A8B969 /* CMakeLists.txt */,
 				D90F0C521B8181E000C5CC5F /* http_server */,
 				D98A8CDA1B58CDB300A8B969 /* mqtt */,
 				D98A8CE31B58CDB300A8B969 /* mqtt_server */,
@@ -529,7 +489,6 @@
 				D912C7B41B66399D0014ED6D /* persist.cpp */,
 				D912C7B51B66399D0014ED6D /* timer_handler.cpp */,
 				D98A8CE41B58CDB300A8B969 /* acceptor.cpp */,
-				D98A8CE51B58CDB300A8B969 /* CMakeLists.txt */,
 				D98A8CE71B58CDB300A8B969 /* mqtt_connection.cpp */,
 				D98A8CE81B58CDB300A8B969 /* tcp_server.cpp */,
 			);
@@ -539,8 +498,6 @@
 		D98A8CE91B58CDB300A8B969 /* mqttc++ */ = {
 			isa = PBXGroup;
 			children = (
-				D98A8CEA1B58CDB300A8B969 /* build */,
-				D98A8D111B58CDB300A8B969 /* CMakeLists.txt */,
 				D98A8D121B58CDB300A8B969 /* log4cplus.properties */,
 				D98A8D131B58CDB300A8B969 /* main.cpp */,
 				D98A8D141B58CDB300A8B969 /* Makefile */,
@@ -550,105 +507,10 @@
 			path = "mqttc++";
 			sourceTree = "<group>";
 		};
-		D98A8CEA1B58CDB300A8B969 /* build */ = {
-			isa = PBXGroup;
-			children = (
-				D98A8CEB1B58CDB300A8B969 /* cmake_install.cmake */,
-				D98A8CEC1B58CDB300A8B969 /* CMakeCache.txt */,
-				D98A8CED1B58CDB300A8B969 /* CMakeFiles */,
-				D98A8D101B58CDB300A8B969 /* Makefile */,
-			);
-			path = build;
-			sourceTree = "<group>";
-		};
-		D98A8CED1B58CDB300A8B969 /* CMakeFiles */ = {
-			isa = PBXGroup;
-			children = (
-				D98A8CEE1B58CDB300A8B969 /* 3.0.2 */,
-				D98A8CFA1B58CDB300A8B969 /* cmake.check_cache */,
-				D98A8CFB1B58CDB300A8B969 /* CMakeDirectoryInformation.cmake */,
-				D98A8CFC1B58CDB300A8B969 /* CMakeOutput.log */,
-				D98A8CFD1B58CDB300A8B969 /* CMakeTmp */,
-				D98A8CFE1B58CDB300A8B969 /* Makefile.cmake */,
-				D98A8CFF1B58CDB300A8B969 /* Makefile2 */,
-				D98A8D001B58CDB300A8B969 /* mqttc++.dir */,
-				D98A8D0B1B58CDB300A8B969 /* Progress */,
-				D98A8D0E1B58CDB300A8B969 /* progress.marks */,
-				D98A8D0F1B58CDB300A8B969 /* TargetDirectories.txt */,
-			);
-			path = CMakeFiles;
-			sourceTree = "<group>";
-		};
-		D98A8CEE1B58CDB300A8B969 /* 3.0.2 */ = {
-			isa = PBXGroup;
-			children = (
-				D98A8CEF1B58CDB300A8B969 /* CMakeCCompiler.cmake */,
-				D98A8CF01B58CDB300A8B969 /* CMakeCXXCompiler.cmake */,
-				D98A8CF11B58CDB300A8B969 /* CMakeDetermineCompilerABI_C.bin */,
-				D98A8CF21B58CDB300A8B969 /* CMakeDetermineCompilerABI_CXX.bin */,
-				D98A8CF31B58CDB300A8B969 /* CMakeSystem.cmake */,
-				D98A8CF41B58CDB300A8B969 /* CompilerIdC */,
-				D98A8CF71B58CDB300A8B969 /* CompilerIdCXX */,
-			);
-			path = 3.0.2;
-			sourceTree = "<group>";
-		};
-		D98A8CF41B58CDB300A8B969 /* CompilerIdC */ = {
-			isa = PBXGroup;
-			children = (
-				D98A8CF51B58CDB300A8B969 /* a.out */,
-				D98A8CF61B58CDB300A8B969 /* CMakeCCompilerId.c */,
-			);
-			path = CompilerIdC;
-			sourceTree = "<group>";
-		};
-		D98A8CF71B58CDB300A8B969 /* CompilerIdCXX */ = {
-			isa = PBXGroup;
-			children = (
-				D98A8CF81B58CDB300A8B969 /* a.out */,
-				D98A8CF91B58CDB300A8B969 /* CMakeCXXCompilerId.cpp */,
-			);
-			path = CompilerIdCXX;
-			sourceTree = "<group>";
-		};
-		D98A8CFD1B58CDB300A8B969 /* CMakeTmp */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = CMakeTmp;
-			sourceTree = "<group>";
-		};
-		D98A8D001B58CDB300A8B969 /* mqttc++.dir */ = {
-			isa = PBXGroup;
-			children = (
-				D98A8D011B58CDB300A8B969 /* build.make */,
-				D98A8D021B58CDB300A8B969 /* cmake_clean.cmake */,
-				D98A8D031B58CDB300A8B969 /* cmake_clean_target.cmake */,
-				D98A8D041B58CDB300A8B969 /* CXX.includecache */,
-				D98A8D051B58CDB300A8B969 /* depend.internal */,
-				D98A8D061B58CDB300A8B969 /* depend.make */,
-				D98A8D071B58CDB300A8B969 /* DependInfo.cmake */,
-				D98A8D081B58CDB300A8B969 /* flags.make */,
-				D98A8D091B58CDB300A8B969 /* link.txt */,
-				D98A8D0A1B58CDB300A8B969 /* progress.make */,
-			);
-			path = "mqttc++.dir";
-			sourceTree = "<group>";
-		};
-		D98A8D0B1B58CDB300A8B969 /* Progress */ = {
-			isa = PBXGroup;
-			children = (
-				D98A8D0C1B58CDB300A8B969 /* 1 */,
-				D98A8D0D1B58CDB300A8B969 /* count.txt */,
-			);
-			path = Progress;
-			sourceTree = "<group>";
-		};
 		D98A8D171B58CDB300A8B969 /* reactor */ = {
 			isa = PBXGroup;
 			children = (
 				D92B936B1B60F5C100DD569B /* sig_handler.cpp */,
-				D98A8D181B58CDB300A8B969 /* CMakeLists.txt */,
 				D98A8D191B58CDB300A8B969 /* event_handler.cpp */,
 				D98A8D1A1B58CDB300A8B969 /* poller_epoll.cpp */,
 				D98A8D1B1B58CDB300A8B969 /* sock_acceptor.cpp */,

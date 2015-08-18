@@ -23,15 +23,15 @@ namespace reactor // later --> mqtt_server
         uint8_t m_dup_flag;
         uint8_t m_retain;
         
-        uint32_t m_remain_length;               // remain length
+        uint32_t m_remain_length;                               // remain length
         
-        uint16_t m_msg_id;                      // src msg id
+        uint16_t m_msg_id;                                      // src msg id
         uint16_t m_reserved;
         
         std::string m_str_topic;
         std::string m_payload;
         
-        uint32_t m_db_id;                      //     time_t      m_timestamp;
+        uint32_t m_db_id;                                      //     time_t      m_timestamp;
     };
     
     class CMqttConnection;
@@ -185,12 +185,12 @@ namespace reactor // later --> mqtt_server
             return m_send_msgs;
         }
         
-        time_t last_msg_in()
+        std::time_t last_msg_in()
         {
             return m_last_msg_in;
         }
         
-        void last_msg_in(time_t time)
+        void last_msg_in(std::time_t time)
         {
             m_last_msg_in = time;
         }
@@ -220,12 +220,12 @@ namespace reactor // later --> mqtt_server
         
         ClientStatus m_client_status;
         
-        std::string m_remote_addr;                  // ip:port
+        std::string m_remote_addr;                                  // ip:port
         
         std::string m_protocal_name;
         uint8_t m_protocal_ver;
         
-        std::string m_client_id;                    // max len 23
+        std::string m_client_id;                                    // max len 23
         std::string m_user_name;
         std::string m_user_password;
         
@@ -235,24 +235,24 @@ namespace reactor // later --> mqtt_server
         uint16_t m_max_inflight_msgs;
         
         // time related
-        time_t m_last_msg_in;
-        time_t m_last_msg_out;
-        time_t m_ping;
-        time_t m_disconnect;
-        time_t m_last_retry_check;
+        std::time_t m_last_msg_in;
+        std::time_t m_last_msg_out;
+        std::time_t m_ping;
+        std::time_t m_disconnect;
+        std::time_t m_last_retry_check;
         
-        uint32_t m_cli_msg_id;                              // last msg id from client
+        uint32_t m_cli_msg_id;                                              // last msg id from client
         bool m_clean_session;
         bool m_will_flag;
         
         // CMqttPubMessage m_will_msg;
-        std::vector<uint64_t> m_send_msgs;         // used to store
+        std::vector<uint64_t> m_send_msgs;                         // used to store
         
         std::list<CMbuf_ptr>  m_send_msg_queue;
         std::vector<CTopic>   m_subcribe_topics;
         
         //stat related struct
-        uint64_t m_qos_msg_count[3];                    // qos0/1/2
+        uint64_t m_qos_msg_count[3];                                    // qos0/1/2
         
     public:
         MSGPACK_DEFINE(m_remote_addr, m_protocal_name, m_protocal_ver,

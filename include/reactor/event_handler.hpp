@@ -28,7 +28,7 @@ namespace reactor
             return 0;
         }
         
-        virtual int notify()                 // use define notify methord
+        virtual int notify()                                                         // use define notify methord
         {
             return 0;
         }
@@ -58,15 +58,14 @@ namespace reactor
             m_current_event_mask = event_mask;
         }
         
-        void peer_addr(std::string &peer_addr)
-        {
-            m_str_peer_addr = peer_addr;
-        }
-        
         std::string &peer_addr()
         {
             return m_str_peer_addr;
         }
+        
+    protected:
+        void get_peer_name();
+        
     protected:
         virtual ~CEventHandler();
         int send(CMbuf_ptr &mbuf, int &my_errno);
@@ -84,7 +83,7 @@ namespace reactor
         
     protected:
         CPoller *m_poller_ptr = nullptr;
-        uint32_t m_current_event_mask;                       // for later use
+        uint32_t m_current_event_mask;                                                               // for later use
         
         uint64_t m_recv_bytes;
         uint64_t m_recv_times;

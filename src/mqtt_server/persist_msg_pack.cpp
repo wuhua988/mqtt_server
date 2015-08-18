@@ -192,8 +192,8 @@ namespace reactor
             // check timeout
             if (context->mqtt_connection() != nullptr)
             {
-                time_t now = time(0);
-                time_t last_msg_in = context->mqtt_connection()->last_msg_time();
+                std::time_t now = std::time(nullptr);
+                std::time_t last_msg_in = context->mqtt_connection()->last_msg_time();
                 
                 if (now - last_msg_in > CONFIG->get_max_idle_timeout())
                 {

@@ -25,6 +25,7 @@ namespace reactor
         CMqttConnection(CPoller *poller) : CEventHandler(poller), m_cur_buf_pos(0)
         {
             LOG_TRACE_METHOD(__func__);
+            m_accept_time = std::time(nullptr);
         }
         
         ~CMqttConnection()
@@ -67,7 +68,7 @@ namespace reactor
         int handle_pingreq_msg(uint8_t *buf, uint32_t len, CMqttConnection *mqtt_connection);
         int handle_disconnect_msg(uint8_t *buf, uint32_t len, CMqttConnection *mqtt_connection);
         
-        time_t last_msg_time()
+        uint32_t last_msg_time()
         {
             return m_last_msg_time;
         }
@@ -78,7 +79,8 @@ namespace reactor
         uint8_t m_recv_buffer[MAX_BUF_SIZE];
         uint32_t m_cur_buf_pos;
         
-        time_t m_last_msg_time;
+        uint32_t m_accept_time;
+        uint32_t m_last_msg_time;
     };
 }
 

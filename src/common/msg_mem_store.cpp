@@ -36,7 +36,7 @@ int CMsgMemStore::del_msg(uint64_t msg_id)
 
 int CMsgMemStore::add_msg(uint64_t msg_id, CMbuf *buf)
 {
-    m_last_update_time = time(0);
+    m_last_update_time = std::time(nullptr);
     if (buf != nullptr)
     {
         m_msg_db[msg_id] = buf;

@@ -11,7 +11,7 @@ struct
 
 struct
 {
-    char : 1;              /**< unused */
+    char : 1;  /**< unused */
     char clean_session : 1;
     char will : 1;
     char will_qos : 2;
@@ -27,15 +27,15 @@ class CMqttPubMessage
     uint8_t m_dup_flag;
     uint8_t m_retain;
     
-    uint32_t m_remain_length;               // remain length
+    uint32_t m_remain_length;                           // remain length
     
-    uint16_t m_msg_id;                      // src msg id
+    uint16_t m_msg_id;                                  // src msg id
     uint16_t m_reserved;
     
     std::string m_str_topic;
     std::string m_payload;
     
-    uint32_t m_db_id;                      //     time_t      m_timestamp;
+    uint32_t m_db_id;                                  //     time_t      m_timestamp;
 };
 
 class CTopic
@@ -50,12 +50,12 @@ class CTMqttClientContext
 public:
     socket_t m_sock_id;
     
-    std::string m_remote_addr;                      // ip:port
+    std::string m_remote_addr;                                  // ip:port
     
     std::string m_protocal_name;
     char m_protocal_ver;
     
-    std::string m_client_id;                        // max len 23
+    std::string m_client_id;                                    // max len 23
     std::string m_user_name;
     std::string m_user_passwd;
     
@@ -66,13 +66,13 @@ public:
     uint16_t m_max_inflight_msgs;
     
     // time related
-    time_t m_last_msg_in;
-    time_t m_last_msg_out;
-    time_t m_ping;
-    time_t m_disconnect;
+    std::time_t m_last_msg_in;
+    std::time_t m_last_msg_out;
+    std::time_t m_ping;
+    std::time_t m_disconnect;
     
-    time_t m_cli_msg_id;                  // last msg id from client
-    time_t m_last_retry_check;
+    std::time_t m_cli_msg_id;                              // last msg id from client
+    std::time_t m_last_retry_check;
     bool m_clean_session;
     
     bool m_will_flag;
@@ -85,6 +85,6 @@ public:
     std::list<CTopic>   m_subcribe_topics;
     
     //stat related struct
-    uint64_t m_qos_msg_count[3];                        // qos0/1/2
+    uint64_t m_qos_msg_count[3];                                    // qos0/1/2
 };
 

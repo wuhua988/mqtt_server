@@ -25,7 +25,7 @@ int CMbuf::init(uint32_t size)
     
     m_msg_type = MSG_DATA;
     
-    m_time = time(0);
+    m_time = std::time(nullptr);
     return 0;
 }
 

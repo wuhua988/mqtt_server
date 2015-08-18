@@ -38,7 +38,7 @@ namespace http
         m_cur_buf_pos += read_len;
         
         m_recv_buffer[m_cur_buf_pos] = '\0';
-        m_last_msg_time  = time(0);
+        m_last_msg_time  = std::time(nullptr);
         return this->process(m_recv_buffer, m_cur_buf_pos);
     }
     
@@ -333,7 +333,7 @@ namespace http
         }
         
         return 0;
-    }                     // end of parse header
+    }                             // end of parse header
     
     int HttpConnection::http_send(const char* data, uint32_t length)
     {

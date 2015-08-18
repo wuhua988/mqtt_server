@@ -80,14 +80,14 @@ namespace reactor
     {
         this->connect();
         
-        uint32_t last_msg_time = time(0);
+        uint32_t last_msg_time = std::time(nullptr);
         uint32_t send_ping_req_time = 0;
         
         m_cur_buf_pos = 0;
         
         while(m_running_flag)
         {
-            uint32_t cur_time = time(0);
+            uint32_t cur_time = std::time(nullptr);
             if ((send_ping_req_time > 5) || (cur_time - last_msg_time  > 5*60))// 5min, we not recv msg, reconnect
             {
                 // timeout reconect
@@ -135,7 +135,7 @@ namespace reactor
             }
             
             send_ping_req_time = 0;
-            last_msg_time = time(0); // current
+            last_msg_time = std::time(nullptr); // current
             
             LOG_DEBUG("MqttClient: handle_input read data len %d, socket [%d]", read_len, this->m_client_socket);
             m_cur_buf_pos += read_len;
@@ -317,7 +317,7 @@ namespace reactor
     }
     
     // -1 error, 0 timeout (or intertunpt or ewouled block), len > 0 read succeed
-    int TCPClient::read(uint8_t *buf, uint32_t len, uint32_t tm)         // timeout ms
+    int TCPClient::read(uint8_t *buf, uint32_t len, uint32_t tm)                                 // timeout ms
     {
         fd_set set;
         struct timeval timeout;

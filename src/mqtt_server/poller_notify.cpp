@@ -140,7 +140,7 @@ namespace reactor
                 
                 publish.print();
                 
-                uint32_t start_tm = time(0);
+                uint32_t start_tm = std::time(nullptr);
                 
                 int pub_count = 0;
                 if (CONFIG->get_mqtt_bridge() <= 0)
@@ -154,7 +154,7 @@ namespace reactor
                     pub_count = SUB_MGR->publish_all(mbuf, publish);
                 }
                 
-                uint32_t diff = time(0) - start_tm;
+                uint32_t diff = std::time(nullptr) - start_tm;
                 
                 LOG_ERROR("This publish cost %d (s) to %d clients", diff, pub_count);
             }

@@ -128,7 +128,7 @@ namespace http
         
         int notify_mqtt_publish(HTTPRequest &req, std::string &error);
         
-        time_t last_msg_time()
+        std::time_t last_msg_time()
         {
             return m_last_msg_time;
         }
@@ -136,7 +136,7 @@ namespace http
     protected:
         uint8_t m_recv_buffer[MAX_BUF_SIZE];
         uint32_t m_cur_buf_pos;
-        time_t m_last_msg_time;
+        std::time_t m_last_msg_time;
         
         reactor::CPoller *m_notify_poller = nullptr;
     };

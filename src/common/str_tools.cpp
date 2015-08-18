@@ -1,5 +1,6 @@
 #include "common/str_tools.hpp"
 #include <sstream>
+#include <ctime>
 
 namespace str_tools
 {
@@ -67,4 +68,23 @@ namespace str_tools
         stream >> result;    //向result中写入值
         return result;
     }
+    
+    std::string format_time(uint32_t time)
+    {
+        std::time_t tm_value = (std::time_t)time;
+        //std::stringstream ss;
+        //ss << std::put_time(std::localtime(&tm_value), "%F %T"); // not yet implement in gcc 4.9
+        //std::string str = ss.str();
+        std::string str;
+        
+        char mbstr[64];
+        if (std::strftime(mbstr, sizeof(mbstr), "%F %T", std::localtime(&tm_value)))
+        {
+            str = mbstr;
+        }
+        
+        return str;
+    }
 }
+
+

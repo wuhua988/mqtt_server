@@ -52,6 +52,22 @@ namespace reactor
         LOG_TRACE_METHOD(__func__);
     }
     
+    void CEventHandler::get_peer_name()
+    {
+        char client_ip[64];
+        char client_addr[64];
+        
+        struct sockaddr_in client;
+        socklen_t client_len = sizeof(client);
+        
+        getpeername(m_sock_handle, (struct sockaddr *)&client, &client_len);
+        inet_ntop(AF_INET, &client.sin_addr, client_ip, sizeof(client_ip));
+        
+        snprintf(client_addr, 64, "%s:%d", client_ip, ntohs(client.sin_port));
+        
+        m_str_peer_addr = client_addr;
+    }
+    
     int CEventHandler::open(void *)
     {
         LOG_TRACE_METHOD(__func__);
@@ -62,6 +78,8 @@ namespace reactor
             return -1;
             
         }
+        
+        this->get_peer_name();
         
         int res = this->m_poller_ptr->add_event(this, EVENT_READ /*|EVENT_WRITE*/);
         if (res < 0)
@@ -111,7 +129,7 @@ namespace reactor
         
         switch(this->nonblk_send(mbuf))
         {
-            case 0:                   // Partial send.
+            case 0:                                                                               // Partial send.
                 // (errno == EWOULDBLOCK);
                 // Didn't write everything this time, come back later...
                 break;

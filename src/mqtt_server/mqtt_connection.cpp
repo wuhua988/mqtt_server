@@ -73,7 +73,7 @@ namespace reactor
         
         m_cur_buf_pos += read_len;
         
-        m_last_msg_time  = time(0);
+        m_last_msg_time  = std::time(nullptr);
         return this->process_mqtt(m_recv_buffer, m_cur_buf_pos);
     }
     
@@ -81,7 +81,7 @@ namespace reactor
     {
         if (m_client_context.get() != nullptr)
         {
-            m_client_context->last_msg_in(time(0));
+            m_client_context->last_msg_in(std::time(nullptr));
         }
         
         // first check is a full pkt
@@ -435,10 +435,10 @@ namespace reactor
         
         
         // 2. publish to clients
-        uint32_t start_tm = time(0);
+        uint32_t start_tm = std::time(nullptr);
         int pub_count = SUB_MGR->publish(publish.topic_name(), mbuf_pub, publish);
         
-        uint32_t diff = time(0) - start_tm;
+        uint32_t diff = std::time(nullptr) - start_tm;
         
         LOG_ERROR("This publish cost %d (s) to %d clients", diff, pub_count);
         

@@ -41,7 +41,8 @@ namespace reactor
     m_send_times(0),
     m_schedule_write_times(0),
     m_cancel_schedule_write_times(0),
-    m_max_msg_in_buffer(50)
+    m_max_msg_in_buffer(50),
+    m_accept_time(std::time(nullptr))
     
     {
         LOG_TRACE_METHOD(__func__);
@@ -129,7 +130,9 @@ namespace reactor
         
         switch(this->nonblk_send(mbuf))
         {
-            case 0:                                                                               // Partial send.
+                
+            case 0:
+                // Partial send.
                 // (errno == EWOULDBLOCK);
                 // Didn't write everything this time, come back later...
                 break;

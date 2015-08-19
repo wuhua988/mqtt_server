@@ -23,15 +23,18 @@ namespace reactor // later --> mqtt_server
         uint8_t m_dup_flag;
         uint8_t m_retain;
         
-        uint32_t m_remain_length;                               // remain length
+        // remain length
+        uint32_t m_remain_length;
         
-        uint16_t m_msg_id;                                      // src msg id
+        // src msg id
+        uint16_t m_msg_id;
         uint16_t m_reserved;
         
         std::string m_str_topic;
         std::string m_payload;
         
-        uint32_t m_db_id;                                      //     time_t      m_timestamp;
+        // time_t      m_timestamp;
+        uint32_t m_db_id;
     };
     
     class CMqttConnection;
@@ -48,49 +51,14 @@ namespace reactor // later --> mqtt_server
     class CTMqttClientContext
     {
     public:
-        CTMqttClientContext(CMqttConnection *mqtt_connection) : m_client_status(ClientStatus::CS_NEW)
+        CTMqttClientContext(CMqttConnection *con) : m_client_status(ClientStatus::CS_NEW)
         {
-            m_mqtt_connection = mqtt_connection;
+            m_mqtt_connection = con;
         }
         
         ~CTMqttClientContext()
         {
             LOG_TRACE_METHOD(__func__);
-        }
-        
-        CMqttConnection * mqtt_connection()
-        {
-            return m_mqtt_connection;
-        }
-        
-        void mqtt_connection(CMqttConnection *connection)
-        {
-            m_mqtt_connection = connection;
-        }
-        
-        std::string & client_id()
-        {
-            return m_client_id;
-        }
-        
-        void client_id(std::string & client_id)
-        {
-            m_client_id = client_id;
-        }
-        
-        ClientStatus client_status()
-        {
-            return m_client_status;
-        }
-        
-        void  client_status(ClientStatus client_status)
-        {
-            m_client_status = client_status;
-        }
-        
-        bool clean_session()
-        {
-            return m_clean_session;
         }
         
         void init(CMqttConnect &con_msg)
@@ -107,13 +75,6 @@ namespace reactor // later --> mqtt_server
             
             m_clean_session = con_msg.clean_session();
             LOG_DEBUG("In CMqttClientContext::init(), clean_session %d", m_clean_session);
-            // m_will_flag     = con_msg.has_will();
-            // m_will_msg      = ;
-        }
-        
-        std::vector<CTopic>  & subcribe_topics()
-        {
-            return m_subcribe_topics;
         }
         
         void add_subcribe_topics(std::vector<CTopic> &sub_topics)
@@ -136,12 +97,6 @@ namespace reactor // later --> mqtt_server
             
             return 0;
         }
-        
-        std::list<CMbuf_ptr> & send_msg()
-        {
-            return m_send_msg_queue;
-        }
-        
         
         int ack_msg(uint16_t msg_id)
         {
@@ -173,26 +128,11 @@ namespace reactor // later --> mqtt_server
         
         void prepare_store()
         {
-            m_send_msgs.clear();
+            m_send_msg_ids.clear();
             for (auto it = m_send_msg_queue.begin(); it != m_send_msg_queue.end(); it++)
             {
-                m_send_msgs.push_back( (*it)->msg_id());
+                m_send_msg_ids.push_back( (*it)->msg_id());
             }
-        }
-        
-        std::vector<uint64_t> & msg_ids()
-        {
-            return m_send_msgs;
-        }
-        
-        std::time_t last_msg_in()
-        {
-            return m_last_msg_in;
-        }
-        
-        void last_msg_in(std::time_t time)
-        {
-            m_last_msg_in = time;
         }
         
         void print()
@@ -214,54 +154,57 @@ namespace reactor // later --> mqtt_server
                 LOG_DEBUG("\t [%d] id %ld, len %d", ++i, (*it)->msg_id(),(*it)->length());
             }
         }
+        
     protected:
-        // socket_t    m_sock_id;
-        CMqttConnection *m_mqtt_connection = nullptr;
+        CLS_VAR_NO_REF_CONST(CMqttConnection *, mqtt_connection);
+        CLS_VAR(ClientStatus, client_status);
+        CLS_VAR(std::string, remote_addr);
+        CLS_VAR(std::string, protocal_name);
+        CLS_VAR(uint8_t, protocal_ver);
         
-        ClientStatus m_client_status;
+        // max len 23
+        CLS_VAR(std::string, client_id);
+        CLS_VAR(std::string, user_name);
+        CLS_VAR(std::string, user_password);
         
-        std::string m_remote_addr;                                  // ip:port
-        
-        std::string m_protocal_name;
-        uint8_t m_protocal_ver;
-        
-        std::string m_client_id;                                    // max len 23
-        std::string m_user_name;
-        std::string m_user_password;
-        
-        uint16_t m_keep_alive_timer;
-        uint16_t m_last_msg_id;
-        
-        uint16_t m_max_inflight_msgs;
+        CLS_VAR(uint16_t, keep_alive_timer);
+        CLS_VAR(uint16_t, max_inflight_msgs);
         
         // time related
-        std::time_t m_last_msg_in;
-        std::time_t m_last_msg_out;
-        std::time_t m_ping;
-        std::time_t m_disconnect;
-        std::time_t m_last_retry_check;
+        CLS_VAR(std::time_t, connect_time);
+        CLS_VAR(std::time_t, discon_time);
+        CLS_VAR(std::time_t, close_time);
+        CLS_VAR(std::time_t, last_pub_time);
+        CLS_VAR(std::time_t, last_msg_time);
         
-        uint32_t m_cli_msg_id;                                              // last msg id from client
-        bool m_clean_session;
-        bool m_will_flag;
+        CLS_VAR(uint16_t, last_pub_msg_id);
         
-        // CMqttPubMessage m_will_msg;
-        std::vector<uint64_t> m_send_msgs;                         // used to store
+        CLS_VAR(bool, clean_session);
+        CLS_VAR(bool, will_flag);
         
-        std::list<CMbuf_ptr>  m_send_msg_queue;
-        std::vector<CTopic>   m_subcribe_topics;
+        // used to store
+        CLS_VAR(std::vector<uint64_t>, send_msg_ids);
         
-        //stat related struct
-        uint64_t m_qos_msg_count[3];                                    // qos0/1/2
+        CLS_VAR_REF(std::list<CMbuf_ptr>, send_msg_queue);
+        CLS_VAR(std::vector<CTopic>,  subcribe_topics);
         
     public:
-        MSGPACK_DEFINE(m_remote_addr, m_protocal_name, m_protocal_ver,
-                       m_client_id, m_user_name, m_user_password,
-                       m_keep_alive_timer, m_last_msg_id, m_max_inflight_msgs,
-                       m_last_msg_in, m_last_msg_out, m_ping, m_disconnect,
-                       m_cli_msg_id, m_last_retry_check,
-                       m_clean_session, m_will_flag,
-                       m_send_msgs, m_subcribe_topics);
+        MSGPACK_DEFINE(m_remote_addr,
+                       m_protocal_name,
+                       m_protocal_ver,
+                       m_client_id,
+                       m_user_name,
+                       m_user_password,
+                       m_keep_alive_timer,
+                       m_max_inflight_msgs,
+                       m_connect_time,
+                       m_last_pub_time,
+                       m_last_msg_time,
+                       m_last_pub_msg_id,
+                       m_clean_session,
+                       m_will_flag,
+                       m_send_msg_ids,
+                       m_subcribe_topics);
     };
     
     typedef std::shared_ptr<CTMqttClientContext> CMqttClientContext_ptr;

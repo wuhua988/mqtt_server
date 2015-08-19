@@ -154,7 +154,7 @@ namespace reactor
         }
         
         // convert msg_id -> CMbuf_ptr
-        auto msgs = context->msg_ids();
+        auto msgs = context->send_msg_ids();
         for (auto it = msgs.begin(); it != msgs.end(); it++)
         {
             uint64_t msg_id = *it;

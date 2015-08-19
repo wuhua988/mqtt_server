@@ -81,7 +81,7 @@ namespace reactor
     {
         if (m_client_context.get() != nullptr)
         {
-            m_client_context->last_msg_in(std::time(nullptr));
+            m_client_context->last_msg_time(std::time(nullptr));
         }
         
         // first check is a full pkt
@@ -153,8 +153,9 @@ namespace reactor
                 LOG_DEBUG("Clean session is set, clean topic [%s]", it->topic_name().c_str());
                 SUB_MGR->del_client_context(it->topic_name(), m_client_context);
             }
-            
-            CLIENT_ID_CONTEXT->del_client_context(m_client_context->client_id());
+           
+            std::string client_id = m_client_context->client_id();
+            CLIENT_ID_CONTEXT->del_client_context(client_id);
         }
         
         if (m_client_context.get() != nullptr)
@@ -350,7 +351,7 @@ namespace reactor
         
         // send offline msg
         CMqttClientContext_ptr &cli_context = mqtt_connection->client_context();
-        std::list<CMbuf_ptr> &offline_msg = cli_context->send_msg();
+        std::list<CMbuf_ptr> &offline_msg = cli_context->send_msg_queue();
         
         int count = 0;
         for (auto it = offline_msg.begin(); it != offline_msg.end(); it++)

@@ -23,13 +23,13 @@
 #define _HAS_LOG4CPLUSH_LOG_
 
 #ifdef _HAS_LOG4CPLUSH_LOG_
-    #include "common/my_logger.h"
+#include "common/my_logger.h"
 #else
-    int my_printf(const char *fmt, ...);
-    #define LOG_DEBUG my_printf                                                                         
-    #define LOG_WARN  my_printf                                                                         
-    #define LOG_ERROR my_printf                                                                         
-    #define LOG_TRACE_METHORD my_printf                                                                 
+int my_printf(const char *fmt, ...);
+#define LOG_DEBUG my_printf
+#define LOG_WARN  my_printf
+#define LOG_ERROR my_printf
+#define LOG_TRACE_METHORD my_printf
 #endif
 
 #ifdef UNUSED
@@ -41,7 +41,7 @@
 # define UNUSED(x) x
 #endif
 
-// void dcc_mon_siginfo_handler(int UNUSED(whatsig)) 
+// void dcc_mon_siginfo_handler(int UNUSED(whatsig))
 
 
 /* IOCP */
@@ -78,7 +78,7 @@
 
 /* KQUEUE */
 #if defined(HAVE_FREEBSD) \
-    || defined(HAVE_KFREEBSD) \
+|| defined(HAVE_KFREEBSD) \
 || defined(HAVE_NETBSD) \
 || defined(HAVE_OPENBSD) \
 || defined(HAVE_DARWIN)
@@ -99,7 +99,7 @@
 
 /* NOT SUPPORT */
 #if !defined(HAVE_IOCP) \
-    && !defined(HAVE_EPOLL) \
+&& !defined(HAVE_EPOLL) \
 && !defined(HAVE_KQUEUE)
 #error Operating system does not support(pre_define.hpp).
 #endif
@@ -126,7 +126,7 @@ enum CONNECT_STATUS
 };
 
 #ifndef INFINITE
-#define INFINITE			0xFFFFFFFF
+#define INFINITE                        0xFFFFFFFF
 #endif
 //
 #ifndef INVALID_SOCKET
@@ -134,110 +134,132 @@ enum CONNECT_STATUS
 #endif
 
 #ifndef SOCKET_ERROR
-#define SOCKET_ERROR		-1
+#define SOCKET_ERROR            -1
 #endif
 
 #ifdef HAVE_ANDROID
-#define EPOLLONESHOT		0x40000000
+#define EPOLLONESHOT            0x40000000
 #endif
 
 /* type */
 #ifdef HAVE_IOCP
 typedef SOCKET socket_t;
 typedef HANDLE handle_t;
-// 		typedef WSABUF buffer_t;
+//              typedef WSABUF buffer_t;
 typedef int socklen_t;
 #else
 typedef int socket_t;
 typedef int handle_t;
-// 		typedef struct {
-// 			ulong_t len;
-// 			char* buf;
-// 		} buffer_t;
+//              typedef struct {
+//                      ulong_t len;
+//                      char* buf;
+//              } buffer_t;
 #endif
 
 namespace reactor
-{     
+{
     typedef uint32_t EVENT_T;
-
+    
     /* 目前只定义TCP的3个类型 */
     enum IO_TYPE
     {
-	HANDLE_ACCEPT,
-	HANDLE_RECV,
-	HANDLE_SEND,
-	HANDLE_COMPLETE,
+        HANDLE_ACCEPT,
+        HANDLE_RECV,
+        HANDLE_SEND,
+        HANDLE_COMPLETE,
     };
-
+    
     enum IO_EVENT_TYPE
     {
-	EVENT_NONE = 0,
-	EVENT_OPEN = 1 << 0,
-	EVENT_READ = 1 << 1,
-	EVENT_WRITE = 1 << 2,
-	EVENT_CLOSE = 1 << 3,
-	EVENT_ERROR = 1 << 4,
-	EVENT_TIMEOUT = 1 << 5,
-	EVENT_SIGNAL = 1 << 6,
+        EVENT_NONE = 0,
+        EVENT_OPEN = 1 << 0,
+        EVENT_READ = 1 << 1,
+        EVENT_WRITE = 1 << 2,
+        EVENT_CLOSE = 1 << 3,
+        EVENT_ERROR = 1 << 4,
+        EVENT_TIMEOUT = 1 << 5,
+        EVENT_SIGNAL = 1 << 6,
     };
-
+    
     /* 异步操作带的DATA数据 */
     struct BASE_IO_DATA
     {
-	socket_t	socket;
-	IO_TYPE		type;
-	void*		ptr;
+        socket_t socket;
+        IO_TYPE type;
+        void*           ptr;
     };
-
+    
 #ifdef HAVE_IOCP
-
+    
     struct IO_DATA : BASE_IO_DATA, public OVERLAPPED
     {
-	DWORD	bytes;
-	char	data[MAX_RECEIVE_BUFFER];
+        DWORD bytes;
+        char data[MAX_RECEIVE_BUFFER];
     };
-
+    
 #elif defined(HAVE_KQUEUE)
-
+    
     struct IO_DATA : BASE_IO_DATA
     {
-	// TODO
+        // TODO
     };
-
+    
 #elif defined(HAVE_EPOLL)
-
+    
     struct IO_DATA : BASE_IO_DATA
     {
-	epoll_event	ev;
+        epoll_event ev;
     };
-
+    
 #endif
-
+    
 } // reactor namespace
 
-#if defined ( WIN32 )                                                                               
-#define __func__ __FUNCTION__                                                                       
-#endif  
+#if defined ( WIN32 )
+#define __func__ __FUNCTION__
+#endif
 
-#define ERROR_RETURN(a,b)\
-if ( (a) < 0 )\
-{\
-    return b;\
-}       
-
-#define NULL_PTR_RETRUN(a,b)\
-{\
-    if ( (a) == nullpr )\
-    {\
-	return b;\
-    }\
+#define ERROR_RETURN(a,b) \
+if ( (a) < 0 ) \
+{ \
+return b; \
 }
 
-#define GETSETVAR(type, name)\
-protected:\
-    type m_##name;\
-public:\
-    const type & get_##name() const { return m_##name; }\
-    void set_##name(const type & newval) { m_##name = newval; }
+#define NULL_PTR_RETRUN(a,b) \
+{ \
+if ( (a) == nullpr ) \
+{ \
+return b; \
+} \
+}
+
+#define GETSETVAR(type, name) \
+protected: \
+type m_##name; \
+public: \
+const type & get_##name() const { return m_##name; } \
+void set_##name(const type &newval) { m_##name = newval; }
+
+#define CLS_VAR(type, name) \
+protected: \
+type m_##name; \
+public: \
+type name() { return m_##name; } \
+void name(const type &newval) { m_##name = newval; }
+
+#define CLS_VAR_NO_REF_CONST(type, name) \
+protected: \
+type m_##name; \
+public: \
+type name() { return m_##name; } \
+void name(type newval) { m_##name = newval; }
+
+
+#define CLS_VAR_REF(type, name) \
+    protected: \
+type m_##name; \
+public: \
+type & name() { return m_##name; } \
+void name(type newval) { m_##name = newval; }
 
 #endif

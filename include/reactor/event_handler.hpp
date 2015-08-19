@@ -28,7 +28,8 @@ namespace reactor
             return 0;
         }
         
-        virtual int notify()                                                         // use define notify methord
+        // use define notify methord
+        virtual int notify()
         {
             return 0;
         }
@@ -63,6 +64,12 @@ namespace reactor
             return m_str_peer_addr;
         }
         
+        // for socket stat
+        std::time_t accept_time()
+        {
+            return m_accept_time;
+        }
+        
     protected:
         void get_peer_name();
         
@@ -83,8 +90,7 @@ namespace reactor
         
     protected:
         CPoller *m_poller_ptr = nullptr;
-        uint32_t m_current_event_mask;                                                               // for later use
-        
+        uint32_t m_current_event_mask;
         uint64_t m_recv_bytes;
         uint64_t m_recv_times;
         
@@ -101,6 +107,7 @@ namespace reactor
         CMbuf_ptr m_recv_mbuf;
         
         std::string m_str_peer_addr;
+        std::time_t m_accept_time;
     };
 }
 

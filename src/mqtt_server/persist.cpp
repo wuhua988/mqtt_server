@@ -333,8 +333,8 @@ namespace reactor
                 LOG_DEBUG("\t\t\t\t[%d] %s", i, topic_name.c_str());
             }
             
-            //std::list<CMbuf_ptr> & send_msg()
-            auto msgs = context->send_msg();
+            //std::vector<uint64_t> send_msg_ids()
+            auto msgs = context->send_msg_ids();
             uint32_t msg_num = msgs.size();
             
             chunk_len += sizeof(uint32_t);
@@ -346,7 +346,7 @@ namespace reactor
             for (auto it2 = msgs.begin(); it2 != msgs.end(); it2++)
             {
                 ++i;
-                uint64_t msg_id = (*it2)->msg_id();
+                uint64_t msg_id = (*it2);
                 
                 // store msg_id -> mbuf
                 chunk_len += sizeof(uint64_t);

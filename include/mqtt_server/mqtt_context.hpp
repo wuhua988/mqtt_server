@@ -2,9 +2,12 @@
 #define _mqtt_context_h__
 
 #include "common/mbuf.hpp"
+#include "common/str_tools.hpp"
 #include "reactor/define.hpp"
 #include "mqttc++/mqtt_msg.hpp"
 #include "msgpack/msgpack.hpp"
+
+#include "common/msg_mem_store.hpp"
 
 #include <list>
 #include <vector>
@@ -114,7 +117,14 @@ namespace reactor // later --> mqtt_server
                               buf_id, msg_id);
                     
                     /*write recode to db?? */
+                    m_last_pub_time = (*it)->time();
+                    m_last_pub_msg_id = (*it)->msg_id();
                     m_send_msg_queue.erase(it);
+                    
+                    
+                    CMsgStat &msg_stat = MSG_STAT_MGR->msg_stat(m_last_pub_msg_id);
+                    msg_stat.inc_ack_client();
+                    LOG_DEBUG("After ack publish, msg_id %ld, ack_client %d", m_last_pub_msg_id, msg_stat.ack_client());
                 }
                 else
                 {
@@ -155,6 +165,52 @@ namespace reactor // later --> mqtt_server
             }
         }
         
+        void flush()
+        {
+            //flush connect recorde, deli by ","
+            //client_id,,0,
+            /*
+             10.1.16.88:52480,
+             2015-08-19 04:03:20, accept
+             2015-08-19 04:03:20, connct
+             1969-12-31 19:00:00, disconnect  -> no disconnect msg
+             2015-08-19 04:03:28, close
+             0,
+             2015-08-19 04:03:20, last_msg_time
+             1969-12-31 19:00:00, last_pub_time
+             
+             0,sensors/temperature|,
+             */
+            
+            std::ostringstream oss;
+            oss << m_client_id << "," << m_user_name << "," << m_clean_session << ",";
+            oss << m_remote_addr << ",";
+            
+            // << str_tools::format_time(std::time(nullptr)) << ","; see close time
+            
+            oss << str_tools::format_time(m_accept_time) << ",";
+            
+            oss << str_tools::format_time(m_connect_time) << ",";
+            oss << str_tools::format_time(m_discon_time) << ",";
+            oss << str_tools::format_time(m_close_time) << ",";
+            oss << m_send_msg_queue.size() << ",";
+            
+            oss << str_tools::format_time(m_last_msg_time) << ",";
+            
+            oss << str_tools::format_time(m_last_pub_time) << ",";
+            oss << m_last_pub_msg_id << ",";
+            
+            for (auto it = m_subcribe_topics.begin(); it != m_subcribe_topics.end(); it++)
+            {
+                oss << it->topic_name() << "|";
+            }
+            
+            LOG_DEBUG("%s", oss.str().c_str());
+            
+            // send to another queue.
+            // type and content
+        }
+        
     protected:
         CLS_VAR_NO_REF_CONST(CMqttConnection *, mqtt_connection);
         CLS_VAR(ClientStatus, client_status);
@@ -171,13 +227,14 @@ namespace reactor // later --> mqtt_server
         CLS_VAR(uint16_t, max_inflight_msgs);
         
         // time related
+        CLS_VAR(std::time_t, accept_time);
         CLS_VAR(std::time_t, connect_time);
         CLS_VAR(std::time_t, discon_time);
         CLS_VAR(std::time_t, close_time);
         CLS_VAR(std::time_t, last_pub_time);
         CLS_VAR(std::time_t, last_msg_time);
         
-        CLS_VAR(uint16_t, last_pub_msg_id);
+        CLS_VAR(uint64_t, last_pub_msg_id);
         
         CLS_VAR(bool, clean_session);
         CLS_VAR(bool, will_flag);
@@ -197,6 +254,7 @@ namespace reactor // later --> mqtt_server
                        m_user_password,
                        m_keep_alive_timer,
                        m_max_inflight_msgs,
+                       m_accept_time,
                        m_connect_time,
                        m_last_pub_time,
                        m_last_msg_time,

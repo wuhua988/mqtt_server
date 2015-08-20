@@ -18,7 +18,8 @@ namespace reactor
         friend class CPersist;
         
     public:
-        CTopicNode(){
+        CTopicNode()
+        {
         }
         
         void update_retain_msg(CMbuf_ptr &retain_msg);
@@ -47,9 +48,12 @@ namespace reactor
         friend class CPersist;
         
     public:
-        CSubscriberMgr(){
+        CSubscriberMgr()
+        {
         }
-        ~CSubscriberMgr(){
+        
+        ~CSubscriberMgr()
+        {
         }
         
         int add_client_context(std::string str_topic_name, CMqttClientContext_ptr cli_context);
@@ -59,8 +63,7 @@ namespace reactor
         int publish_all(CMbuf_ptr &mbuf, CMqttPublish & publish_msg);
         int publish(std::string &str_topic_name, CMbuf_ptr &mbuf, CMqttPublish &publish_msg);
         
-        int publish(const CMqttClientContext_ptr &client, CMbuf_ptr &mbuf);
-        
+        int publish(const CMqttClientContext_ptr &client, CMbuf_ptr &mbuf, CMsgStat &msg_stat);
         
         void print();
         

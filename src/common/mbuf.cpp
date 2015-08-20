@@ -1,6 +1,7 @@
 #include "common/mbuf.hpp"
 #include "common/msg_mem_store.hpp"
 
+#include <sstream>
 
 CMbuf::CMbuf(uint32_t size)
 {
@@ -178,15 +179,21 @@ uint32_t CMbuf::time()
 
 void hex_dump(uint8_t *buf, uint32_t len)
 {
-    LOG_DEBUG("0000 ");
+    std::ostringstream oss;
+    oss << "------------------------\n";
+    oss << "0000 ";
     for (uint i = 0; i < len; i++)
     {
         if (i && ((i%16) == 0))
         {
-            LOG_DEBUG("\n%04x ", i);
+            oss << "\n" << std::hex << std::setw(4) << std::setfill('0') << i << " "; 
         }
         
-        LOG_DEBUG("%02X ", buf[i]);
+        oss << std::hex << std::setw(2) << std::setfill('0') << (int)buf[i] << " ";
     }
+
+    oss << "\n";
+
+    LOG_DEBUG("%s", oss.str().c_str());
 }
 

@@ -465,6 +465,8 @@ namespace reactor
     
     int CPersistMsgPack::store(bool force_flush)
     {
+        MSG_STAT_MGR->flush();
+        
         if (!force_flush) // not force flush
         {
             static uint32_t last_db_update_time = 0;

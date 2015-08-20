@@ -7,7 +7,7 @@
 <mqtt_server>
 	<ip>0.0.0.0</ip>
 	<port>5060</port>
-	<db_file_name>dup.db</db_file_name>
+	<db_file_name>mqtt_server_dup.db</db_file_name>
 	<db_flush_interval>30</db_flush_interval>
 	<max_idle_timeout>300</max_idle_timeout>
 </mqtt_server>
@@ -15,9 +15,9 @@
 <mqtt_bridge>0</mqtt_bridge>  <!-- bridge will ingore parent server -->
 
 <parent_mqtt_server>
-	<ip>10.1.16.130</ip>
-	<port>1883</port>
+	<ip>127.0.0.1</ip>
+	<port>5070</port>
 	<user_name>diwh</user_name>
-	<topic_name>topic_name</topic_name>
+    <topic_name>sensors/temperature</topic_name>
 	<keep_alive>60</keep_alive>
 </parent_mqtt_server>

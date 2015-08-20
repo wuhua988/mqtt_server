@@ -83,7 +83,7 @@ namespace reactor
             auto mqtt_conn = cli_context->mqtt_connection();
             
             // send retain msg
-            if ( (retain_msg.get() != nullptr) && (mqtt_conn != nullptr) )
+            if ( (retain_msg.get() != nullptr) && (mqtt_conn != nullptr))
             {
                 cli_context->add_send_msg(retain_msg);
                 return mqtt_conn->put(retain_msg);
@@ -129,21 +129,28 @@ namespace reactor
     int CSubscriberMgr::publish_all(CMbuf_ptr &mbuf, CMqttPublish &UNUSED(publish_msg))
     {
         LOG_TRACE_METHOD(__func__);
+
+        CMsgStat &msg_stat = MSG_STAT_MGR->msg_stat(mbuf->msg_id());
+        msg_stat.start_stat();
+        
         for (auto it = m_topic_mgr.begin(); it != m_topic_mgr.end(); it++)
         {
             CONTEXT_SET &client_context_set = it->second->client_context();
             for (auto it_context = client_context_set.begin(); it_context != client_context_set.end(); it_context++)
             {
                 // CMqttClientContext_ptr
-                this->publish(*it_context, mbuf);
+                this->publish(*it_context, mbuf, msg_stat);
             }
         }
+        
+        msg_stat.end_stat();
         
         return 0;
         
     }
     
-    int CSubscriberMgr::publish(const CMqttClientContext_ptr &client, CMbuf_ptr &mbuf)
+    
+    int CSubscriberMgr::publish(const CMqttClientContext_ptr &client, CMbuf_ptr &mbuf, CMsgStat &msg_stat)
     {
         if (client.get() == nullptr)
         {
@@ -152,17 +159,28 @@ namespace reactor
         
         client->add_send_msg(mbuf);
         
+        uint32_t online_client = 0;
+        uint32_t offline_client = 0;
+        
         // it mean client_context object
         auto mqtt_conn = client->mqtt_connection();
         if (mqtt_conn != nullptr)
         {
+            online_client++;
             mqtt_conn->put(mbuf);
         }
         else
         {
+            offline_client++;
             LOG_DEBUG("Client Context may offline now [%s]", client->client_id().c_str());
         }
         
+        online_client += msg_stat.pub_online_num();
+        offline_client += msg_stat.pub_offline_num();
+        
+        msg_stat.pub_online_num(online_client);
+        msg_stat.pub_offline_num(offline_client);
+       
         return 0;
     }
     
@@ -221,20 +239,25 @@ namespace reactor
         
         if (no_sub_client)
         {
-            return -1;
+            return 0;
         }
+        
+        CMsgStat &msg_stat = MSG_STAT_MGR->msg_stat(mbuf->msg_id());
+        msg_stat.start_stat();
         
         int count = 0;
         CONTEXT_SET &client_context_set = it->second->client_context();
         
         LOG_DEBUG("Subscribe clients size %d", (uint32_t)client_context_set.size());
         
+        
         for (auto it = client_context_set.begin(); it != client_context_set.end(); it++)
         {
             count++;
-            this->publish(*it, mbuf);
+            this->publish(*it, mbuf, msg_stat);
         }
         
+        msg_stat.end_stat();
         return count;
     }
     
@@ -254,7 +277,6 @@ namespace reactor
         LOG_DEBUG("-------- CSubscriberMgr end ----------\n");
         
     }
-    
     
     std::unordered_map<std::string,CTopicNode_ptr>  & CSubscriberMgr::topic_mgr()
     {

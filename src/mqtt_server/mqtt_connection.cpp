@@ -153,13 +153,15 @@ namespace reactor
                 LOG_DEBUG("Clean session is set, clean topic [%s]", it->topic_name().c_str());
                 SUB_MGR->del_client_context(it->topic_name(), m_client_context);
             }
-           
+            
             std::string client_id = m_client_context->client_id();
             CLIENT_ID_CONTEXT->del_client_context(client_id);
         }
         
         if (m_client_context.get() != nullptr)
         {
+            m_client_context->close_time(std::time(nullptr));
+            m_client_context->flush();
             m_client_context->mqtt_connection(nullptr);
         }
         
@@ -325,6 +327,11 @@ namespace reactor
                 // add client_context to
                 CLIENT_ID_CONTEXT->add_client_context(client_id, cli_context);
             }
+            
+            CMqttClientContext_ptr &cli_context = mqtt_connection->client_context();
+            cli_context->accept_time(mqtt_connection->accept_time());
+            cli_context->connect_time(std::time(nullptr));
+            cli_context->remote_addr(this->m_str_peer_addr);
         }
         
         if ( ack_code != CMqttConnAck::Code::ACCEPTED )
@@ -631,6 +638,8 @@ namespace reactor
         
         CMqttClientContext_ptr &cli_context = mqtt_connection->client_context();
         cli_context->client_status(ClientStatus::CS_DISCONNECTED);
+        
+        cli_context->discon_time(std::time(nullptr));
         
         if ( cli_context->clean_session())
         {

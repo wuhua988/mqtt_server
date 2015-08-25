@@ -256,10 +256,10 @@ void name(type newval) { m_##name = newval; }
 
 
 #define CLS_VAR_REF(type, name) \
-    protected: \
+protected: \
 type m_##name; \
 public: \
 type & name() { return m_##name; } \
-void name(type newval) { m_##name = newval; }
+void name(type & newval) { m_##name = newval; }
 
 #endif

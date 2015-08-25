@@ -35,6 +35,11 @@
 		D90F0C661B81C32100C5CC5F /* msg_mem_store.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = msg_mem_store.cpp; sourceTree = "<group>"; };
 		D90F0C671B81C32100C5CC5F /* str_tools.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = str_tools.cpp; sourceTree = "<group>"; };
 		D90F0C681B81C32100C5CC5F /* tinyxml2.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = tinyxml2.cpp; sourceTree = "<group>"; };
+		D911F5501B8AB6780092577F /* CMakeLists.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = "<group>"; };
+		D911F5511B8AB6780092577F /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
+		D911F5521B8C455E0092577F /* readerwriterqueue.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = readerwriterqueue.h; path = ../../include/common/readerwriterqueue.h; sourceTree = "<group>"; };
+		D911F5531B8C455E0092577F /* atomicops.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = atomicops.h; path = ../../include/common/atomicops.h; sourceTree = "<group>"; };
+		D911F5541B8C455E0092577F /* thread_record.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = thread_record.hpp; path = ../../include/common/thread_record.hpp; sourceTree = "<group>"; };
 		D912C7AE1B65F7B80014ED6D /* persist.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = persist.hpp; sourceTree = "<group>"; };
 		D912C7B21B66399D0014ED6D /* subscriber_mgr.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = subscriber_mgr.cpp; sourceTree = "<group>"; };
 		D912C7B31B66399D0014ED6D /* client_db_id.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = client_db_id.cpp; sourceTree = "<group>"; };
@@ -169,6 +174,7 @@
 		D98A8D251B58CDB300A8B969 /* test_mem_new_tcmalloc */ = {isa = PBXFileReference; lastKnownFileType = file; path = test_mem_new_tcmalloc; sourceTree = "<group>"; };
 		D98A8D261B58CDB300A8B969 /* test_shared_ptr */ = {isa = PBXFileReference; lastKnownFileType = file; path = test_shared_ptr; sourceTree = "<group>"; };
 		D98A8D271B58CDB300A8B969 /* test_shared_ptr.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = test_shared_ptr.cpp; sourceTree = "<group>"; };
+		D98F48BA1B85CB5F006F89C3 /* timer_file.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = timer_file.hpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXGroup section */
@@ -210,12 +216,24 @@
 		D90F0C631B81C32100C5CC5F /* common */ = {
 			isa = PBXGroup;
 			children = (
+				D911F5521B8C455E0092577F /* readerwriterqueue.h */,
+				D911F5531B8C455E0092577F /* atomicops.h */,
+				D911F5541B8C455E0092577F /* thread_record.hpp */,
 				D90F0C651B81C32100C5CC5F /* mbuf.cpp */,
 				D90F0C661B81C32100C5CC5F /* msg_mem_store.cpp */,
 				D90F0C671B81C32100C5CC5F /* str_tools.cpp */,
 				D90F0C681B81C32100C5CC5F /* tinyxml2.cpp */,
 			);
 			path = common;
+			sourceTree = "<group>";
+		};
+		D911F54F1B8AB6780092577F /* mqtt_broker */ = {
+			isa = PBXGroup;
+			children = (
+				D911F5501B8AB6780092577F /* CMakeLists.txt */,
+				D911F5511B8AB6780092577F /* main.cpp */,
+			);
+			path = mqtt_broker;
 			sourceTree = "<group>";
 		};
 		D98A8C631B58CD9000A8B969 = {
@@ -251,6 +269,7 @@
 				D98A8C6D1B58CD9D00A8B969 /* mem_pool.hpp */,
 				D98A8C6E1B58CD9D00A8B969 /* my_logger.h */,
 				D98A8C6F1B58CD9D00A8B969 /* singleton.hpp */,
+				D98F48BA1B85CB5F006F89C3 /* timer_file.hpp */,
 			);
 			path = common;
 			sourceTree = "<group>";
@@ -443,6 +462,7 @@
 		D98A8CD81B58CDB300A8B969 /* src */ = {
 			isa = PBXGroup;
 			children = (
+				D911F54F1B8AB6780092577F /* mqtt_broker */,
 				D90F0C631B81C32100C5CC5F /* common */,
 				D90F0C521B8181E000C5CC5F /* http_server */,
 				D98A8CDA1B58CDB300A8B969 /* mqtt */,

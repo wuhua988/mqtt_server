@@ -27,7 +27,7 @@ int CXMLConfig::open()
 {
     if (m_file_name.empty())
     {
-        LOG_ERROR("Config file name is empty");
+        fprintf(stderr, "Config file name is empty");
         return -1;
     }
     
@@ -36,7 +36,7 @@ int CXMLConfig::open()
     
     if (doc.ErrorID())
     {
-        LOG_ERROR("Open file name [%s], failed err %d,  %s\n",m_file_name.c_str(), doc.ErrorID(),doc.GetErrorStr2());
+        fprintf(stderr, "Open file name [%s], failed err %d,  %s\n",m_file_name.c_str(), doc.ErrorID(),doc.GetErrorStr2());
         return -1;
     }
     
@@ -50,7 +50,7 @@ int CXMLConfig::open()
     tinyxml2::XMLElement *global = doc.FirstChildElement("global");
     if ( global == nullptr )
     {
-        LOG_ERROR("Cann't find xml node for global");
+        fprintf(stderr, "Cann't find xml node for global");
         return -1;
     }
     
@@ -77,6 +77,7 @@ int CXMLConfig::open()
     //      <db_file_name>dup.db</db_file_name>
     //      <db_flush_interval>60</db_flush_interval>
     //      <max_idle_time>300</max_idle_time>
+    //      <data_dir>./</data_dir>
     //</mqtt_server>
     
     tinyxml2::XMLElement *mqtt_server = doc.FirstChildElement("mqtt_server");
@@ -106,6 +107,8 @@ int CXMLConfig::open()
     {
         m_max_idle_timeout = 300; // 5min
     }
+    
+    ERROR_RETURN(this->read_node_text(mqtt_server, "data_dir", m_data_dir), -1);
     
     // <mqtt_bridge>1</mqtt_bridge>
     tinyxml2::XMLElement *bridge = doc.FirstChildElement("mqtt_bridge");
@@ -179,7 +182,8 @@ void CXMLConfig::print()
     LOG_INFO("\t  Server listen at [%s:%d]", m_server_listen_ip.c_str(), m_server_listen_port);
     LOG_INFO("\t  DB AND TIMOUT Check Interval [%d]", m_flush_interval);
     LOG_INFO("\t  DB file name [%s]", m_db_file_name.c_str());
-    LOG_INFO("\t  Max client timeout [%d]\n", m_max_idle_timeout);
+    LOG_INFO("\t  Max client timeout [%d]", m_max_idle_timeout);
+    LOG_INFO("\t  Data dir %s\n", m_data_dir.c_str());
     
     
     if (m_mqtt_bridge == 0 || m_mqtt_bridge == 3 )

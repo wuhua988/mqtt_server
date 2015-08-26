@@ -1,3 +1,6 @@
+#ifndef __THEAD__H__WRAPPER_
+#define __THEAD__H__WRAPPER_
+
 #include <thread>
 #include <chrono>
 #include <string>
@@ -5,6 +8,8 @@
 
 #include "common/timer_file.hpp"
 #include "common/readerwriterqueue.h"
+
+#include "common/singleton.hpp"
 
 class CThread
 {
@@ -122,5 +127,69 @@ protected:
     CTimerFile *m_timer_file = nullptr;
     
     bool m_delete_queue = false;
-    QUEUE      *m_lock_free_queue = nullptr;
+    QUEUE       *m_lock_free_queue = nullptr;
 };
+
+
+
+class CMsgRecordMgr
+{
+public:
+    int open(CTimerFileInfo &timer_file_info)
+    {
+        return m_record_thread.open(timer_file_info);
+    }
+    
+    int put_msg(std::string &str)
+    {
+        return m_record_thread.put_msg(str);
+    }
+    
+    int put_msg(std::string && str)
+    {
+        return m_record_thread.put_msg(str);
+    }
+    
+    void stop()
+    {
+        m_record_thread.stop();
+    }
+    
+protected:
+    CRecordThread<std::string> m_record_thread;
+};
+
+#define MSG_RECORD  CSingleton<CMsgRecordMgr>::instance()
+
+class CClientRecordMgr
+{
+public:
+    int open(CTimerFileInfo &timer_file_info)
+    {
+        return m_record_thread.open(timer_file_info);
+    }
+    
+    int put_msg(std::string &str)
+    {
+        return m_record_thread.put_msg(str);
+    }
+    
+    int put_msg(std::string && str)
+    {
+        return m_record_thread.put_msg(str);
+    }
+    
+    void stop()
+    {
+        m_record_thread.stop();
+    }
+    
+protected:
+    CRecordThread<std::string> m_record_thread;
+};
+
+#define CLIENT_RECORD  CSingleton<CClientRecordMgr>::instance()
+
+
+#endif
+

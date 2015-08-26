@@ -2,6 +2,8 @@
 #include "common/msg_mem_store.hpp"
 #include "common/str_tools.hpp"
 
+#include "common/thread_record.hpp"
+
 CMsgMemStore::CMsgMemStore(uint64_t msg_id_start)
 : m_last_msg_id(msg_id_start)
 {
@@ -68,12 +70,12 @@ void CMsgStat::start_stat()
     m_pub_end = 0;
     m_pub_online_num = 0;
     m_pub_offline_num = 0;
-
+    
     m_min_delay = 0;
     m_max_delay = 0;
-
+    
     m_ack_client = 0;
-
+    
     m_pub_start = std::time(nullptr);
 }
 
@@ -98,19 +100,19 @@ CMsgStat & CMsgStatMgr::msg_stat(uint64_t msg_id)
 {
     uint16_t idx = (uint16_t)(msg_id&0xFFFF);
     m_msg_stat[idx].msg_id(msg_id);
-
+    
     return m_msg_stat[idx];
 }
 
 void CMsgStatMgr::flush()
 {
     LOG_DEBUG("Enter CMsgStatMgr flush()");
-
+    
     for (int i = 0; i < MAX_STAT_MSG; i++)
     {
         CMsgStat &msg_stat =  m_msg_stat[i];
         std::time_t cur_tm = std::time(nullptr);
-       
+        
         if ((msg_stat.msg_id() > 0) && (cur_tm - msg_stat.pub_start() > 2*60)) // 1min
         {
             //msg_id, pub_start_tm, pub_end_time, cur_time, online_client, offline_client, ack_client
@@ -123,9 +125,10 @@ void CMsgStatMgr::flush()
             oss << msg_stat.pub_online_num() << ",";
             oss << msg_stat.pub_offline_num() << ",";
             
-            oss << msg_stat.ack_client() << ""; 
-            LOG_DEBUG("%s", oss.str().c_str());
-
+            oss << msg_stat.ack_client() << "\n";
+            //LOG_DEBUG("%s", oss.str().c_str());
+            MSG_RECORD->put_msg(std::move(oss.str()));
+            
             msg_stat.start_stat(); // clean attribute
         }
     }

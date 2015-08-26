@@ -1,10 +1,14 @@
+#include "reactor/poller_epoll.hpp"
+
 #include "mqtt_server/tcp_server.hpp"
 #include "mqtt_server/tcp_client.hpp"
-#include "reactor/poller_epoll.hpp"
+
 #include "mqtt_server/xml_config.hpp"
 #include <signal.h>
 
 #include "http_server/http_server.hpp"
+
+#include "common/thread_record.hpp"
 
 extern char *optarg;
 extern int optind, opterr, optopt;
@@ -92,6 +96,22 @@ int main(int argc, char *argv[])
     str_db_file_name = CONFIG->get_db_file_name();
     
     CONFIG->print();
+    
+    CTimerFileInfo timer_file_info;
+    
+    std::string str_data_dir = CONFIG->get_data_dir();
+    
+    timer_file_info.file_prefix("msg");
+    timer_file_info.file_suffix("log");
+    timer_file_info.file_dir(str_data_dir);
+    timer_file_info.file_max_size(1024*1024);
+    timer_file_info.file_max_line(10000);
+    timer_file_info.file_start_seq(0);
+    
+    MSG_RECORD->open(timer_file_info);
+    
+    timer_file_info.file_prefix("client");
+    CLIENT_RECORD->open(timer_file_info);
     
     // CLoggerMgr logger(str_log_conf.c_str()); -> CONFIG->open()
     CPollerEpoll poller_epoll;

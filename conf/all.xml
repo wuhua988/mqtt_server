@@ -10,6 +10,7 @@
 	<db_file_name>dup.db</db_file_name>
 	<db_flush_interval>30</db_flush_interval>
 	<max_idle_timeout>300</max_idle_timeout>
+	<data_dir>./<data_dir>
 </mqtt_server>
 
 <mqtt_bridge>3</mqtt_bridge>  <!-- bridge will ingore parent server -->

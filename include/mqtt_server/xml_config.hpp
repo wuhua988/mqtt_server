@@ -49,6 +49,8 @@ public:
     GETSETVAR(std::string, parent_topic_name);
     GETSETVAR(std::string, db_file_name);
     
+    GETSETVAR(std::string, data_dir);
+    
     
     GETSETVAR(uint16_t, server_listen_port);
     GETSETVAR(uint16_t, parent_server_port);

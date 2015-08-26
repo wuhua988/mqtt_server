@@ -8,6 +8,7 @@
 #include "msgpack/msgpack.hpp"
 
 #include "common/msg_mem_store.hpp"
+#include "common/thread_record.hpp"
 
 #include <list>
 #include <vector>
@@ -205,10 +206,13 @@ namespace reactor // later --> mqtt_server
                 oss << it->topic_name() << "|";
             }
             
-            LOG_DEBUG("%s", oss.str().c_str());
+            oss << "\n";
+            //LOG_DEBUG("%s", oss.str().c_str());
+            CLIENT_RECORD->put_msg(std::move(oss.str()));
             
             // send to another queue.
             // type and content
+            
         }
         
     protected:

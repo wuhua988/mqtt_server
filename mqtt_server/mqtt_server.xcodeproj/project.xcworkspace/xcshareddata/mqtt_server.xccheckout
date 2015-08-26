@@ -7,14 +7,14 @@
 	<key>IDESourceControlProjectIdentifier</key>
 	<string>E37A9F35-F0C8-44D8-BC9C-E076D2EA525A</string>
 	<key>IDESourceControlProjectName</key>
-	<string>mqtt_server</string>
+	<string>project</string>
 	<key>IDESourceControlProjectOriginsDictionary</key>
 	<dict>
 		<key>F6AC29EE6977B4D66A1043905DB228192A61F156</key>
 		<string>https://github.com/DavadDi/mqtt_server.git</string>
 	</dict>
 	<key>IDESourceControlProjectPath</key>
-	<string>mqtt_server/mqtt_server.xcodeproj</string>
+	<string>mqtt_server/mqtt_server.xcodeproj/project.xcworkspace</string>
 	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
 	<dict>
 		<key>F6AC29EE6977B4D66A1043905DB228192A61F156</key>

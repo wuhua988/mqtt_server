@@ -14,5 +14,3 @@ TARGET_LINK_LIBRARIES(test_xml log4cplus)
 # here for profile analysis
 set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -ltcmalloc -lprofiler")
 TARGET_LINK_LIBRARIES(test_xml ${CMAKE_EXE_LINKER_FLAGS})
-
-

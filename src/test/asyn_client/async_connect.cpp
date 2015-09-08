@@ -89,6 +89,7 @@ int epoll_version(int *fd) {
             status = getsockopt(c_fd, SOL_SOCKET, SO_ERROR, &err, &len);
             cout << status << "," << err << " : " << strerror(err) << endl;
         }
+
         if (events & EPOLLIN) {
             struct so* so_data = (struct so*) ev.data.ptr;
             cout << so_data->val << ",in event fire." << endl;

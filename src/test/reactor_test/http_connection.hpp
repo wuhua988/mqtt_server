@@ -102,15 +102,29 @@ namespace http
         enum {MAX_BUF_SIZE = 4096};
         
     public:
-        HttpConnection(reactor::CReactor *reactor, reactor::CReactor *notify_reactor)
-        : reactor::CEventHandler(reactor), m_cur_buf_pos(0), m_notify_reactor(notify_reactor)
+        HttpConnection(reactor::CReactor *reactor)
+        : reactor::CEventHandler(reactor), m_cur_buf_pos(0)
         {
             LOG_TRACE_METHOD(__func__);
         }
         
         ~HttpConnection()
         {
+            this->m_reactor_ptr->unregist_timer(m_timer_id);
             LOG_TRACE_METHOD(__func__);
+        }
+
+        virtual int open(void *data)
+        {
+            reactor::CEventHandler::open();
+            m_timer_id = this->m_reactor_ptr->regist_timer(this, 5, 0); // 5s
+
+            LOG_DEBUG("Regist timer id %d", m_timer_id);
+        }
+
+        virtual int handle_timeout(uint32_t tm)
+        {
+            LOG_DEBUG("Handle_timeout %d", tm);
         }
 
         reactor::CReactor * reactor()
@@ -121,24 +135,12 @@ namespace http
         virtual int handle_input(socket_t sock_id);
         // virtual int handle_close(socket_t sock_id = INVALID_SOCKET);
         
-        // http logic
-        int process(uint8_t *buf, uint32_t len);
-        int parse_headers(char* headers, HTTPRequest* req, HTTPResponse* res);
-        int http_send(const char *data, uint32_t len);
-        
-        int notify_mqtt_publish(HTTPRequest &req, std::string &error);
-        
-        std::time_t last_msg_time()
-        {
-            return m_last_msg_time;
-        }
-        
     protected:
         uint8_t m_recv_buffer[MAX_BUF_SIZE];
         uint32_t m_cur_buf_pos;
         std::time_t m_last_msg_time;
         
-        reactor::CReactor *m_notify_reactor = nullptr;
+        int m_timer_id;
     };
 }
 

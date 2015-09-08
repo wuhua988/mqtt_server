@@ -40,7 +40,7 @@ namespace reactor
 
             // timer mgr interface
             int regist_timer(CEventHandler *handler, int period, int repeat = 0); // 0 uninfine
-            int unrigist_timer(int timer_id);
+            int unregist_timer(int timer_id);
 
         protected:
             CPoller      *m_poller = nullptr;

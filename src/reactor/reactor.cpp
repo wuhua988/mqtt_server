@@ -123,7 +123,7 @@ namespace reactor
         return this->m_timer_mgr->add_timer(handler, period, repeat);
     }
     
-    int CReactor::unrigist_timer(int timer_id)
+    int CReactor::unregist_timer(int timer_id)
     {
         return this->m_timer_mgr->del_timer(timer_id);
     }

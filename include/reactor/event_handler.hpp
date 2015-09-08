@@ -40,6 +40,11 @@ namespace reactor
             LOG_TRACE_METHOD(__func__);
             return 0;
         }
+
+        virtual int handle_timeout(uint32_t UNUSED(time))
+        {
+            return 0;
+        }
         
         virtual int handle_close(socket_t socket = INVALID_SOCKET);
         

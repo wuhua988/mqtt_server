@@ -14,9 +14,9 @@ public:
         return &value;
     }
     
-private:
-    CSingleton();
-    ~CSingleton();
+//private:
+//    CSingleton();
+//    ~CSingleton();
 };
 
 #endif

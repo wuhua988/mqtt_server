@@ -35,6 +35,8 @@ namespace reactor
         {
             LOG_TRACE_METHOD(__func__);
         };
+
+        virtual int open(int size) = 0;
         
         virtual bool run(int32_t tm) = 0;
         virtual void stop() = 0;

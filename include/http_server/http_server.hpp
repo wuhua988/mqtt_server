@@ -19,11 +19,11 @@ namespace http
     {
         
     public:
-        HttpServer(uint16_t port, reactor::CPoller *notify_poller)
+        HttpServer(uint16_t port, reactor::CReactor *notify_reactor)
         : m_server_address(port), m_running_flag(true)
         {
             LOG_TRACE_METHOD(__func__);
-            m_acceptor = new HttpAcceptor(&m_poller_epoll, notify_poller);
+            m_acceptor = new HttpAcceptor(&m_reactor, notify_reactor);
         }
         
         ~HttpServer()
@@ -43,7 +43,7 @@ namespace http
         
     protected:
         reactor::CSockAddress m_server_address;
-        reactor::CPollerEpoll m_poller_epoll;
+        reactor::CReactor m_reactor;
         
         HttpAcceptor            *m_acceptor = nullptr;
         

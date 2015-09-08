@@ -24,6 +24,7 @@ namespace reactor
 
             // poller interface
             bool run_event_loop();
+            bool run_event_loop_once(int timeout);
             void end_event_loop();
 
             int add_event(CEventHandler *event_handler, uint32_t event_mask);

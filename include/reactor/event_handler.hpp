@@ -3,6 +3,7 @@
 
 #include "common/mbuf.hpp"
 #include "reactor/sock_base.hpp"
+#include "reactor/reactor.hpp"
 #include <list>
 
 extern int my_printf(const char *fmt, ...);
@@ -15,7 +16,7 @@ namespace reactor
     {
     public:
         
-        CEventHandler(CPoller *poller);
+        CEventHandler(CReactor *reactor = CReactor::instance());
         
         virtual int open(void *data = nullptr);
         virtual int close();
@@ -94,7 +95,7 @@ namespace reactor
         
         
     protected:
-        CPoller *m_poller_ptr = nullptr;
+        CReactor *m_reactor_ptr = nullptr;
         uint32_t m_current_event_mask;
         uint64_t m_recv_bytes;
         uint64_t m_recv_times;

@@ -252,7 +252,7 @@ namespace reactor
                 mbuf->copy(buf, len);
                 mbuf->msg_id(publish.msg_id());
                 mbuf->msg_type(MSG_PUBLISH);
-                m_poller->notify(mbuf);
+                m_reactor->notify(mbuf);
                 
                 this->send_pub_ack_msg(publish.msg_id());
                 

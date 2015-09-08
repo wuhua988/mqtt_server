@@ -22,7 +22,7 @@ namespace reactor
         enum {MAX_BUF_SIZE = 4096};
         
     public:
-        CMqttConnection(CPoller *poller) : CEventHandler(poller), m_cur_buf_pos(0)
+        CMqttConnection(CReactor *reactor) : CEventHandler(reactor), m_cur_buf_pos(0)
         {
             LOG_TRACE_METHOD(__func__);
             m_accept_time = std::time(nullptr);
@@ -33,9 +33,9 @@ namespace reactor
             LOG_TRACE_METHOD(__func__);
         }
         
-        CPoller * poller()
+        CReactor * reactor()
         {
-            return this->m_poller_ptr;
+            return this->m_reactor_ptr;
         }
         
         CMqttClientContext_ptr & client_context()

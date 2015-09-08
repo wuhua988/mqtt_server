@@ -19,7 +19,7 @@ namespace reactor
     class Acceptor : public CEventHandler
     {
     public:
-        Acceptor(CPoller *poller) : CEventHandler(poller)
+        Acceptor(CReactor *reactor) : CEventHandler(reactor)
         {
             LOG_TRACE_METHOD(__func__);
         }

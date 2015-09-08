@@ -60,6 +60,17 @@ namespace reactor
         return true;
     }
 
+    bool CReactor::run_event_loop_once(int tm)
+    {
+        if (this->m_poller->run(tm))
+        {
+            this->m_timer_mgr->update_timer();
+            return true;
+        }
+
+        return false;
+    }
+
     void CReactor::end_event_loop()
     {
         this->m_poller->stop();

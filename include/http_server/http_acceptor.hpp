@@ -19,8 +19,8 @@ namespace http
     class HttpAcceptor : public reactor::CEventHandler
     {
     public:
-        HttpAcceptor(reactor::CPoller *poller, reactor::CPoller *notify_poller)
-        : reactor::CEventHandler(poller), m_notify_poller(notify_poller)
+        HttpAcceptor(reactor::CReactor *reactor, reactor::CReactor *notify_reactor)
+        : reactor::CEventHandler(reactor), m_notify_reactor(notify_reactor)
         {
             LOG_TRACE_METHOD(__func__);
         }
@@ -31,7 +31,7 @@ namespace http
     protected:
         reactor::CSockAcceptor m_sock_acceptor;
         
-        reactor::CPoller        *m_notify_poller = nullptr;
+        reactor::CReactor        *m_notify_reactor = nullptr;
     private:
         ~HttpAcceptor()
         {

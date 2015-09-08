@@ -15,8 +15,8 @@ namespace reactor
     {
         
     public:
-        CTimerHandler(CPoller *poller, CPersistMsgPack *persist)
-        : CEventHandler(poller), m_persist(persist)
+        CTimerHandler(CReactor *reactor, CPersistMsgPack *persist)
+        : CEventHandler(reactor), m_persist(persist)
         {
             LOG_TRACE_METHOD(__func__);
         }

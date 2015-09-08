@@ -23,16 +23,16 @@ namespace reactor
     {
         
     public:
-        TCPServer(std::string &file_name, CPollerEpoll *poller)
-        : m_server_address(5050), m_poller_epoll(poller),  m_persist(file_name)
+        TCPServer(std::string &file_name, CReactor *reactor)
+        : m_server_address(5050), m_reactor(reactor),  m_persist(file_name)
         {
             LOG_TRACE_METHOD(__func__);
             
-            m_acceptor = new Acceptor(m_poller_epoll);
-            m_sig_handler = new CSigHandler(m_poller_epoll);
-            m_timer_handler = new CTimerHandler(m_poller_epoll, &m_persist);
+            m_acceptor = new Acceptor(reactor);
+            m_sig_handler = new CSigHandler(reactor);
+            m_timer_handler = new CTimerHandler(reactor, &m_persist);
             
-            m_notify_fd  = new CPollerNotifyFd(m_poller_epoll);
+            m_notify_fd  = new CPollerNotifyFd(reactor);
         }
         
         int open(CSockAddress &server_addr);
@@ -43,7 +43,7 @@ namespace reactor
         CSockAddress m_server_address;
         
         Acceptor        *m_acceptor = nullptr;                      // manage by handle_close()
-        CPollerEpoll    *m_poller_epoll = nullptr;
+        CReactor        *m_reactor = nullptr;
         
         CPollerNotifyFd  *m_notify_fd = nullptr;
         CSigHandler      *m_sig_handler = nullptr;                  // manage by handle_close()

@@ -31,7 +31,7 @@ namespace reactor
     {
         LOG_TRACE_METHOD(__func__);
         
-        CEventHandler *event_handler = new CMqttConnection(this->m_poller_ptr);
+        CEventHandler *event_handler = new CMqttConnection(this->m_reactor_ptr);
         
         int socket_id = this->m_sock_acceptor.accept(event_handler);
         

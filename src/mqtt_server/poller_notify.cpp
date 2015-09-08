@@ -47,18 +47,18 @@ namespace reactor
     {
         CEventHandler::open();
         
-        if (m_poller_ptr != nullptr)
+        if (m_reactor_ptr != nullptr)
         {
-            m_poller_ptr->regist_notify(this);
+            m_reactor_ptr->regist_notify(this);
         }
         return 0;
     }
     
     CPollerNotifyWriter::~CPollerNotifyWriter()
     {
-        if (m_poller_ptr != nullptr)
+        if (m_reactor_ptr != nullptr)
         {
-            m_poller_ptr->unregist_notify();
+            m_reactor_ptr->unregist_notify();
         }
     }
     
@@ -71,8 +71,8 @@ namespace reactor
             return -1;
         }
         
-        CPollerNotifyReader *reader = new CPollerNotifyReader(m_poller);
-        CPollerNotifyWriter *writer = new CPollerNotifyWriter(m_poller);
+        CPollerNotifyReader *reader = new CPollerNotifyReader(m_reactor);
+        CPollerNotifyWriter *writer = new CPollerNotifyWriter(m_reactor);
         
         reader->set_handle(fds[0]);
         writer->set_handle(fds[1]);
@@ -91,18 +91,18 @@ namespace reactor
         
         CEventHandler::open();
         
-        if (m_poller_ptr != nullptr)
+        if (m_reactor_ptr != nullptr)
         {
-            m_poller_ptr->regist_notify(this);
+            m_reactor_ptr->regist_notify(this);
         }
         return 0;
     }
     
     CPollerNotifyFd::~CPollerNotifyFd()
     {
-        if (m_poller_ptr != nullptr)
+        if (m_reactor_ptr != nullptr)
         {
-            m_poller_ptr->unregist_notify();
+            m_reactor_ptr->unregist_notify();
         }
     }
     
@@ -121,7 +121,7 @@ namespace reactor
         
         // read message from epoll deque and deal
         CMbuf_ptr mbuf;
-        while ( m_poller_ptr->pop_front(mbuf) != -1)
+        while ( m_reactor_ptr->pop_front(mbuf) != -1)
         {
             if (mbuf.get() == nullptr)
             {

@@ -211,11 +211,11 @@ namespace http
         else
         {
             mbuf->write_ptr(pkt_len);
-            if (m_notify_poller != nullptr)
+            if (m_notify_reactor != nullptr)
             {
                 LOG_DEBUG("Publish msg lenght %d", mbuf->length());
                 ::hex_dump(mbuf->read_ptr(), mbuf->length());
-                m_notify_poller->notify(mbuf);
+                m_notify_reactor->notify(mbuf);
             }
         }
         

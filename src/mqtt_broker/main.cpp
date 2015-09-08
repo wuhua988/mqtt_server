@@ -114,6 +114,7 @@ int main(int argc, char *argv[])
     CLIENT_RECORD->open(timer_file_info);
     
     // CLoggerMgr logger(str_log_conf.c_str()); -> CONFIG->open()
+   /*
     CPollerEpoll poller_epoll;
     
     if (poller_epoll.open() == -1)
@@ -121,7 +122,8 @@ int main(int argc, char *argv[])
         LOG_ERROR("Epoll open faild. %s", strerror(errno));
         return -1;
     }
-    
+    */
+
     // mqtt client
     CSockAddress server_addr(str_server_ip, server_port);
     LOG_INFO("Server will start at [%s:%d], thread_num [%d]....",
@@ -139,7 +141,7 @@ int main(int argc, char *argv[])
         std::string str_parent_server_addr = CONFIG->get_parent_server_ip();
         uint16_t parent_server_port     = CONFIG->get_parent_server_port();
         
-        client = make_shared<TCPClient>((reactor::CPoller *)&poller_epoll,str_parent_topic_name, str_client_id);
+        client = make_shared<TCPClient>(CReactor::instance(),str_parent_topic_name, str_client_id);
         CSockAddress addr(str_parent_server_addr, parent_server_port);
         client->open((void *)&addr);
         //  client start finished
@@ -149,7 +151,7 @@ int main(int argc, char *argv[])
     {
         uint16_t http_server_port = CONFIG->get_http_server_port();
         // http_server
-        http_server = make_shared<http::HttpServer>(http_server_port, &poller_epoll);
+        http_server = make_shared<http::HttpServer>(http_server_port, CReactor::instance()); // notify reactor
         if (http_server->open() == -1)
         {
             LOG_ERROR("Open Http server on 8080 failed.");
@@ -158,7 +160,7 @@ int main(int argc, char *argv[])
         // end of http_server
     }
     
-    TCPServer server(str_db_file_name, &poller_epoll); // db file name
+    TCPServer server(str_db_file_name, CReactor::instance()); // db file name
     server.open(server_addr);
     server.loop();
     

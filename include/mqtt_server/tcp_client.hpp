@@ -16,9 +16,9 @@ namespace reactor
     public:
         enum {MAX_BUF_SIZE = 4096};
         
-        TCPClient(CPoller *poller, std::string topic_name, std::string client_id)
+        TCPClient(CReactor *reactor, std::string topic_name, std::string client_id)
         : m_running_flag(true),
-        m_poller(poller),
+        m_reactor(reactor),
         m_str_client_id(client_id),
         m_str_topic_name(topic_name)
         {
@@ -63,7 +63,7 @@ namespace reactor
         CSockAddress m_server_addr;
         std::thread m_thread_handler;
         
-        CPoller     *m_poller;
+        CReactor     *m_reactor;
         
         std::string m_str_client_id;
         std::string m_str_topic_name;

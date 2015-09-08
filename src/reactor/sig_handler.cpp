@@ -50,11 +50,11 @@ namespace reactor
         {
             if (m_signal_set.find(fdsi.ssi_signo) != m_signal_set.end())
             {
-                if (m_poller_ptr != nullptr)
+                if (m_reactor_ptr != nullptr)
                 {
                     LOG_DEBUG("Recv signale %d, ready to exit poll", fdsi.ssi_signo);
                     
-                    m_poller_ptr->stop();
+                    m_reactor_ptr->end_event_loop();
                 }
             }
         }

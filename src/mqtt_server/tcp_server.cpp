@@ -73,10 +73,8 @@ namespace reactor // later -> mqtt_server
     {
         LOG_TRACE_METHOD(__func__);
         
-        while(m_poller_epoll->run(-1))
-        {
-        }
-        
+        m_reactor->run_event_loop();
+
         m_persist.store(true); // force flush
         
         LOG_INFO("Ready to exit loop now");

@@ -19,14 +19,16 @@ namespace http
     {
         LOG_TRACE_METHOD(__func__);
         m_server_address = server_addr;
-        
+       
+        /*
         if (m_poller_epoll.open() == -1)
         {
             LOG_ERROR("Http Server poller open failed. %d, %s",
                       errno, strerror(errno));
             return -1;
         }
-        
+        */
+
         if ( m_acceptor->open(m_server_address) == -1)
         {
             LOG_ERROR("Open Server at %d failed, %s",
@@ -48,7 +50,7 @@ namespace http
         
         while(m_running_flag)
         {
-            m_poller_epoll.run(1000); // 1000ms
+            m_reactor.run_event_loop_once(100); // 100ms
         }
         
         LOG_INFO("Http Server Ready to exit loop now");

@@ -33,8 +33,8 @@ namespace reactor
 
 namespace reactor
 {
-    CEventHandler::CEventHandler(CPoller* poller)
-    : m_poller_ptr(poller),
+    CEventHandler::CEventHandler(CReactor* reactor)
+    : m_reactor_ptr(reactor),
     m_recv_bytes(0),
     m_recv_times(0),
     m_send_bytes(0),
@@ -73,7 +73,7 @@ namespace reactor
     {
         LOG_TRACE_METHOD(__func__);
         
-        if (this->m_poller_ptr == nullptr)
+        if (this->m_reactor_ptr == nullptr)
         {
             LOG_WARN("In CEventHandler::open, poller_ptr is null");
             return -1;
@@ -82,7 +82,7 @@ namespace reactor
         
         this->get_peer_name();
         
-        int res = this->m_poller_ptr->add_event(this, EVENT_READ /*|EVENT_WRITE*/);
+        int res = this->m_reactor_ptr->add_event(this, EVENT_READ /*|EVENT_WRITE*/);
         if (res < 0)
         {
             LOG_ERROR("CEventHandler::open(), add event EVENT_READ failed. %s.", strerror(errno));
@@ -173,14 +173,14 @@ namespace reactor
             return 0;
         }
         
-        return this->m_poller_ptr->mod_event(this, this->m_current_event_mask|EVENT_WRITE);
+        return this->m_reactor_ptr->mod_event(this, this->m_current_event_mask|EVENT_WRITE);
     }
     
     int CEventHandler::cancel_schedule_write()
     {
         LOG_TRACE_METHOD(__func__);
         m_cancel_schedule_write_times++;
-        return this->m_poller_ptr->mod_event(this, this->m_current_event_mask^EVENT_WRITE);
+        return this->m_reactor_ptr->mod_event(this, this->m_current_event_mask^EVENT_WRITE);
     }
     
     int CEventHandler::put(CMbuf_ptr &mbuf)
@@ -300,11 +300,11 @@ namespace reactor
     {
         LOG_TRACE_METHOD(__func__);
         
-        this->m_poller_ptr->del_event(this, 0);      // event_mask not used in epoll
+        this->m_reactor_ptr->del_event(this, 0);      // event_mask not used in epoll
         
         CSockBase::close();
         
-        this->m_poller_ptr = nullptr;
+        this->m_reactor_ptr = nullptr;
         
         return 0;
     }

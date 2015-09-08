@@ -31,7 +31,7 @@ namespace http
     {
         LOG_TRACE_METHOD(__func__);
         
-        CEventHandler *event_handler = new HttpConnection(this->m_poller_ptr, this->m_notify_poller);
+        CEventHandler *event_handler = new HttpConnection(this->m_reactor_ptr, this->m_notify_reactor);
         
         
         int socket_id = this->m_sock_acceptor.accept(event_handler);

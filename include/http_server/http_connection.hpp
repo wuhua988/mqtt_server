@@ -102,8 +102,8 @@ namespace http
         enum {MAX_BUF_SIZE = 4096};
         
     public:
-        HttpConnection(reactor::CPoller *poller, reactor::CPoller *notify_poller)
-        : reactor::CEventHandler(poller), m_cur_buf_pos(0), m_notify_poller(notify_poller)
+        HttpConnection(reactor::CReactor *reactor, reactor::CReactor *notify_reactor)
+        : reactor::CEventHandler(reactor), m_cur_buf_pos(0), m_notify_reactor(notify_reactor)
         {
             LOG_TRACE_METHOD(__func__);
         }
@@ -113,9 +113,9 @@ namespace http
             LOG_TRACE_METHOD(__func__);
         }
         
-        reactor::CPoller * poller()
+        reactor::CReactor * reactor()
         {
-            return this->m_poller_ptr;
+            return this->m_reactor_ptr;
         }
         
         virtual int handle_input(socket_t sock_id);
@@ -138,7 +138,7 @@ namespace http
         uint32_t m_cur_buf_pos;
         std::time_t m_last_msg_time;
         
-        reactor::CPoller *m_notify_poller = nullptr;
+        reactor::CReactor *m_notify_reactor = nullptr;
     };
 }
 

@@ -4,6 +4,7 @@
 #include "reactor/define.hpp"
 #include "reactor/poller_epoll.hpp"
 #include "reactor/event_handler.hpp"
+#include "reactor/reactor.hpp"
 #include <set>
 
 namespace reactor
@@ -11,7 +12,7 @@ namespace reactor
     class CSigHandler : public CEventHandler
     {
     public:
-        CSigHandler(CPoller *poller) : CEventHandler(poller)
+        CSigHandler(CReactor *reactor = CReactor::instance()) : CEventHandler(reactor)
         {
             LOG_TRACE_METHOD(__func__);
         }

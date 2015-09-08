@@ -14,7 +14,7 @@ namespace reactor
     public:
         enum {MAX_BUF_SIZE = 4096};
         
-        CPollerNotifyReader(CPoller *poller) : CEventHandler(poller)
+        CPollerNotifyReader(CReactor *reactor) : CEventHandler(reactor)
         {
         }
         
@@ -30,7 +30,7 @@ namespace reactor
     class CPollerNotifyWriter : public CEventHandler
     {
     public:
-        CPollerNotifyWriter(CPoller *poller) : CEventHandler(poller)
+        CPollerNotifyWriter(CReactor *reactor) : CEventHandler(reactor)
         {
         }
         
@@ -42,20 +42,20 @@ namespace reactor
     class CPollerNotify
     {
     public:
-        CPollerNotify(CPoller *poller) : m_poller(poller)
+        CPollerNotify(CReactor *reactor) : m_reactor(reactor)
         {
         }
         
         int open();
         
     protected:
-        CPoller *m_poller = nullptr;
+        CReactor *m_reactor = nullptr;
     };
     
     class CPollerNotifyFd : public CEventHandler
     {
     public:
-        CPollerNotifyFd(CPoller *poller) : CEventHandler(poller)
+        CPollerNotifyFd(CReactor *reactor) : CEventHandler(reactor)
         {
         }
         

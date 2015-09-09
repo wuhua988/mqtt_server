@@ -39,7 +39,7 @@ namespace reactor
             int  push_back(CMbuf_ptr &msg);
 
             // timer mgr interface
-            int regist_timer(CEventHandler *handler, int period, int repeat = 0); // 0 uninfine
+            int regist_timer(CEventHandler *handler, int period, int repeat = 0, void* data = nullptr); // 0 uninfine
             int unregist_timer(int timer_id);
 
         protected:

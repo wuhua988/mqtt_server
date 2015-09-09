@@ -42,7 +42,7 @@ namespace reactor
             return 0;
         }
 
-        virtual int handle_timeout(uint32_t UNUSED(time))
+        virtual int handle_timeout(uint32_t UNUSED(time), void *UNUSED(data) = nullptr)
         {
             return 0;
         }

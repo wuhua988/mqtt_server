@@ -13,7 +13,7 @@ namespace reactor
             CTimerWheelMgr();
             ~CTimerWheelMgr();
 
-            virtual int add_timer(CEventHandler *handler, int period, int repeat = 0);
+            virtual int add_timer(CEventHandler *handler, int period, int repeat = 0, void *data = nullptr);
             virtual int del_timer(int timer_id);
 
             virtual int update_timer();

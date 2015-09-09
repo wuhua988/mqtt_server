@@ -118,9 +118,9 @@ namespace reactor
         return this->m_poller->push_back(msg);
     }                                                                                                                       
     
-    int CReactor::regist_timer(CEventHandler *handler, int period, int repeat) // repeat = 0 uninfine
+    int CReactor::regist_timer(CEventHandler *handler, int period, int repeat, void *data) // repeat = 0 uninfine
     {
-        return this->m_timer_mgr->add_timer(handler, period, repeat);
+        return this->m_timer_mgr->add_timer(handler, period, repeat, data);
     }
     
     int CReactor::unregist_timer(int timer_id)

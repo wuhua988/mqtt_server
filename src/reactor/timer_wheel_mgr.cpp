@@ -3,10 +3,10 @@
 
 namespace reactor
 {
-    void evt_timer_cb(void *data, void *)
+    void evt_timer_cb(void *event_handler, void *data)
     {
-        CEventHandler *evt = static_cast<CEventHandler *>(data);
-        evt->handle_timeout(time(0));    
+        CEventHandler *evt = static_cast<CEventHandler *>(event_handler);
+        evt->handle_timeout(time(0), data);    
     }
 
     CTimerWheelMgr::CTimerWheelMgr(): m_last_timer_id(0)
@@ -14,10 +14,10 @@ namespace reactor
         itimer_mgr_init(&m_timer_mgr, time(0)*1000, 1); // ms
     }
 
-    int CTimerWheelMgr::add_timer(CEventHandler *handler, int period, int repeat) // second
+    int CTimerWheelMgr::add_timer(CEventHandler *handler, int period, int repeat, void *data) // second
     {
         itimer_evt  *tm_evt = new itimer_evt;
-        itimer_evt_init(tm_evt, evt_timer_cb, handler, nullptr);
+        itimer_evt_init(tm_evt, evt_timer_cb, handler, data);
         itimer_evt_start(&m_timer_mgr, tm_evt, period*1000, repeat);
 
 

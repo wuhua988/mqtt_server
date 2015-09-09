@@ -122,7 +122,7 @@ namespace http
             LOG_DEBUG("Regist timer id %d", m_timer_id);
         }
 
-        virtual int handle_timeout(uint32_t tm)
+        virtual int handle_timeout(uint32_t tm, void *)
         {
             LOG_DEBUG("Handle_timeout %d", tm);
         }

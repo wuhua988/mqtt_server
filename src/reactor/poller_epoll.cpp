@@ -108,7 +108,19 @@ namespace reactor
             }
             
             int sock_id = event_handler->get_handle();
-            
+                        
+            // error
+            if (event & (EPOLLHUP|EPOLLERR))
+            {
+                int err = 0;
+                socklen_t len = sizeof(err);
+                int status = getsockopt(sock_id, SOL_SOCKET, SO_ERROR, &err, &len);
+                LOG_DEBUG("Epoller error,status %d,  sock_id %d, errno %d, %s", status, sock_id, err, strerror(err));
+                
+                event_handler->handle_close(sock_id);
+                continue;
+            }
+
             if (event & EPOLLIN)
             {
                 if (event_handler->handle_input(sock_id) < 0)
@@ -116,6 +128,7 @@ namespace reactor
                     LOG_INFO("In epoll run, handle_input return < 0, call handle_close now");
                     
                     event_handler->handle_close(sock_id);
+                    
                     continue; // we just ready to call close now, no need further more
                 }
             }
@@ -126,14 +139,8 @@ namespace reactor
                 {
                     event_handler->handle_close(sock_id);
                 }
-                continue; // we just ready to call close now, no need further more
                 
-            }
-            
-            // error
-            if (event & EPOLLERR)
-            {
-                event_handler->handle_close(sock_id);
+                continue; // we just ready to call close now, no need further more 
             }
         }
         

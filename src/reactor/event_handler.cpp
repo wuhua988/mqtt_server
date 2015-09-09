@@ -304,8 +304,6 @@ namespace reactor
         
         CSockBase::close();
         
-        this->m_reactor_ptr = nullptr;
-        
         return 0;
     }
     

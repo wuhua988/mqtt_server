@@ -92,7 +92,7 @@ int epoll_version(int *fd) {
 
         if (events & EPOLLIN) {
             struct so* so_data = (struct so*) ev.data.ptr;
-            cout << so_data->val << ",in event fire." << endl;
+            cout << so_data->val << ",in event fire. status and err" << endl;
             status = getsockopt(c_fd, SOL_SOCKET, SO_ERROR, &err, &len);
             cout << status << "," << err << endl;
         }
@@ -139,6 +139,16 @@ int main(int argc, char** argv) {
         }
     }
     //select_version(&c_fd);
-    epoll_version(&c_fd);
+    //
+    int i = 0;
+    while(1)
+    {
+        if (i++ > 3)
+        {
+            break;
+        }
+
+        epoll_version(&c_fd);
+    }
     return 0;
 }

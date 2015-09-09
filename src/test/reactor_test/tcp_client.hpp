@@ -1,0 +1,66 @@
+#ifndef _tcp_client_h__
+#define _tcp_client_h__
+
+#include "reactor/event_handler.hpp"
+#include <thread>
+#include "reactor/sock_address.hpp"
+
+
+namespace reactor
+{
+    
+    class CReactor;
+    
+    class TCPClient : public CEventHandler
+    {
+    public:
+        enum {MAX_BUF_SIZE = 4096};
+        
+        TCPClient(CSockAddress server_addr, CReactor *reactor) 
+            :m_server_addr(server_addr), CEventHandler(reactor) 
+        {
+        }
+        
+        void hello();
+
+        TCPClient(const char *srv_ip, uint16_t srv_port, CReactor *reactor) : CEventHandler(reactor)
+        {
+            CSockAddress srv_addr(srv_ip, srv_port);
+            m_server_addr = srv_addr;
+        }
+        
+        TCPClient(CReactor *reactor) : CEventHandler(reactor)
+        {
+        }
+
+        ~TCPClient();
+        
+        virtual int open(void *data = nullptr);
+        
+        int connect();
+        int connect(const char *ip, uint16_t port);
+     
+        virtual int handle_input(socket_t socket);
+        virtual int handle_output(socket_t socket);
+        virtual int handle_timeout(uint32_t time, void *data = nullptr);
+        virtual int handle_close(socket_t socket = INVALID_SOCKET);
+
+    protected:
+        uint8_t m_recv_buffer[MAX_BUF_SIZE];
+        uint32_t m_cur_buf_pos;
+        
+        //socket_t m_client_socket = INVALID_SOCKET;
+        CSockAddress m_server_addr;
+
+        CONNECT_STATUS  m_client_status = CONNECT_STATUS::CLIENT_UNCONNECTED;
+
+        int m_timer_id = 0; // connect timer
+        int m_timeout_value = 8; // reconnet interval
+
+        int m_timer_id_data = 0; // 60s
+        int m_timeout_value_data = 60; 
+    };
+}
+
+#endif
+

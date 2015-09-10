@@ -67,3 +67,8 @@ V1.1.4
 
 V1.1.5
 1. add thread wrapper for timer file
+
+V1.1.6 
+1. add timer wheel
+2. add tcp client
+3. add http base class

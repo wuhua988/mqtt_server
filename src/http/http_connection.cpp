@@ -47,10 +47,8 @@ namespace http
 
         if (read_all) // we have got whole pkt 
         {
-            if (this->process(m_http_parser, m_http_response) == 0)
-            {
-                this->http_send(m_http_response);
-            }
+            this->process(m_http_parser, m_http_response);
+            this->http_send(m_http_response);
 
             return -1; // close socket
         }

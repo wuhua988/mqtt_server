@@ -12,6 +12,8 @@
 #include "reactor/define.hpp"
 #include "reactor/event_handler.hpp"
 
+#include "HttpParserWrapper.h"
+
 //class reactor::CPoller;
 
 namespace http
@@ -26,8 +28,7 @@ namespace http
         void print()
         {
             LOG_DEBUG("Methord %s, path %s, params %s", method.c_str(), path.c_str(), params.c_str());
-            
-            
+                        
             LOG_DEBUG("Headers:");
             int i = 0;
             for (auto it = headers.begin(); it != headers.end(); it++)
@@ -110,16 +111,15 @@ namespace http
         
         ~HttpConnection()
         {
-            this->m_reactor_ptr->unregist_timer(m_timer_id);
+            //this->m_reactor_ptr->unregist_timer(m_timer_id);
             LOG_TRACE_METHOD(__func__);
         }
 
         virtual int open(void *data)
         {
-            reactor::CEventHandler::open();
-            m_timer_id = this->m_reactor_ptr->regist_timer(this, 5, 0); // 5s
-
-            LOG_DEBUG("Regist timer id %d", m_timer_id);
+            return reactor::CEventHandler::open();
+            // m_timer_id = this->m_reactor_ptr->regist_timer(this, 5, 0); // 5s
+            //LOG_DEBUG("Regist timer id %d", m_timer_id);
         }
 
         virtual int handle_timeout(uint32_t tm, void *)
@@ -127,12 +127,11 @@ namespace http
             LOG_DEBUG("Handle_timeout %d", tm);
         }
 
-        reactor::CReactor * reactor()
-        {
-            return this->m_reactor_ptr;
-        }
-        
         virtual int handle_input(socket_t sock_id);
+
+        int http_send(HTTPResponse &res);
+
+        int process(CHttpParserWrapper &http_parse, HTTPResponse &http_response);
         // virtual int handle_close(socket_t sock_id = INVALID_SOCKET);
         
     protected:
@@ -141,6 +140,9 @@ namespace http
         std::time_t m_last_msg_time;
         
         int m_timer_id;
+
+        HTTPResponse       m_http_response;
+        CHttpParserWrapper m_http_parser;
     };
 }
 

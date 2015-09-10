@@ -162,7 +162,7 @@ namespace reactor
         this->close();
 
         LOG_DEBUG("Enter into handle_close(), Start reconnect now");
-        //this->connect();
+        //this->connect(); ->  connect() on handle_timeout
         m_client_status = CONNECT_STATUS::CLIENT_UNCONNECTED;
         return 0;
     }

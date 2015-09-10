@@ -124,7 +124,7 @@ namespace http
         // http logic
         int process(uint8_t *buf, uint32_t len);
         int parse_headers(char* headers, HTTPRequest* req, HTTPResponse* res);
-        int http_send(const char *data, uint32_t len);
+        int http_send(HTTPResponse &res);
         
         int notify_mqtt_publish(HTTPRequest &req, std::string &error);
         
@@ -137,7 +137,8 @@ namespace http
         uint8_t m_recv_buffer[MAX_BUF_SIZE];
         uint32_t m_cur_buf_pos;
         std::time_t m_last_msg_time;
-        
+       
+        HTTPResponse m_http_response;
         reactor::CReactor *m_notify_reactor = nullptr;
     };
 }

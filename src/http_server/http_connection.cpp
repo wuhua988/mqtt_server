@@ -53,9 +53,9 @@ namespace http
         LOG_DEBUG("HTTP Content \n%s", (char *)buf);
         
         HTTPRequest req;
-        HTTPResponse response;
+        //HTTPResponse response;
         
-        int res = this->parse_headers((char *)buf, &req, &response);
+        int res = this->parse_headers((char *)buf, &req, &m_http_response);
         LOG_DEBUG("parse_headers res %d, req.path [%s]", res, req.path.c_str());
         
         if (req.path.compare("/favicon.ico") == 0)
@@ -66,17 +66,17 @@ namespace http
         
         std::string error;
         
-        response.type = "text/json";
+        m_http_response.type = "text/json";
         char str_buf[1024];
         if ( (res == -1) || (req.path.compare("/publish") != 0))
         {
             LOG_DEBUG("Send not found 404 to client");
-            response.code = 404;
-            response.phrase = "Not Found";
+            m_http_response.code = 404;
+            m_http_response.phrase = "Not Found";
             
             snprintf(str_buf, 1024, json_error, "not found", "400", req.path.c_str());
             std::string str(str_buf);
-            response.append(str);
+            m_http_response.append(str);
             /*
              response.append("<html>\n"\
              "<head><title>404 Not Found</title></head>\n" \
@@ -91,15 +91,15 @@ namespace http
         {
             if (this->notify_mqtt_publish(req, error) == -1)
             {
-                response.code = 400;
+                m_http_response.code = 400;
                 snprintf(str_buf, 1024, json_error, error.c_str(), "400", req.path.c_str());
                 std::string str(str_buf);
-                response.append(str);
+                m_http_response.append(str);
             }
             else
             {
-                response.code = 200;
-                response.append("{\"msg\":\"succeed\"}");
+                m_http_response.code = 200;
+                m_http_response.append("{\"msg\":\"succeed\"}");
             }
             
             /*
@@ -114,7 +114,7 @@ namespace http
              */
         }
         
-        this->http_send(response.body.str().c_str(), strlen(response.body.str().c_str()));
+        this->http_send(m_http_response);
         
         return 0; //wait for close socket
     }
@@ -335,12 +335,11 @@ namespace http
         return 0;
     }                             // end of parse header
     
-    int HttpConnection::http_send(const char* data, uint32_t length)
+    int HttpConnection::http_send(HTTPResponse &res)
     {
-        HTTPResponse res;
         char header_buffer[1024];
-        std::string body;
-        body.append(data, length);
+        std::string str_body = res.body.str();
+        uint32_t length = str_body.length();
         
         /* build http response */
         snprintf(header_buffer,
@@ -362,8 +361,8 @@ namespace http
         
         std::string response_data = "";
         response_data.append(header_buffer, strlen(header_buffer));
-        response_data.append(body);
+        response_data.append(str_body);
         
-        return this->write_n((uint8_t *)response_data.c_str(), response_data.size());
+        return this->write_n((uint8_t *)response_data.c_str(), response_data.length());
     }
 }

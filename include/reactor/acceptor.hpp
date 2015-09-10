@@ -17,26 +17,55 @@
 namespace reactor
 {
     template <class T>
-    class CAcceptor : public reactor::CEventHandler
+        class CAcceptor : public reactor::CEventHandler
     {
-    public:
-        CAcceptor(reactor::CReactor *reactor)
-        : reactor::CEventHandler(reactor)
-        {
-            LOG_TRACE_METHOD(__func__);
-        }
-        
-        int open(const reactor::CSockAddress &address);
-        virtual int handle_input(socket_t sock_id);
-        
-    protected:
-        reactor::CSockAcceptor m_sock_acceptor;
-        
-    private:
-        ~CAcceptor()
-        {
-            LOG_TRACE_METHOD(__func__);
-        }
+        public:
+            CAcceptor(reactor::CReactor *reactor)
+                : reactor::CEventHandler(reactor)
+            {
+                LOG_TRACE_METHOD(__func__);
+            }
+
+            int open(const reactor::CSockAddress &address)
+            {
+                LOG_TRACE_METHOD(__func__);
+
+                if (m_sock_acceptor.open(address, 1024) == -1)
+                {
+                    LOG_ERROR("CAcceptor open failed.");
+                    return -1;
+                }
+
+                this->set_handle(m_sock_acceptor.get_handle());
+                LOG_INFO("CAcceptor open succeed. handler %d", m_sock_acceptor.get_handle());
+
+                return CEventHandler::open(); // register handler, with EV_READ event
+            }
+
+            virtual int handle_input(socket_t UNUSED(sock_id))
+            {
+                LOG_TRACE_METHOD(__func__);
+
+                CEventHandler *event_handler = new T(this->m_reactor_ptr);
+
+
+                int socket_id = this->m_sock_acceptor.accept(event_handler);
+                LOG_INFO("New  client arrived, sock_id [%d]", socket_id);
+
+                event_handler->open();
+
+                return 0;
+            }
+
+
+        protected:
+            reactor::CSockAcceptor m_sock_acceptor;
+
+        private:
+            ~CAcceptor()
+            {
+                LOG_TRACE_METHOD(__func__);
+            }
     };
 }
 

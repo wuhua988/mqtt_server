@@ -143,7 +143,7 @@ void itimer_node_add(itimer_core *core, itimer_node *node, IUINT32 expires)
 //---------------------------------------------------------------------
 // remove node from core
 //---------------------------------------------------------------------
-int itimer_node_del(itimer_core *core, itimer_node *node)
+int itimer_node_del(itimer_core * /*core*/, itimer_node *node)
 {
 	if (node->state != ITIMER_NODE_STATE_OK) {
 		assert(node->state == ITIMER_NODE_STATE_OK);
@@ -404,7 +404,7 @@ void itimer_evt_start(itimer_mgr *mgr, itimer_evt *evt,
 }
 
 // stop timer
-void itimer_evt_stop(itimer_mgr *mgr, itimer_evt *evt)
+void itimer_evt_stop(itimer_mgr * /*mgr*/, itimer_evt *evt)
 {
 	if (evt->mgr) {
 		itimer_node_del(&evt->mgr->core, &evt->node);

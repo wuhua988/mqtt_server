@@ -15,7 +15,7 @@ namespace http
         return this->open(m_server_address);
     }
     
-    int HttpServer::open(reactor::CSockAddress &server_addr)
+    int HttpServer::open(const reactor::CSockAddress &server_addr)
     {
         LOG_TRACE_METHOD(__func__);
         m_server_address = server_addr;
